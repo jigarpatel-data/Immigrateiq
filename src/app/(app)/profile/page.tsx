@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useForm } from "react-hook-form";
@@ -15,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -24,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
 
 const profileSchema = z.object({
@@ -35,12 +37,58 @@ const profileSchema = z.object({
 const preferencesSchema = z.object({
   drawNotifications: z.boolean().default(false),
   programUpdates: z.boolean().default(true),
+  pushNotifications: z.boolean().default(false),
 });
 
 export default function ProfilePage() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then(function(registration) {
+        console.log('Service Worker registered with scope:', registration.scope);
+      }).catch(function(error) {
+        console.log('Service Worker registration failed:', error);
+      });
+    }
+  }, []);
+
+  const handlePushNotificationToggle = async (checked: boolean) => {
+    if (checked) {
+      if ('Notification' in window && 'serviceWorker' in navigator) {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+          toast({
+            title: "Notifications Enabled",
+            description: "You will now receive notifications about new draws.",
+          });
+          // In a real app, you'd send the subscription to your server here.
+          const registration = await navigator.serviceWorker.ready;
+          const subscription = await registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: 'YOUR_PUBLIC_VAPID_KEY', // This needs to be generated on your server
+          });
+          console.log('Push subscription:', subscription);
+        } else {
+          toast({
+            title: "Notification Permission Denied",
+            description: "You need to grant permission to receive notifications.",
+            variant: "destructive",
+          });
+          preferencesForm.setValue('pushNotifications', false);
+        }
+      }
+    } else {
+        // Logic to unsubscribe user
+         toast({
+            title: "Notifications Disabled",
+            description: "You will no longer receive push notifications.",
+          });
+    }
+  }
+
+
   const profileForm = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
@@ -54,6 +102,7 @@ export default function ProfilePage() {
     defaultValues: {
       drawNotifications: true,
       programUpdates: false,
+      pushNotifications: false,
     },
   });
 
@@ -138,7 +187,7 @@ export default function ProfilePage() {
                 <form onSubmit={preferencesForm.handleSubmit(onPreferencesSubmit)}>
                   <CardHeader>
                     <CardTitle>Notifications</CardTitle>
-                    <CardDescription>Manage your email notification preferences.</CardDescription>
+                    <CardDescription>Manage your email and push notification preferences.</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <FormField
@@ -154,6 +203,29 @@ export default function ProfilePage() {
                           </div>
                           <FormControl>
                             <Switch checked={field.value} onCheckedChange={field.onChange} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                     <FormField
+                      control={preferencesForm.control}
+                      name="pushNotifications"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                           <div className="space-y-0.5">
+                            <FormLabel className="text-base">Push Notifications</FormLabel>
+                            <FormDescription>
+                              Get browser notifications about new draws.
+                            </FormDescription>
+                          </div>
+                          <FormControl>
+                            <Switch 
+                              checked={field.value} 
+                              onCheckedChange={(checked) => {
+                                field.onChange(checked);
+                                handlePushNotificationToggle(checked);
+                              }}
+                            />
                           </FormControl>
                         </FormItem>
                       )}
