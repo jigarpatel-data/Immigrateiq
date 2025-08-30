@@ -49,12 +49,19 @@ export default function SignupPage() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
     const result = await signUpWithEmail(values.name, values.email, values.password);
+    
+    // Stop loading indicator regardless of outcome
+    setLoading(false);
+
     if (result.success) {
       toast({ 
         title: "Account Created Successfully",
         description: "Please log in to continue.",
       });
-      router.push("/login");
+      // Redirect after a short delay to allow toast to be seen
+      setTimeout(() => {
+        router.push("/login");
+      }, 1000);
     } else {
       toast({
         title: "Sign Up Failed",
@@ -62,7 +69,6 @@ export default function SignupPage() {
         variant: "destructive",
       });
     }
-    setLoading(false);
   };
 
   const handleGoogleSignIn = async () => {
