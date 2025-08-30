@@ -28,10 +28,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
 import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 
 const profileSchema = z.object({
   name: z.string().min(1, "Name is required."),
-  email: z.string().email("Invalid email address."),
+  email: z.string().email("Invalid email address.").optional(),
 });
 
 const preferencesSchema = z.object({
@@ -41,6 +42,7 @@ const preferencesSchema = z.object({
 });
 
 export default function ProfilePage() {
+  const { user } = useAuth();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   
@@ -92,10 +94,19 @@ export default function ProfilePage() {
   const profileForm = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: "User",
-      email: "user@example.com",
+      name: "",
+      email: "",
     },
   });
+
+  useEffect(() => {
+    if (user) {
+        profileForm.reset({
+            name: user.displayName ?? "",
+            email: user.email ?? ""
+        })
+    }
+  }, [user, profileForm])
 
   const preferencesForm = useForm<z.infer<typeof preferencesSchema>>({
     resolver: zodResolver(preferencesSchema),
@@ -108,6 +119,7 @@ export default function ProfilePage() {
 
   const onProfileSubmit = async (values: z.infer<typeof profileSchema>) => {
     setLoading(true);
+    // Here you would typically update the user's profile in Firebase
     await new Promise(resolve => setTimeout(resolve, 1000));
     toast({
       title: "Profile Updated",
@@ -165,8 +177,9 @@ export default function ProfilePage() {
                         <FormItem>
                           <FormLabel>Email</FormLabel>
                           <FormControl>
-                            <Input type="email" placeholder="your@email.com" {...field} />
+                            <Input type="email" placeholder="your@email.com" {...field} disabled />
                           </FormControl>
+                           <FormDescription>You cannot change your email address.</FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -259,19 +272,21 @@ export default function ProfilePage() {
             </Card>
         </div>
         <div className="space-y-6">
-          <Card className="text-center">
-            <CardHeader>
-              <Avatar className="mx-auto h-24 w-24 mb-4">
-                <AvatarImage src="https://placehold.co/100x100.png" />
-                <AvatarFallback>U</AvatarFallback>
-              </Avatar>
-              <CardTitle>User</CardTitle>
-              <CardDescription>user@example.com</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button>Change Avatar</Button>
-            </CardContent>
-          </Card>
+          {user && (
+              <Card className="text-center">
+                <CardHeader>
+                  <Avatar className="mx-auto h-24 w-24 mb-4">
+                    <AvatarImage src={user.photoURL ?? undefined} />
+                    <AvatarFallback>{user.displayName?.[0] ?? user.email?.[0] ?? 'U'}</AvatarFallback>
+                  </Avatar>
+                  <CardTitle>{user.displayName}</CardTitle>
+                  <CardDescription>{user.email}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button>Change Avatar</Button>
+                </CardContent>
+              </Card>
+          )}
           <Card>
             <CardHeader>
               <CardTitle>Saved Scores</CardTitle>
