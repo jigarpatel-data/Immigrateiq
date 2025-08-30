@@ -61,8 +61,8 @@ export default function SignupPage() {
         description: result.error,
         variant: "destructive",
       });
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   const handleGoogleSignIn = async () => {
