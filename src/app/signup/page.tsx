@@ -38,6 +38,7 @@ const formSchema = z.object({
 export default function SignupPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -46,9 +47,10 @@ export default function SignupPage() {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setLoading(true);
     form.clearErrors();
     const result = await signUpWithEmail(values.name, values.email, values.password);
-
+    
     if (result.success) {
       toast({ 
         title: "Account Created Successfully",
@@ -62,6 +64,7 @@ export default function SignupPage() {
         variant: "destructive",
       });
     }
+    setLoading(false);
   };
 
   const handleGoogleSignIn = async () => {
@@ -97,7 +100,7 @@ export default function SignupPage() {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Your Name" {...field} disabled={googleLoading} />
+                      <Input placeholder="Your Name" {...field} disabled={loading || googleLoading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -110,7 +113,7 @@ export default function SignupPage() {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="you@example.com" {...field} disabled={googleLoading} />
+                      <Input type="email" placeholder="you@example.com" {...field} disabled={loading || googleLoading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -123,13 +126,14 @@ export default function SignupPage() {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} disabled={googleLoading} />
+                      <Input type="password" placeholder="••••••••" {...field} disabled={loading || googleLoading} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={form.formState.isSubmitting || googleLoading}>
+              <Button type="submit" className="w-full" disabled={loading || googleLoading}>
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Sign Up
               </Button>
             </form>
@@ -146,7 +150,7 @@ export default function SignupPage() {
             </div>
           </div>
 
-          <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={form.formState.isSubmitting || googleLoading}>
+          <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={loading || googleLoading}>
             {googleLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CustomGoogleIcon className="mr-2 h-5 w-5" />}
             Sign up with Google
           </Button>
