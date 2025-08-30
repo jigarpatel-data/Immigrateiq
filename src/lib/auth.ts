@@ -1,4 +1,6 @@
 
+"use server";
+
 import { auth, db } from "./firebase";
 import {
   createUserWithEmailAndPassword,
@@ -15,7 +17,10 @@ export async function signUpWithEmail(name: string, email: string, password: str
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
     
+    // Update the Firebase Auth user profile
     await updateProfile(user, { displayName: name });
+
+    // Create a user document in Firestore
     await setDoc(doc(db, "users", user.uid), {
       uid: user.uid,
       name: name,
