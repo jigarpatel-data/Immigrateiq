@@ -1,4 +1,5 @@
 
+
 "use server";
 
 import { auth, db } from "./firebase";
@@ -8,6 +9,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   signOut as firebaseSignOut,
+  updateProfile,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 
@@ -16,7 +18,8 @@ export async function signUpWithEmail(name: string, email: string, password: str
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
     
-    // Create a user document in Firestore
+    // Update profile and create user document
+    await updateProfile(user, { displayName: name });
     await setDoc(doc(db, "users", user.uid), {
       uid: user.uid,
       name: name,
@@ -61,6 +64,10 @@ export async function signInWithGoogle() {
 
     return { success: true, userId: user.uid };
   } catch (error: any) {
+    // Handle specific errors like popup closed by user
+    if (error.code === 'auth/popup-closed-by-user') {
+        return { success: false, error: 'Sign-in process cancelled.' };
+    }
     return { success: false, error: error.message };
   }
 }
