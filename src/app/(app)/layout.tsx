@@ -67,8 +67,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   if (!user) {
-    // This should ideally not be reached if the root page.tsx handles redirection
-    // But as a fallback, it prevents rendering the layout for non-authed users.
     if (typeof window !== 'undefined') {
        router.push('/login');
     }

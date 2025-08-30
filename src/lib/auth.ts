@@ -1,6 +1,4 @@
 
-"use server";
-
 import { auth, db } from "./firebase";
 import {
   createUserWithEmailAndPassword,
@@ -17,7 +15,6 @@ export async function signUpWithEmail(name: string, email: string, password: str
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
     
-    // Update profile and create user document
     await updateProfile(user, { displayName: name });
     await setDoc(doc(db, "users", user.uid), {
       uid: user.uid,
@@ -51,19 +48,17 @@ export async function signInWithGoogle() {
     const userDoc = await getDoc(userDocRef);
 
     if (!userDoc.exists()) {
-      // Create a user document in Firestore if it doesn't exist
       await setDoc(userDocRef, {
         uid: user.uid,
         name: user.displayName,
         email: user.email,
         provider: "google",
-        photoURL: user.photoURL
+        photoURL: user.photoURL,
       });
     }
 
     return { success: true, userId: user.uid };
   } catch (error: any) {
-    // Handle specific errors like popup closed by user
     if (error.code === 'auth/popup-closed-by-user') {
         return { success: false, error: 'Sign-in process cancelled.' };
     }
