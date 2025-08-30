@@ -49,8 +49,11 @@ export default function SignupPage() {
     setLoading(true);
     const result = await signUpWithEmail(values.name, values.email, values.password);
     if (result.success) {
-      toast({ title: "Account Created Successfully" });
-      router.push("/dashboard");
+      toast({ 
+        title: "Account Created Successfully",
+        description: "Please log in to continue.",
+      });
+      router.push("/login");
     } else {
       toast({
         title: "Sign Up Failed",
