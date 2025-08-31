@@ -69,7 +69,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   if (!user) {
-    return null; // Don't render anything, the redirect is happening
+    return null; 
   }
 
   return (
