@@ -36,9 +36,8 @@ import {
   Landmark,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
-import { useAuth } from "@/hooks/use-auth";
 import { signOut } from "@/lib/auth";
-import React, { useEffect } from "react";
+import React from "react";
 import { Loader2 } from "lucide-react";
 import { useRequireAuth } from "@/hooks/use-require-auth";
 
