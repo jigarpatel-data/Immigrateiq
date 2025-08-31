@@ -51,7 +51,7 @@ export default function LoginPage() {
     
     if (result.success) {
       toast({ title: "Login Successful" });
-      window.location.href = '/dashboard';
+      router.push('/'); // Redirect to the gatekeeper
     } else {
       toast({
         title: "Login Failed",
@@ -68,7 +68,7 @@ export default function LoginPage() {
 
     if (result.success) {
       toast({ title: "Google Sign-In Successful" });
-      window.location.href = '/dashboard';
+      router.push('/'); // Redirect to the gatekeeper
     } else {
       toast({
         title: "Google Sign-In Failed",

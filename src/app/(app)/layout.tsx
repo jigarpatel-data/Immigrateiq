@@ -38,7 +38,7 @@ import {
 import { Footer } from "@/components/footer";
 import { signOut } from "@/lib/auth";
 import React from "react";
-import { useRequireAuth } from "@/hooks/use-require-auth";
+import { useAuth } from "@/hooks/use-auth";
 import { Loader2 } from "lucide-react";
 
 const navItems = [
@@ -52,14 +52,16 @@ const navItems = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, loading } = useRequireAuth();
+  const { user, loading } = useAuth(); // We still use useAuth to get user info
 
   const handleLogout = async () => {
     await signOut();
     router.push('/login');
   };
 
-  if (loading || !user) {
+  // The auth check is now done by the root page.tsx (gatekeeper)
+  // We can still show a loader here if the user object is not yet available.
+  if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
