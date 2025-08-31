@@ -5,15 +5,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   SidebarProvider,
   Sidebar,
@@ -32,7 +23,6 @@ import {
   HelpCircle,
   LayoutDashboard,
   ListChecks,
-  User,
   Landmark,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
@@ -61,7 +51,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <SidebarMenu>
             {navItems.map((item) => (
               <SidebarMenuItem key={item.href}>
-                <Link href={item.href} passHref legacyBehavior>
+                <Link href={item.href}>
                   <SidebarMenuButton
                     isActive={pathname.startsWith(item.href)}
                     tooltip={{ children: item.label }}
@@ -75,15 +65,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
-            <div className="flex items-center gap-2 w-full p-2">
-                <Avatar className="h-8 w-8">
-                <AvatarImage src="https://picsum.photos/100" alt="Guest" />
-                <AvatarFallback>G</AvatarFallback>
-                </Avatar>
-                <div className="text-left group-data-[collapsible=icon]:hidden">
-                <p className="font-medium text-sm truncate">Guest User</p>
-                </div>
-            </div>
+            <Link href="/profile">
+              <div className="flex items-center gap-2 w-full p-2 hover:bg-sidebar-accent rounded-md">
+                  <Avatar className="h-8 w-8">
+                  <AvatarImage src="https://picsum.photos/100" alt="Guest" data-ai-hint="profile avatar" />
+                  <AvatarFallback>G</AvatarFallback>
+                  </Avatar>
+                  <div className="text-left group-data-[collapsible=icon]:hidden">
+                  <p className="font-medium text-sm truncate">Guest User</p>
+                  </div>
+              </div>
+            </Link>
           </SidebarFooter>
       </Sidebar>
       <SidebarInset className="flex flex-col">
@@ -92,10 +84,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <SidebarTrigger />
                 <h1 className="text-lg font-semibold">TheCanIndian</h1>
             </div>
-              <Avatar className="h-8 w-8">
-                  <AvatarImage src="https://picsum.photos/100" alt="Guest" />
-                  <AvatarFallback>G</AvatarFallback>
-              </Avatar>
+              <Link href="/profile">
+                <Avatar className="h-8 w-8">
+                    <AvatarImage src="https://picsum.photos/100" alt="Guest" data-ai-hint="profile avatar" />
+                    <AvatarFallback>G</AvatarFallback>
+                </Avatar>
+              </Link>
         </header>
         <main className="flex-1 overflow-auto p-4 sm:p-6">
           {children}
@@ -105,5 +99,3 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   );
 }
-
-    
