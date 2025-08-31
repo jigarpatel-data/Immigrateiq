@@ -51,7 +51,7 @@ export default function LoginPage() {
     
     if (result.success) {
       toast({ title: "Login Successful" });
-      router.push('/'); // Redirect to the gatekeeper
+      router.push('/'); 
     } else {
       toast({
         title: "Login Failed",
@@ -68,7 +68,7 @@ export default function LoginPage() {
 
     if (result.success) {
       toast({ title: "Google Sign-In Successful" });
-      router.push('/'); // Redirect to the gatekeeper
+      router.push('/'); 
     } else {
       toast({
         title: "Google Sign-In Failed",
