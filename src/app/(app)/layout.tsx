@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,12 +34,12 @@ import {
   User,
   LogOut,
   Landmark,
-  Loader2,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
 import { signOut } from "@/lib/auth";
-import React, { useEffect } from "react";
+import React from "react";
 import { useAuth } from "@/hooks/use-auth";
+import { useRouter } from 'next/navigation';
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -52,30 +52,12 @@ const navItems = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, loading } = useAuth(); 
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.replace('/login');
-    }
-  }, [user, loading, router]);
+  const { user } = useAuth(); 
 
   const handleLogout = async () => {
     await signOut();
     router.push('/login');
   };
-
-  if (loading) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
-
-  if (!user) {
-    return null; // Or a fallback component
-  }
 
   return (
     <SidebarProvider>
