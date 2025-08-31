@@ -61,9 +61,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <SidebarMenu>
             {navItems.map((item) => (
               <SidebarMenuItem key={item.href}>
-                <Link href={item.href}>
+                <Link href={item.href} passHref legacyBehavior>
                   <SidebarMenuButton
-                    asChild
                     isActive={pathname.startsWith(item.href)}
                     tooltip={{ children: item.label }}
                   >
@@ -76,38 +75,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="justify-start gap-2 w-full p-2 h-auto">
-                   <div className="flex items-center gap-2">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src="https://picsum.photos/100" alt="Guest" />
-                        <AvatarFallback>G</AvatarFallback>
-                      </Avatar>
-                      <div className="text-left group-data-[collapsible=icon]:hidden">
-                        <p className="font-medium text-sm truncate">Guest User</p>
-                      </div>
-                   </div>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56 mb-2" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">Guest User</p>
-                    <p className="text-xs leading-none text-muted-foreground">
-                      guest@example.com
-                    </p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <Link href="/profile" passHref>
-                  <DropdownMenuItem>
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Profile</span>
-                  </DropdownMenuItem>
-                </Link>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="flex items-center gap-2 w-full p-2">
+                <Avatar className="h-8 w-8">
+                <AvatarImage src="https://picsum.photos/100" alt="Guest" />
+                <AvatarFallback>G</AvatarFallback>
+                </Avatar>
+                <div className="text-left group-data-[collapsible=icon]:hidden">
+                <p className="font-medium text-sm truncate">Guest User</p>
+                </div>
+            </div>
           </SidebarFooter>
       </Sidebar>
       <SidebarInset className="flex flex-col">
@@ -129,3 +105,5 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   );
 }
+
+    
