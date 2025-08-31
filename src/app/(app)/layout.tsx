@@ -37,9 +37,8 @@ import {
 } from "lucide-react";
 import { Footer } from "@/components/footer";
 import { signOut } from "@/lib/auth";
-import React, { useEffect } from "react";
+import React from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { Loader2 } from "lucide-react";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -52,27 +51,12 @@ const navItems = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, loading } = useAuth(); 
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.replace('/login');
-    }
-  }, [user, loading, router]);
-
+  const { user } = useAuth(); 
 
   const handleLogout = async () => {
     await signOut();
     router.push('/login');
   };
-  
-  if (loading || !user) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
 
   return (
     <SidebarProvider>
