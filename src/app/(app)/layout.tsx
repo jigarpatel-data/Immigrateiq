@@ -38,7 +38,7 @@ import {
 import { Footer } from "@/components/footer";
 import { useAuth } from "@/hooks/use-auth";
 import { signOut } from "@/lib/auth";
-import React from "react";
+import React, { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 
 const navItems = [
@@ -65,12 +65,22 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     }
   }, [loading, user, router]);
 
-  if (loading || !user) {
+  if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
+  }
+
+  if (!user) {
+    // This case will be handled by the useEffect redirect, but as a fallback
+    // we can show a loader while redirecting.
+     return (
+       <div className="flex h-screen w-full items-center justify-center">
+         <Loader2 className="h-8 w-8 animate-spin" />
+       </div>
+     );
   }
 
   return (
