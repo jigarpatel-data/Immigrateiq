@@ -38,7 +38,6 @@ import {
 import { Footer } from "@/components/footer";
 import { signOut } from "@/lib/auth";
 import React from "react";
-import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from 'next/navigation';
 import { useRequireAuth } from "@/hooks/use-require-auth";
 import { Loader2 } from "lucide-react";
@@ -54,7 +53,7 @@ const navItems = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, loading } = useRequireAuth(); // Use the guard hook
+  const { user, loading } = useRequireAuth(); 
 
   const handleLogout = async () => {
     await signOut();
@@ -70,8 +69,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
   
   if (!user) {
-    // This part should technically not be reached if useRequireAuth works correctly,
-    // but it's good for safety.
     return null; 
   }
 
