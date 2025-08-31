@@ -34,10 +34,11 @@ import {
   User,
   LogOut,
   Landmark,
+  Loader2,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
 import { signOut } from "@/lib/auth";
-import React from "react";
+import React, { useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from 'next/navigation';
 
@@ -52,12 +53,39 @@ const navItems = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user } = useAuth(); 
+  const { user, loading } = useAuth(); 
+
+  useEffect(() => {
+    // If loading is finished and there's no user, redirect to login.
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+
 
   const handleLogout = async () => {
     await signOut();
     router.push('/login');
   };
+  
+  // While loading, show a full-screen spinner. This prevents the redirect loop.
+  if (loading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+  
+  // If there is no user, children won't be rendered because of the redirect above.
+  // We can return null or a spinner, but the redirect should be fast enough.
+  if (!user) {
+     return (
+      <div className="flex h-screen w-full items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <SidebarProvider>
