@@ -2,8 +2,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import { usePathname } from "next/navigation";
+import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,11 +35,8 @@ import {
   User,
   LogOut,
   Landmark,
-  Loader2,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
-import { signOut } from "@/lib/auth";
-import { useAuth } from "@/hooks/use-auth";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -51,26 +48,6 @@ const navItems = [
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const router = useRouter();
-  const { user, loading } = useAuth();
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login');
-    }
-  }, [user, loading, router]);
-
-  if (loading) {
-    return (
-        <div className="flex h-screen w-full items-center justify-center bg-background">
-            <Loader2 className="h-8 w-8 animate-spin" />
-        </div>
-    );
-  }
-
-  if (!user) {
-    return null; 
-  }
 
   return (
     <SidebarProvider>
@@ -99,18 +76,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             ))}
           </SidebarMenu>
         </SidebarContent>
-        {user && (
-          <SidebarFooter>
+        <SidebarFooter>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="justify-start gap-2 w-full p-2 h-auto">
                    <div className="flex items-center gap-2">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={user.photoURL ?? undefined} alt={user.displayName ?? 'User'} />
-                        <AvatarFallback>{user.displayName?.[0] ?? user.email?.[0] ?? 'U'}</AvatarFallback>
+                        <AvatarImage src="https://picsum.photos/100" alt="Guest" />
+                        <AvatarFallback>G</AvatarFallback>
                       </Avatar>
                       <div className="text-left group-data-[collapsible=icon]:hidden">
-                        <p className="font-medium text-sm truncate">{user.displayName ?? 'User'}</p>
+                        <p className="font-medium text-sm truncate">Guest User</p>
                       </div>
                    </div>
                 </Button>
@@ -118,9 +94,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <DropdownMenuContent className="w-56 mb-2" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{user.displayName ?? 'User'}</p>
+                    <p className="text-sm font-medium leading-none">Guest User</p>
                     <p className="text-xs leading-none text-muted-foreground">
-                      {user.email}
+                      guest@example.com
                     </p>
                   </div>
                 </DropdownMenuLabel>
@@ -131,17 +107,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     <span>Profile</span>
                   </DropdownMenuItem>
                 </Link>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => {
-                  signOut().then(() => router.push('/login'));
-                }}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
-                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarFooter>
-        )}
       </Sidebar>
       <SidebarInset className="flex flex-col">
         <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6 md:hidden">
@@ -149,12 +117,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <SidebarTrigger />
                 <h1 className="text-lg font-semibold">TheCanIndian</h1>
             </div>
-            {user && (
               <Avatar className="h-8 w-8">
-                  <AvatarImage src={user.photoURL ?? undefined} alt={user.displayName ?? 'User'} />
-                  <AvatarFallback>{user.displayName?.[0] ?? user.email?.[0] ?? 'U'}</AvatarFallback>
+                  <AvatarImage src="https://picsum.photos/100" alt="Guest" />
+                  <AvatarFallback>G</AvatarFallback>
               </Avatar>
-            )}
         </header>
         <main className="flex-1 overflow-auto p-4 sm:p-6">
           {children}
