@@ -2,7 +2,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,9 +39,7 @@ import {
 } from "lucide-react";
 import { Footer } from "@/components/footer";
 import { signOut } from "@/lib/auth";
-import React, { useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { useRouter } from 'next/navigation';
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -53,22 +52,19 @@ const navItems = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, loading } = useAuth(); 
+  const { user, loading } = useAuth();
 
   useEffect(() => {
-    // If loading is finished and there's no user, redirect to login.
     if (!loading && !user) {
       router.push('/login');
     }
   }, [user, loading, router]);
 
-
   const handleLogout = async () => {
     await signOut();
     router.push('/login');
   };
-  
-  // While loading, show a full-screen spinner. This prevents the redirect loop.
+
   if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
@@ -76,11 +72,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </div>
     );
   }
-  
-  // If there is no user, children won't be rendered because of the redirect above.
-  // We can return null or a spinner, but the redirect should be fast enough.
+
   if (!user) {
-     return (
+    // This will be caught by the useEffect but as a fallback, we can show a loader
+    // while the redirect happens.
+    return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
