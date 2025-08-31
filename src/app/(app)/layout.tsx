@@ -66,18 +66,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     router.push('/login');
   };
   
-  if (loading) {
+  if (loading || !user) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
-  
-  if (!user) {
-    return null; 
-  }
-
 
   return (
     <SidebarProvider>
