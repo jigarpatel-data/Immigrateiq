@@ -3,16 +3,26 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/use-auth';
+import { Loader2 } from 'lucide-react';
 
-// This is the root page of the application.
-// Its only job is to redirect the user to the dashboard.
-// The dashboard route is protected by the AppLayout, which handles authentication.
 export default function RootPage() {
   const router = useRouter();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
-    router.replace('/dashboard');
-  }, [router]);
+    if (!loading) {
+      if (user) {
+        router.replace('/dashboard');
+      } else {
+        router.replace('/login');
+      }
+    }
+  }, [user, loading, router]);
 
-  return null; // Render nothing while redirecting
+  return (
+    <div className="flex h-screen w-full items-center justify-center bg-background">
+      <Loader2 className="h-8 w-8 animate-spin" />
+    </div>
+  );
 }
