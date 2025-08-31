@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,7 +35,6 @@ import {
   User,
   LogOut,
   Landmark,
-  Loader2,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
 import { signOut } from "@/lib/auth";
@@ -52,25 +51,7 @@ const navItems = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, loading } = useAuth();
-
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login');
-    }
-  }, [user, loading, router]);
-
-  if (loading) {
-    return (
-      <div className="flex h-screen w-full items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
-  
-  if (!user) {
-    return null; // Don't render anything, the redirect is happening
-  }
+  const { user } = useAuth(); // We still need the user for the UI
 
   return (
     <SidebarProvider>
