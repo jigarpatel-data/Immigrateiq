@@ -40,6 +40,7 @@ import { signOut } from "@/lib/auth";
 import React from "react";
 import { useRequireAuth } from "@/hooks/use-require-auth";
 import { Loader2 } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
