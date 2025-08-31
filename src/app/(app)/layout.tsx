@@ -58,8 +58,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     await signOut();
     router.push('/login');
   };
-  
-  React.useEffect(() => {
+
+  useEffect(() => {
     if (!loading && !user) {
       router.push('/login');
     }
