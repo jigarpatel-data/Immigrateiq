@@ -60,18 +60,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     }
   }, [user, loading, router]);
 
-  if (loading) {
+  if (loading || !user) {
     return (
       <div className="flex h-screen w-full items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
-
-  if (!user) {
-    return null; // or a fallback component if you don't want to show anything while redirecting
-  }
-
 
   return (
     <SidebarProvider>
