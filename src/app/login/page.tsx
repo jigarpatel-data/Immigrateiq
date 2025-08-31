@@ -58,8 +58,8 @@ export default function LoginPage() {
         description: result.error,
         variant: "destructive",
       });
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleGoogleSignIn = async () => {
@@ -75,8 +75,8 @@ export default function LoginPage() {
         description: result.error,
         variant: "destructive",
       });
+      setGoogleLoading(false);
     }
-    setGoogleLoading(false);
   };
 
   return (
