@@ -39,6 +39,7 @@ import {
 import { Footer } from "@/components/footer";
 import { useAuth } from "@/hooks/use-auth";
 import { signOut } from "@/lib/auth";
+import React from "react";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -58,19 +59,19 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     router.push('/login');
   };
 
-  if (loading) {
+  React.useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+
+
+  if (loading || !user) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
-  }
-
-  if (!user) {
-    if (typeof window !== 'undefined') {
-       router.push('/login');
-    }
-    return null;
   }
 
   return (
