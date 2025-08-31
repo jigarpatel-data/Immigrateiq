@@ -34,10 +34,11 @@ import {
   User,
   LogOut,
   Landmark,
+  Loader2,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
 import { signOut } from "@/lib/auth";
-import React from "react";
+import React, { useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
 
 const navItems = [
@@ -51,12 +52,30 @@ const navItems = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user } = useAuth(); 
+  const { user, loading } = useAuth(); 
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.replace('/login');
+    }
+  }, [user, loading, router]);
 
   const handleLogout = async () => {
     await signOut();
     router.push('/login');
   };
+
+  if (loading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null; // Or a fallback component
+  }
 
   return (
     <SidebarProvider>
