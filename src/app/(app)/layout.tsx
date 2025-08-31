@@ -78,11 +78,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </Link>
           </SidebarFooter>
       </Sidebar>
-      <SidebarInset className="flex flex-col">
+      <SidebarInset className="flex flex-col min-h-screen">
         <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6 md:hidden">
             <div className="flex items-center gap-2">
                 <SidebarTrigger />
-                <h1 className="text-lg font-semibold">TheCanIndian</h1>
+                <Link href="/dashboard" className="flex items-center gap-2">
+                    <Landmark className="w-6 h-6 text-accent" />
+                    <h1 className="text-lg font-semibold">TheCanIndian</h1>
+                </Link>
             </div>
               <Link href="/profile">
                 <Avatar className="h-8 w-8">
