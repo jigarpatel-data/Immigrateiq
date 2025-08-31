@@ -58,26 +58,20 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     await signOut();
     router.push('/login');
   };
+  
+  React.useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [loading, user, router]);
 
-  if (loading) {
+  if (loading || !user) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
-
-  if (!user) {
-    // This should ideally not happen if page.tsx is working correctly,
-    // but it's a good fallback.
-    router.push('/login');
-    return (
-       <div className="flex h-screen w-full items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
-
 
   return (
     <SidebarProvider>
