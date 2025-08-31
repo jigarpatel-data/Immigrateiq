@@ -35,6 +35,7 @@ import {
   User,
   LogOut,
   Landmark,
+  Loader2,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
 import { signOut } from "@/lib/auth";
@@ -51,16 +52,25 @@ const navItems = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user } = useAuth(); // We only need the user object here now
+  const { user, loading } = useAuth();
 
-  // This layout is now only for displaying the UI for authenticated users.
-  // The access control is handled by the root page.tsx gatekeeper.
-  // We can still redirect if a user signs out while inside the app.
   useEffect(() => {
-    if (!user) {
+    if (!loading && !user) {
       router.push('/login');
     }
-  }, [user, router]);
+  }, [user, loading, router]);
+
+  if (loading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return null; // or a fallback component if you don't want to show anything while redirecting
+  }
 
 
   return (

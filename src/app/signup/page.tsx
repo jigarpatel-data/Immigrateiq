@@ -72,7 +72,7 @@ export default function SignupPage() {
     const result = await signInWithGoogle();
     if (result.success) {
       toast({ title: "Google Sign-In Successful" });
-      router.push("/");
+      router.push("/dashboard");
     } else {
       toast({
         title: "Google Sign-In Failed",
