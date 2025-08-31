@@ -63,8 +63,8 @@ export default function SignupPage() {
         description: result.error,
         variant: "destructive",
       });
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const handleGoogleSignIn = async () => {
@@ -72,15 +72,15 @@ export default function SignupPage() {
     const result = await signInWithGoogle();
     if (result.success) {
       toast({ title: "Google Sign-In Successful" });
-      router.push("/");
+      router.push("/dashboard");
     } else {
       toast({
         title: "Google Sign-In Failed",
         description: result.error,
         variant: "destructive",
       });
+      setGoogleLoading(false);
     }
-    setGoogleLoading(false);
   };
 
   return (
