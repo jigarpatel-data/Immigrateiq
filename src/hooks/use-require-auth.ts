@@ -5,6 +5,9 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from './use-auth';
 
+// This hook is now deprecated in favor of the gatekeeper page pattern.
+// It is kept here in case it's needed for other purposes, but it's
+// no longer used for routing protection in AppLayout.
 export function useRequireAuth() {
   const auth = useAuth();
   const router = useRouter();

@@ -39,7 +39,7 @@ import { Footer } from "@/components/footer";
 import { signOut } from "@/lib/auth";
 import React from "react";
 import { useRouter } from 'next/navigation';
-import { useRequireAuth } from "@/hooks/use-require-auth";
+import { useAuth } from "@/hooks/use-auth";
 import { Loader2 } from "lucide-react";
 
 const navItems = [
@@ -53,13 +53,18 @@ const navItems = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, loading } = useRequireAuth(); 
+  // We use useAuth here to get user info for the UI, but we don't need useRequireAuth anymore.
+  // The gatekeeper at src/app/page.tsx handles the auth protection.
+  const { user, loading } = useAuth(); 
 
   const handleLogout = async () => {
     await signOut();
     router.push('/login');
   };
-
+  
+  // The root page now handles the loading and redirect logic, 
+  // but we can still show a loading state here if needed, for instance,
+  // if a user navigates directly to a protected page.
   if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
@@ -68,9 +73,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     );
   }
   
+  // Although the gatekeeper should prevent unauthenticated access,
+  // this is an extra layer of safety.
   if (!user) {
+    // It's better to return null and let the gatekeeper handle the redirect
+    // to avoid potential redirect loops if this layout were to be used
+    // in a context without the gatekeeper.
     return null; 
   }
+
 
   return (
     <SidebarProvider>
