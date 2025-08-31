@@ -38,8 +38,8 @@ import {
 import { Footer } from "@/components/footer";
 import { signOut } from "@/lib/auth";
 import React from "react";
-import { Loader2 } from "lucide-react";
 import { useRequireAuth } from "@/hooks/use-require-auth";
+import { Loader2 } from "lucide-react";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
