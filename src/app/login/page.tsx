@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -51,7 +50,7 @@ export default function LoginPage() {
     
     if (result.success) {
       toast({ title: "Login Successful" });
-      router.push('/');
+      router.push('/dashboard'); // ✅ changed from "/" to "/dashboard"
     } else {
       toast({
         title: "Login Failed",
@@ -68,7 +67,7 @@ export default function LoginPage() {
 
     if (result.success) {
       toast({ title: "Google Sign-In Successful" });
-      router.push('/');
+      router.push('/dashboard'); // ✅ changed from "/" to "/dashboard"
     } else {
       toast({
         title: "Google Sign-In Failed",
@@ -133,7 +132,12 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <Button variant="outline" className="w-full" onClick={handleGoogleSignIn} disabled={loading || googleLoading}>
+          <Button 
+            variant="outline" 
+            className="w-full" 
+            onClick={handleGoogleSignIn} 
+            disabled={loading || googleLoading}
+          >
             {googleLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CustomGoogleIcon className="mr-2 h-5 w-5" />}
             Sign in with Google
           </Button>
