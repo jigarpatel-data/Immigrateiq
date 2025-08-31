@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -39,6 +39,8 @@ import { Footer } from "@/components/footer";
 import { signOut } from "@/lib/auth";
 import React from "react";
 import { useAuth } from "@/hooks/use-auth";
+import { useRouter } from 'next/navigation';
+import { useRequireAuth } from "@/hooks/use-require-auth";
 import { Loader2 } from "lucide-react";
 
 const navItems = [
@@ -52,21 +54,25 @@ const navItems = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, loading } = useAuth(); // We still use useAuth to get user info
+  const { user, loading } = useRequireAuth(); // Use the guard hook
 
   const handleLogout = async () => {
     await signOut();
     router.push('/login');
   };
 
-  // The auth check is now done by the root page.tsx (gatekeeper)
-  // We can still show a loader here if the user object is not yet available.
   if (loading) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
+  }
+  
+  if (!user) {
+    // This part should technically not be reached if useRequireAuth works correctly,
+    // but it's good for safety.
+    return null; 
   }
 
   return (
