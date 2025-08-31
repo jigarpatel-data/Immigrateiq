@@ -3,28 +3,16 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/use-auth';
-import { Loader2 } from 'lucide-react';
 
+// This is a simple redirect page. It sends the user to the main dashboard.
+// The dashboard's layout is responsible for handling authentication.
 export default function RootPage() {
-  const { user, loading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    // We don't want to redirect until the auth state is confirmed
-    if (!loading) {
-      if (user) {
-        router.replace('/dashboard');
-      } else {
-        router.replace('/login');
-      }
-    }
-  }, [user, loading, router]);
+    router.replace('/dashboard');
+  }, [router]);
 
-  // While loading, show a spinner to prevent premature redirects
-  return (
-    <div className="flex h-screen w-full items-center justify-center bg-background">
-      <Loader2 className="h-8 w-8 animate-spin" />
-    </div>
-  );
+  // Return null or a loader while the redirect happens
+  return null;
 }
