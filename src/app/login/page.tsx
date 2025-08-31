@@ -51,15 +51,15 @@ export default function LoginPage() {
     
     if (result.success) {
       toast({ title: "Login Successful" });
-      router.push("/dashboard");
+      // The redirection is handled by the root page or layout based on auth state.
     } else {
       toast({
         title: "Login Failed",
         description: result.error,
         variant: "destructive",
       });
-      setLoading(false);
     }
+    setLoading(false);
   };
 
   const handleGoogleSignIn = async () => {
@@ -68,15 +68,15 @@ export default function LoginPage() {
 
     if (result.success) {
       toast({ title: "Google Sign-In Successful" });
-      router.push("/dashboard");
+      // The redirection is handled by the root page or layout based on auth state.
     } else {
       toast({
         title: "Google Sign-In Failed",
         description: result.error,
         variant: "destructive",
       });
-      setGoogleLoading(false);
     }
+    setGoogleLoading(false);
   };
 
   return (
