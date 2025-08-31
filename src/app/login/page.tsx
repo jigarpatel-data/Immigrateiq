@@ -48,10 +48,11 @@ export default function LoginPage() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
     const result = await signInWithEmail(values.email, values.password);
+    setLoading(false);
     
     if (result.success) {
       toast({ title: "Login Successful" });
-      // The redirection is handled by the root page or layout based on auth state.
+      router.push('/dashboard');
     } else {
       toast({
         title: "Login Failed",
@@ -59,16 +60,16 @@ export default function LoginPage() {
         variant: "destructive",
       });
     }
-    setLoading(false);
   };
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
     const result = await signInWithGoogle();
+    setGoogleLoading(false);
 
     if (result.success) {
       toast({ title: "Google Sign-In Successful" });
-      // The redirection is handled by the root page or layout based on auth state.
+      router.push('/dashboard');
     } else {
       toast({
         title: "Google Sign-In Failed",
@@ -76,7 +77,6 @@ export default function LoginPage() {
         variant: "destructive",
       });
     }
-    setGoogleLoading(false);
   };
 
   return (
