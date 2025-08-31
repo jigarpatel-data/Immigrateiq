@@ -40,6 +40,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { signOut } from "@/lib/auth";
 import React, { useEffect } from "react";
 import { Loader2 } from "lucide-react";
+import { useRequireAuth } from "@/hooks/use-require-auth";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -52,35 +53,19 @@ const navItems = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user, loading } = useRequireAuth();
 
   const handleLogout = async () => {
     await signOut();
     router.push('/login');
   };
 
-  useEffect(() => {
-    if (!loading && !user) {
-      router.push('/login');
-    }
-  }, [loading, user, router]);
-
-  if (loading) {
+  if (loading || !user) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
-  }
-
-  if (!user) {
-    // This case will be handled by the useEffect redirect, but as a fallback
-    // we can show a loader while redirecting.
-     return (
-       <div className="flex h-screen w-full items-center justify-center">
-         <Loader2 className="h-8 w-8 animate-spin" />
-       </div>
-     );
   }
 
   return (
