@@ -14,12 +14,12 @@ const AuthContext = createContext<AuthContextType>({ user: null, loading: true }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // 👈 start as true
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
-      setLoading(false);
+      setLoading(false); // 👈 only set false after Firebase responds
     });
 
     // Cleanup subscription on unmount
