@@ -33,7 +33,6 @@ import {
   LayoutDashboard,
   ListChecks,
   User,
-  LogOut,
   Landmark,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
