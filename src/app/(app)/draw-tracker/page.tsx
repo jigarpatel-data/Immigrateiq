@@ -93,38 +93,40 @@ export default function DrawTrackerPage() {
           </div>
 
           <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Round</TableHead>
-                  <TableHead>Program</TableHead>
-                  <TableHead className="text-right">Invitations Issued</TableHead>
-                  <TableHead className="text-right">CRS Score</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredDraws.length > 0 ? (
-                  filteredDraws.map((draw, index) => (
-                    <TableRow key={index}>
-                      <TableCell className="font-medium">{draw.date}</TableCell>
-                      <TableCell>{draw.round}</TableCell>
-                      <TableCell>
-                        <Badge variant="secondary">{draw.program}</Badge>
-                      </TableCell>
-                      <TableCell className="text-right">{draw.invitations}</TableCell>
-                      <TableCell className="text-right font-bold text-accent">{draw.score}</TableCell>
-                    </TableRow>
-                  ))
-                ) : (
+            <div className="relative w-full overflow-auto">
+              <Table>
+                <TableHeader>
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center h-24">
-                      No draws found.
-                    </TableCell>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Round</TableHead>
+                    <TableHead>Program</TableHead>
+                    <TableHead className="text-right">Invitations Issued</TableHead>
+                    <TableHead className="text-right">CRS Score</TableHead>
                   </TableRow>
-                )}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredDraws.length > 0 ? (
+                    filteredDraws.map((draw, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="font-medium">{draw.date}</TableCell>
+                        <TableCell>{draw.round}</TableCell>
+                        <TableCell>
+                          <Badge variant="secondary">{draw.program}</Badge>
+                        </TableCell>
+                        <TableCell className="text-right">{draw.invitations}</TableCell>
+                        <TableCell className="text-right font-bold text-accent">{draw.score}</TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center h-24">
+                        No draws found.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         </CardContent>
       </Card>

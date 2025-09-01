@@ -71,7 +71,7 @@ export default function ProfilePage() {
     setLoading(false);
   };
   
-  const onPreferencesSubmit = async (values: z.infer<typeof preferencesSchema>>) => {
+  const onPreferencesSubmit = async (values: z.infer<typeof preferencesSchema>) => {
     setLoading(true);
     await new Promise(resolve => setTimeout(resolve, 1000));
     toast({
@@ -90,7 +90,7 @@ export default function ProfilePage() {
         </p>
       </header>
       
-      <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
             <Card>
               <Form {...profileForm}>
