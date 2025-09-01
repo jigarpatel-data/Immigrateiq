@@ -208,29 +208,31 @@ export default function DashboardPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="hidden md:block relative w-full overflow-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Program</TableHead>
-                  <TableHead className="text-right">Invitations</TableHead>
-                  <TableHead className="text-right">CRS Score</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {recentDraws.map((draw) => (
-                  <TableRow key={draw.date}>
-                    <TableCell className="font-medium">{draw.date}</TableCell>
-                    <TableCell>
-                      <Badge variant={draw.program === 'General' ? 'default' : 'secondary'} className={draw.program === 'General' ? 'bg-accent text-accent-foreground' : ''}>{draw.program}</Badge>
-                    </TableCell>
-                    <TableCell className="text-right">{draw.invitations}</TableCell>
-                    <TableCell className="text-right font-semibold">{draw.score}</TableCell>
+          <div className="hidden md:block">
+            <div className="relative w-full overflow-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Program</TableHead>
+                    <TableHead className="text-right">Invitations</TableHead>
+                    <TableHead className="text-right">CRS Score</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {recentDraws.map((draw) => (
+                    <TableRow key={draw.date}>
+                      <TableCell className="font-medium">{draw.date}</TableCell>
+                      <TableCell>
+                        <Badge variant={draw.program === 'General' ? 'default' : 'secondary'} className={draw.program === 'General' ? 'bg-accent text-accent-foreground' : ''}>{draw.program}</Badge>
+                      </TableCell>
+                      <TableCell className="text-right">{draw.invitations}</TableCell>
+                      <TableCell className="text-right font-semibold">{draw.score}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
           <div className="grid gap-4 md:hidden">
             {recentDraws.map((draw) => (
