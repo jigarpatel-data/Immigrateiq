@@ -87,7 +87,7 @@ export default function DashboardPage() {
         </p>
       </header>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
@@ -208,28 +208,30 @@ export default function DashboardPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Program</TableHead>
-                <TableHead className="text-right">Invitations</TableHead>
-                <TableHead className="text-right">CRS Score</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {recentDraws.map((draw) => (
-                <TableRow key={draw.date}>
-                  <TableCell className="font-medium">{draw.date}</TableCell>
-                  <TableCell>
-                    <Badge variant={draw.program === 'General' ? 'default' : 'secondary'} className={draw.program === 'General' ? 'bg-accent text-accent-foreground' : ''}>{draw.program}</Badge>
-                  </TableCell>
-                  <TableCell className="text-right">{draw.invitations}</TableCell>
-                  <TableCell className="text-right font-semibold">{draw.score}</TableCell>
+          <div className="relative w-full overflow-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Program</TableHead>
+                  <TableHead className="text-right">Invitations</TableHead>
+                  <TableHead className="text-right">CRS Score</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {recentDraws.map((draw) => (
+                  <TableRow key={draw.date}>
+                    <TableCell className="font-medium">{draw.date}</TableCell>
+                    <TableCell>
+                      <Badge variant={draw.program === 'General' ? 'default' : 'secondary'} className={draw.program === 'General' ? 'bg-accent text-accent-foreground' : ''}>{draw.program}</Badge>
+                    </TableCell>
+                    <TableCell className="text-right">{draw.invitations}</TableCell>
+                    <TableCell className="text-right font-semibold">{draw.score}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>
