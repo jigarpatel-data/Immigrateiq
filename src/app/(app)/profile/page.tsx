@@ -90,7 +90,7 @@ export default function ProfilePage() {
         </p>
       </header>
       
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">
             <Card>
               <Form {...profileForm}>
