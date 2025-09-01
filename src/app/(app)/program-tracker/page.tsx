@@ -32,6 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CheckCircle, Loader2, XCircle } from "lucide-react";
+import { withAuth } from "@/hooks/use-auth";
 
 const formSchema = z.object({
   age: z.coerce.number().min(18, "Must be at least 18").max(60, "Must be 60 or younger"),
@@ -50,7 +51,7 @@ type EligibilityResult = {
   details: string;
 };
 
-export default function ProgramTrackerPage() {
+function ProgramTrackerPage() {
   const [results, setResults] = useState<EligibilityResult[] | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -209,3 +210,5 @@ export default function ProgramTrackerPage() {
     </div>
   );
 }
+
+export default withAuth(ProgramTrackerPage);

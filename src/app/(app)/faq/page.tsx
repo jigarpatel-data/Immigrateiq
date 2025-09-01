@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo } from 'react';
@@ -9,6 +10,7 @@ import {
 } from "@/components/ui/accordion";
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
+import { withAuth } from '@/hooks/use-auth';
 
 const faqData = [
   {
@@ -37,7 +39,7 @@ const faqData = [
   },
 ];
 
-export default function FaqPage() {
+function FaqPage() {
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredFaqs = useMemo(() => {
@@ -90,3 +92,5 @@ export default function FaqPage() {
     </div>
   );
 }
+
+export default withAuth(FaqPage);

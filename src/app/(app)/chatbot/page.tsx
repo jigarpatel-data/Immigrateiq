@@ -1,6 +1,8 @@
-import { ChatInterface } from "@/components/chat-interface";
 
-export default function ChatbotPage() {
+import { ChatInterface } from "@/components/chat-interface";
+import { withAuth } from "@/hooks/use-auth";
+
+function ChatbotPage() {
   return (
     <div className="h-[calc(100vh-theme(spacing.28))] flex flex-col">
        <header className="mb-6">
@@ -13,3 +15,5 @@ export default function ChatbotPage() {
     </div>
   );
 }
+
+export default withAuth(ChatbotPage);

@@ -26,8 +26,9 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
+import { withAuth, useAuth } from "@/hooks/use-auth";
 
 const profileSchema = z.object({
   name: z.string().min(1, "Name is required."),
@@ -40,17 +41,27 @@ const preferencesSchema = z.object({
   pushNotifications: z.boolean().default(false),
 });
 
-export default function ProfilePage() {
+function ProfilePage() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
   
   const profileForm = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: "Guest User",
-      email: "guest@example.com",
+      name: "",
+      email: "",
     },
   });
+
+  useEffect(() => {
+    if (user) {
+      profileForm.reset({
+        name: user.displayName ?? '',
+        email: user.email ?? '',
+      });
+    }
+  }, [user, profileForm]);
 
   const preferencesForm = useForm<z.infer<typeof preferencesSchema>>({
     resolver: zodResolver(preferencesSchema),
@@ -80,6 +91,10 @@ export default function ProfilePage() {
     });
     setLoading(false);
   };
+
+  if (!user) {
+    return null; // Or a loading spinner
+  }
 
   return (
     <div className="space-y-6">
@@ -215,11 +230,11 @@ export default function ProfilePage() {
               <Card className="text-center">
                 <CardHeader>
                   <Avatar className="mx-auto h-24 w-24 mb-4">
-                    <AvatarImage src="https://picsum.photos/100" data-ai-hint="profile avatar" />
-                    <AvatarFallback>G</AvatarFallback>
+                    <AvatarImage src={user.photoURL ?? `https://i.pravatar.cc/150?u=${user.uid}`} data-ai-hint="profile avatar" />
+                    <AvatarFallback>{user.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
                   </Avatar>
-                  <CardTitle>Guest User</CardTitle>
-                  <CardDescription>guest@example.com</CardDescription>
+                  <CardTitle>{user.displayName ?? "User"}</CardTitle>
+                  <CardDescription>{user.email}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <Button>Change Avatar</Button>
@@ -248,3 +263,5 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+export default withAuth(ProfilePage);

@@ -26,6 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from '@/components/ui/badge';
+import { withAuth } from '@/hooks/use-auth';
 
 const allDraws = [
   { date: "2024-07-19", round: "297", program: "General", invitations: "4,500", score: "522" },
@@ -44,7 +45,7 @@ const allDraws = [
 
 const programOptions = ["All", "General", "Provincial Nominee Program", "Canadian Experience Class", "French language proficiency", "STEM occupations", "Transport occupations"];
 
-export default function DrawTrackerPage() {
+function DrawTrackerPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [programFilter, setProgramFilter] = useState('All');
 
@@ -160,3 +161,5 @@ export default function DrawTrackerPage() {
     </div>
   );
 }
+
+export default withAuth(DrawTrackerPage);
