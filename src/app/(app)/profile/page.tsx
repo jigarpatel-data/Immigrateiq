@@ -91,7 +91,7 @@ export default function ProfilePage() {
       </header>
       
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <div className="md:col-span-1 lg:col-span-2">
+        <div className="lg:col-span-2 space-y-6">
             <Card>
               <Form {...profileForm}>
                 <form onSubmit={profileForm.handleSubmit(onProfileSubmit)}>
@@ -138,7 +138,7 @@ export default function ProfilePage() {
               </Form>
             </Card>
 
-            <Card className="mt-6">
+            <Card>
               <Form {...preferencesForm}>
                 <form onSubmit={preferencesForm.handleSubmit(onPreferencesSubmit)}>
                   <CardHeader>
@@ -211,7 +211,7 @@ export default function ProfilePage() {
               </Form>
             </Card>
         </div>
-        <div className="space-y-6 md:col-span-1 lg:col-span-1">
+        <div className="space-y-6">
               <Card className="text-center">
                 <CardHeader>
                   <Avatar className="mx-auto h-24 w-24 mb-4">
