@@ -92,7 +92,7 @@ export default function DrawTrackerPage() {
             </Select>
           </div>
 
-          <div className="rounded-md border">
+          <div className="hidden md:block rounded-md border">
             <div className="relative w-full overflow-auto">
               <Table>
                 <TableHeader>
@@ -128,6 +128,33 @@ export default function DrawTrackerPage() {
               </Table>
             </div>
           </div>
+          
+          <div className="grid gap-4 md:hidden">
+             {filteredDraws.length > 0 ? (
+                filteredDraws.map((draw, index) => (
+                  <div key={index} className="rounded-lg border p-4 space-y-3">
+                     <div className="flex justify-between items-center">
+                      <span className="font-semibold text-sm">{draw.date} (Round {draw.round})</span>
+                       <Badge variant="secondary">{draw.program}</Badge>
+                    </div>
+                     <div className="flex justify-between items-baseline">
+                      <span className="text-muted-foreground text-sm">Invitations:</span>
+                      <span>{draw.invitations}</span>
+                    </div>
+                    <div className="flex justify-between items-baseline">
+                      <span className="text-muted-foreground text-sm">CRS Score:</span>
+                      <span className="font-bold text-lg text-accent">{draw.score}</span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-12 text-muted-foreground">
+                  <p className="text-lg font-semibold">No draws found</p>
+                  <p>Try adjusting your filters.</p>
+                </div>
+              )}
+          </div>
+          
         </CardContent>
       </Card>
     </div>

@@ -208,7 +208,7 @@ export default function DashboardPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="relative w-full overflow-auto">
+          <div className="hidden md:block relative w-full overflow-auto">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -231,6 +231,24 @@ export default function DashboardPage() {
                 ))}
               </TableBody>
             </Table>
+          </div>
+          <div className="grid gap-4 md:hidden">
+            {recentDraws.map((draw) => (
+              <div key={draw.date} className="rounded-lg border p-4 space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold">{draw.date}</span>
+                  <Badge variant={draw.program === 'General' ? 'default' : 'secondary'} className={draw.program === 'General' ? 'bg-accent text-accent-foreground' : ''}>{draw.program}</Badge>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Invitations:</span>
+                  <span>{draw.invitations}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">CRS Score:</span>
+                  <span className="font-bold text-accent">{draw.score}</span>
+                </div>
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>
