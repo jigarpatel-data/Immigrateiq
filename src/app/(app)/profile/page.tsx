@@ -215,7 +215,7 @@ export default function ProfilePage() {
               <Card className="text-center">
                 <CardHeader>
                   <Avatar className="mx-auto h-24 w-24 mb-4">
-                    <AvatarImage src="https://picsum.photos/100" />
+                    <AvatarImage src="https://picsum.photos/100" data-ai-hint="profile avatar" />
                     <AvatarFallback>G</AvatarFallback>
                   </Avatar>
                   <CardTitle>Guest User</CardTitle>

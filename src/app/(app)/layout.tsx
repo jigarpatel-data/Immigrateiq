@@ -85,7 +85,7 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
           </SidebarFooter>
       </Sidebar>
       <SidebarInset className="flex flex-col min-h-screen">
-        <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6 md:hidden">
+        <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6 lg:hidden">
             <div className="flex items-center gap-2">
                 <SidebarTrigger />
                 <Link href="/dashboard" className="flex items-center gap-2">
