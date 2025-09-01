@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo } from 'react';
@@ -77,7 +78,7 @@ export default function DrawTrackerPage() {
               placeholder="Search by round or score..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="max-w-xs"
+              className="sm:max-w-xs"
             />
             <Select value={programFilter} onValueChange={setProgramFilter}>
               <SelectTrigger className="w-full sm:w-[280px]">

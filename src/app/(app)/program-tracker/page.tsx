@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -103,7 +104,7 @@ export default function ProgramTrackerPage() {
         </p>
       </header>
 
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
           <Card>
             <CardHeader>
@@ -147,7 +148,7 @@ export default function ProgramTrackerPage() {
                   )} />
                   <div>
                     <h3 className="text-md font-medium mb-4">IELTS Scores</h3>
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
                       <FormField control={form.control} name="ielts_listening" render={({ field }) => (
                           <FormItem><FormLabel>Listening</FormLabel><FormControl><Input type="number" step="0.5" {...field} /></FormControl><FormMessage /></FormItem>
                       )} />

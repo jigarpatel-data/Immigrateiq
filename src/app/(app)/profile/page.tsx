@@ -26,7 +26,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Loader2 } from "lucide-react";
 
 const profileSchema = z.object({
@@ -71,7 +71,7 @@ export default function ProfilePage() {
     setLoading(false);
   };
   
-  const onPreferencesSubmit = async (values: z.infer<typeof preferencesSchema>) => {
+  const onPreferencesSubmit = async (values: z.infer<typeof preferencesSchema>>) => {
     setLoading(true);
     await new Promise(resolve => setTimeout(resolve, 1000));
     toast({
@@ -90,8 +90,8 @@ export default function ProfilePage() {
         </p>
       </header>
       
-      <div className="grid gap-6 md:grid-cols-3">
-        <div className="md:col-span-2">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="md:col-span-1 lg:col-span-2">
             <Card>
               <Form {...profileForm}>
                 <form onSubmit={profileForm.handleSubmit(onProfileSubmit)}>
@@ -211,7 +211,7 @@ export default function ProfilePage() {
               </Form>
             </Card>
         </div>
-        <div className="space-y-6">
+        <div className="space-y-6 md:col-span-1 lg:col-span-1">
               <Card className="text-center">
                 <CardHeader>
                   <Avatar className="mx-auto h-24 w-24 mb-4">
