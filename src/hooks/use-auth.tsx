@@ -18,9 +18,7 @@ const publicPaths = ["/auth", "/dashboard"];
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const pathname = usePathname();
-  const router = useRouter();
-
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
@@ -29,13 +27,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     return () => unsubscribe();
   }, []);
-
-  useEffect(() => {
-    if (!loading && !user && !publicPaths.includes(pathname)) {
-      router.push('/auth');
-    }
-  }, [user, loading, pathname, router]);
-
 
   return (
     <AuthContext.Provider value={{ user, loading }}>
@@ -64,18 +55,22 @@ export function withAuth<P extends object>(Component: React.ComponentType<P>) {
       }
     }, [user, loading, router, pathname]);
 
-    if (loading || (!user && !publicPaths.includes(pathname))) {
-      return  <div className="flex h-screen w-full items-center justify-center bg-background"></div>;
+    if (loading) {
+       return  <div className="flex h-screen w-full items-center justify-center bg-background"></div>;
     }
 
     if (!user && publicPaths.includes(pathname)) {
-        return <Component {...props} />;
+      return <Component {...props} />;
+    }
+    
+    if (user) {
+      return <Component {...props} />;
     }
 
-    if(user) {
-        return <Component {...props} />;
+    if (!user && !publicPaths.includes(pathname)) {
+      return  <div className="flex h-screen w-full items-center justify-center bg-background"></div>;
     }
 
-    return <div className="flex h-screen w-full items-center justify-center bg-background"></div>;
+    return <Component {...props} />;
   };
 }

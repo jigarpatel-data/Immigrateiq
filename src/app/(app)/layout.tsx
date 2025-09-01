@@ -28,7 +28,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth, withAuth } from "@/hooks/use-auth";
 import { handleSignOut } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 
@@ -40,7 +40,7 @@ const navItems = [
   { href: "/faq", icon: HelpCircle, label: "FAQ" },
 ];
 
-function AppLayoutContent({ children }: { children: React.ReactNode }) {
+function AppLayoutComponent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { setOpenMobile } = useSidebar();
   const { user } = useAuth();
@@ -58,7 +58,7 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
   const visibleNavItems = user ? navItems : navItems.slice(0,1);
 
   return (
-    <>
+    <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
           <div className="flex items-center gap-2 p-2">
@@ -136,15 +136,13 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
         </main>
         <Footer />
       </SidebarInset>
-    </>
-  );
-}
-
-
-export default function AppLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <SidebarProvider>
-      <AppLayoutContent>{children}</AppLayoutContent>
     </SidebarProvider>
   );
 }
+
+
+function AppLayout({ children }: { children: React.ReactNode }) {
+  return withAuth(() => <AppLayoutComponent>{children}</AppLayoutComponent>)({children});
+}
+
+export default AppLayout;
