@@ -144,7 +144,7 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>CRS Score Trend</CardTitle>
@@ -178,7 +178,7 @@ export default function DashboardPage() {
           <CardContent className="flex items-center justify-center">
              <ChartContainer
               config={eligibilityConfig}
-              className="mx-auto aspect-square h-64"
+              className="mx-auto aspect-square h-full max-h-[250px]"
             >
               <PieChart>
                 <ChartTooltip
