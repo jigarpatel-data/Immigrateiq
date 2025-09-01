@@ -21,6 +21,7 @@ import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { handleSignIn, handleSignUp, handleGoogleSignIn } from "@/lib/auth";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const signUpSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -150,6 +151,11 @@ export function AuthForm() {
              {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CustomGoogleIcon className="mr-2 h-5 w-5" />}
              Google
           </Button>
+          <div className="mt-4 text-center text-sm">
+            <Link href="/dashboard" className="underline text-muted-foreground hover:text-primary">
+              Continue as Guest
+            </Link>
+          </div>
         </div>
       </TabsContent>
       <TabsContent value="signup">
@@ -200,6 +206,11 @@ export function AuthForm() {
              {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CustomGoogleIcon className="mr-2 h-5 w-5" />}
              Google
           </Button>
+          <div className="mt-4 text-center text-sm">
+            <Link href="/dashboard" className="underline text-muted-foreground hover:text-primary">
+              Continue as Guest
+            </Link>
+          </div>
         </div>
       </TabsContent>
     </Tabs>
