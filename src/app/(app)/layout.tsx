@@ -16,6 +16,7 @@ import {
   SidebarFooter,
   SidebarInset,
   SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {
   Bot,
@@ -35,11 +36,16 @@ const navItems = [
   { href: "/faq", icon: HelpCircle, label: "FAQ" },
 ];
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+function AppLayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { setOpenMobile } = useSidebar();
+
+  const handleLinkClick = () => {
+    setOpenMobile(false);
+  };
 
   return (
-    <SidebarProvider>
+    <>
       <Sidebar>
         <SidebarHeader>
           <div className="flex items-center gap-2 p-2">
@@ -51,7 +57,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <SidebarMenu>
             {navItems.map((item) => (
               <SidebarMenuItem key={item.href}>
-                <Link href={item.href}>
+                <Link href={item.href} onClick={handleLinkClick}>
                   <SidebarMenuButton
                     isActive={pathname.startsWith(item.href)}
                     tooltip={{ children: item.label }}
@@ -65,7 +71,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
-            <Link href="/profile">
+            <Link href="/profile" onClick={handleLinkClick}>
               <div className="flex items-center gap-2 w-full p-2 hover:bg-sidebar-accent rounded-md">
                   <Avatar className="h-8 w-8">
                   <AvatarImage src="https://picsum.photos/100" alt="Guest" data-ai-hint="profile avatar" />
@@ -99,6 +105,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </main>
         <Footer />
       </SidebarInset>
+    </>
+  );
+}
+
+
+export default function AppLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <SidebarProvider>
+      <AppLayoutContent>{children}</AppLayoutContent>
     </SidebarProvider>
   );
 }
