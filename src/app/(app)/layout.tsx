@@ -41,15 +41,9 @@ const navItems = [
 ];
 
 function AppLayoutComponent({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const { setOpenMobile } = useSidebar();
   const { user } = useAuth();
   const router = useRouter();
 
-  const handleLinkClick = () => {
-    setOpenMobile(false);
-  };
-  
   const onSignOut = async () => {
     await handleSignOut();
     router.push('/auth');
@@ -57,85 +51,101 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
 
   const visibleNavItems = user ? navItems : navItems.slice(0,1);
 
-  return (
-    <SidebarProvider>
-      <Sidebar>
-        <SidebarHeader>
-          <div className="flex items-center gap-2 p-2">
-            <Link href="/dashboard" className="flex items-center gap-2">
-              <Landmark className="w-8 h-8 text-accent" />
-              <span className="text-lg font-semibold">TheCanIndian</span>
-            </Link>
-          </div>
-        </SidebarHeader>
-        <SidebarContent>
-          <SidebarMenu>
-            {visibleNavItems.map((item) => (
-              <SidebarMenuItem key={item.href}>
-                <Link href={item.href} onClick={handleLinkClick}>
-                  <SidebarMenuButton
-                    isActive={pathname.startsWith(item.href)}
-                    tooltip={{ children: item.label }}
-                  >
-                    <item.icon />
-                    <span>{item.label}</span>
-                  </SidebarMenuButton>
-                </Link>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarContent>
-        <SidebarFooter>
-            {user ? (
-              <div className="w-full flex flex-col gap-2 p-2">
-                 <Link href="/profile" onClick={handleLinkClick} className="w-full">
-                    <div className="flex items-center gap-2 w-full p-2 hover:bg-sidebar-accent rounded-md">
-                        <Avatar className="h-8 w-8">
+  // This inner component is necessary to use the useSidebar hook
+  const SidebarLayout = ({ children: mainContent }: { children: React.ReactNode }) => {
+    const pathname = usePathname();
+    const { setOpenMobile } = useSidebar();
+    
+    const handleLinkClick = () => {
+      setOpenMobile(false);
+    };
+
+    return (
+      <>
+        <Sidebar>
+          <SidebarHeader>
+            <div className="flex items-center gap-2 p-2">
+              <Link href="/dashboard" className="flex items-center gap-2">
+                <Landmark className="w-8 h-8 text-accent" />
+                <span className="text-lg font-semibold">TheCanIndian</span>
+              </Link>
+            </div>
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarMenu>
+              {visibleNavItems.map((item) => (
+                <SidebarMenuItem key={item.href}>
+                  <Link href={item.href} onClick={handleLinkClick}>
+                    <SidebarMenuButton
+                      isActive={pathname.startsWith(item.href)}
+                      tooltip={{ children: item.label }}
+                    >
+                      <item.icon />
+                      <span>{item.label}</span>
+                    </SidebarMenuButton>
+                  </Link>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarContent>
+          <SidebarFooter>
+              {user ? (
+                <div className="w-full flex flex-col gap-2 p-2">
+                   <Link href="/profile" onClick={handleLinkClick} className="w-full">
+                      <div className="flex items-center gap-2 w-full p-2 hover:bg-sidebar-accent rounded-md">
+                          <Avatar className="h-8 w-8">
+                          <AvatarImage src={user.photoURL ?? `https://i.pravatar.cc/150?u=${user.uid}`} alt={user.displayName ?? "User"} data-ai-hint="profile avatar" />
+                          <AvatarFallback>{user.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
+                          </Avatar>
+                          <div className="text-left group-data-[collapsible=icon]:hidden">
+                          <p className="font-medium text-sm truncate">{user.displayName ?? user.email}</p>
+                          </div>
+                      </div>
+                    </Link>
+                    <Button variant="ghost" onClick={onSignOut} className="w-full justify-start group-data-[collapsible=icon]:justify-center">
+                      <LogOut className="h-4 w-4 mr-2 group-data-[collapsible=icon]:mr-0"/>
+                      <span className="group-data-[collapsible=icon]:hidden">Logout</span>
+                    </Button>
+                </div>
+              ) : (
+                 <div className="w-full flex flex-col gap-2 p-2">
+                  <Link href="/auth">
+                    <Button className="w-full">Sign In</Button>
+                  </Link>
+                </div>
+              )}
+            </SidebarFooter>
+        </Sidebar>
+        <SidebarInset className="flex flex-col min-h-screen">
+          <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6 lg:hidden">
+              <div className="flex items-center gap-2">
+                  <SidebarTrigger />
+                  <Link href="/dashboard" className="flex items-center gap-2">
+                      <Landmark className="w-6 h-6 text-accent" />
+                      <h1 className="text-lg font-semibold">TheCanIndian</h1>
+                  </Link>
+              </div>
+               {user && (
+                  <Link href="/profile">
+                    <Avatar className="h-8 w-8">
                         <AvatarImage src={user.photoURL ?? `https://i.pravatar.cc/150?u=${user.uid}`} alt={user.displayName ?? "User"} data-ai-hint="profile avatar" />
                         <AvatarFallback>{user.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
-                        </Avatar>
-                        <div className="text-left group-data-[collapsible=icon]:hidden">
-                        <p className="font-medium text-sm truncate">{user.displayName ?? user.email}</p>
-                        </div>
-                    </div>
+                    </Avatar>
                   </Link>
-                  <Button variant="ghost" onClick={onSignOut} className="w-full justify-start group-data-[collapsible=icon]:justify-center">
-                    <LogOut className="h-4 w-4 mr-2 group-data-[collapsible=icon]:mr-0"/>
-                    <span className="group-data-[collapsible=icon]:hidden">Logout</span>
-                  </Button>
-              </div>
-            ) : (
-               <div className="w-full flex flex-col gap-2 p-2">
-                <Link href="/auth">
-                  <Button className="w-full">Sign In</Button>
-                </Link>
-              </div>
-            )}
-          </SidebarFooter>
-      </Sidebar>
-      <SidebarInset className="flex flex-col min-h-screen">
-        <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6 lg:hidden">
-            <div className="flex items-center gap-2">
-                <SidebarTrigger />
-                <Link href="/dashboard" className="flex items-center gap-2">
-                    <Landmark className="w-6 h-6 text-accent" />
-                    <h1 className="text-lg font-semibold">TheCanIndian</h1>
-                </Link>
-            </div>
-             {user && (
-                <Link href="/profile">
-                  <Avatar className="h-8 w-8">
-                      <AvatarImage src={user.photoURL ?? `https://i.pravatar.cc/150?u=${user.uid}`} alt={user.displayName ?? "User"} data-ai-hint="profile avatar" />
-                      <AvatarFallback>{user.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
-                  </Avatar>
-                </Link>
-             )}
-        </header>
-        <main className="flex-1 overflow-auto p-4 sm:p-6">
-          {children}
-        </main>
-        <Footer />
-      </SidebarInset>
+               )}
+          </header>
+          <main className="flex-1 overflow-auto p-4 sm:p-6">
+            {mainContent}
+          </main>
+          <Footer />
+        </SidebarInset>
+      </>
+    );
+  };
+
+  return (
+    <SidebarProvider>
+      <SidebarLayout>{children}</SidebarLayout>
     </SidebarProvider>
   );
 }
