@@ -33,7 +33,7 @@ import { handleSignOut } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
-  { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard", public: true },
+  { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/draw-tracker", icon: GanttChart, label: "Draw Tracker" },
   { href: "/program-tracker", icon: ListChecks, label: "Program Tracker" },
   { href: "/chatbot", icon: Bot, label: "Chatbot" },
@@ -55,7 +55,7 @@ function AppLayoutContent({ children }: { children: React.ReactNode }) {
     router.push('/auth');
   }
 
-  const visibleNavItems = navItems.filter(item => item.public || user);
+  const visibleNavItems = user ? navItems : navItems.slice(0,1);
 
   return (
     <>

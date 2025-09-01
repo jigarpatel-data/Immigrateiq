@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider value={{ user, loading }}>
-      {loading && !publicPaths.includes(pathname) ? <div className="flex h-screen w-full items-center justify-center bg-background"></div> : children}
+      {children}
     </AuthContext.Provider>
   );
 };
@@ -68,6 +68,14 @@ export function withAuth<P extends object>(Component: React.ComponentType<P>) {
       return  <div className="flex h-screen w-full items-center justify-center bg-background"></div>;
     }
 
-    return <Component {...props} />;
+    if (!user && publicPaths.includes(pathname)) {
+        return <Component {...props} />;
+    }
+
+    if(user) {
+        return <Component {...props} />;
+    }
+
+    return <div className="flex h-screen w-full items-center justify-center bg-background"></div>;
   };
 }
