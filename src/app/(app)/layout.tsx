@@ -28,7 +28,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
-import { useAuth, withAuth } from "@/hooks/use-auth";
+import { useAuth } from "@/hooks/use-auth";
 import { handleSignOut } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 
@@ -150,9 +150,4 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
   );
 }
 
-
-function AppLayout({ children }: { children: React.ReactNode }) {
-  return withAuth(() => <AppLayoutComponent>{children}</AppLayoutComponent>)({children});
-}
-
-export default AppLayout;
+export default AppLayoutComponent;
