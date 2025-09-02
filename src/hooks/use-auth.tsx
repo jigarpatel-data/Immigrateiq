@@ -2,9 +2,9 @@
 "use client";
 
 import { useState, useEffect, createContext, useContext, ReactNode } from "react";
-import { onAuthStateChanged, User } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import type { User } from "firebase/auth";
 import { usePathname, useRouter } from "next/navigation";
+import { initAuthListener } from "@/lib/auth";
 
 type AuthContextType = {
   user: User | null;
@@ -14,6 +14,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({ user: null, loading: true });
 
 const protectedPaths = [
+    "/dashboard",
     "/draw-tracker",
     "/program-tracker",
     "/chatbot",
@@ -21,7 +22,7 @@ const protectedPaths = [
     "/profile",
 ];
 
-const publicPaths = ["/auth", "/dashboard"];
+const publicPaths = ["/auth"];
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -30,11 +31,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = initAuthListener((user) => {
       setUser(user);
       setLoading(false);
     });
-
     return () => unsubscribe();
   }, []);
 
@@ -42,17 +42,30 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (loading) return;
 
     const isProtected = protectedPaths.some(path => pathname.startsWith(path));
+    const isPublic = publicPaths.includes(pathname);
 
     if (!user && isProtected) {
       router.replace('/auth');
     }
-
-    if (user && pathname === '/auth') {
+    
+    if (user && isPublic) {
         router.replace('/draw-tracker');
     }
 
   }, [user, loading, router, pathname]);
+
+  // Don't render anything until auth state is determined
+  // to prevent flicker or showing wrong UI
+  if (loading) {
+    return <div className="flex h-screen w-full items-center justify-center bg-background"></div>;
+  }
   
+  const isProtected = protectedPaths.some(path => pathname.startsWith(path));
+  if (!user && isProtected) {
+    // While redirecting, show a loader
+    return <div className="flex h-screen w-full items-center justify-center bg-background"></div>;
+  }
+
   return (
     <AuthContext.Provider value={{ user, loading }}>
       {children}
@@ -70,29 +83,12 @@ export const useAuth = () => {
 
 export function withAuth<P extends object>(Component: React.ComponentType<P>) {
   return function WithAuth(props: P) {
-    const { user, loading } = useAuth();
-    const router = useRouter();
-    const pathname = usePathname();
-
-    useEffect(() => {
-        if (loading) return;
-
-        const isProtected = protectedPaths.some(path => pathname.startsWith(path));
-
-        if (!user && isProtected) {
-            router.replace('/auth');
-        }
-    }, [user, loading, router, pathname]);
-
+    const { loading } = useAuth();
+    
     if (loading) {
        return  <div className="flex h-screen w-full items-center justify-center bg-background"></div>;
     }
 
-    const isProtected = protectedPaths.some(path => pathname.startsWith(path));
-    if(isProtected && !user) {
-        return <div className="flex h-screen w-full items-center justify-center bg-background"></div>;
-    }
-    
     return <Component {...props} />;
   };
 }
