@@ -90,9 +90,8 @@ export default {
           },
         },
         'typing': {
-          '0%': { width: '0' },
-          '40%': { width: '100%' },
-          '90%, 100%': { width: '100%' },
+          'from': { width: '0' },
+          'to': { width: '100%' },
         },
         'blink-caret': {
           'from, to': { borderColor: 'transparent' },
@@ -106,11 +105,11 @@ export default {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'typing-container': 'typing 8s steps(40, end) infinite, blink-caret .75s step-end infinite',
+        'typing-container': 'typing 8s steps(40, end), blink-caret .75s step-end',
         'fade-in-up': 'fade-in-up 0.5s ease-out forwards',
-        'fade-in-up-1': 'fade-in-up 0.5s ease-out 3s forwards infinite',
-        'fade-in-up-2': 'fade-in-up 0.5s ease-out 3.5s forwards infinite',
-        'fade-in-up-3': 'fade-in-up 0.5s ease-out 4s forwards infinite',
+        'fade-in-up-1': 'fade-in-up 0.5s ease-out 3s forwards',
+        'fade-in-up-2': 'fade-in-up 0.5s ease-out 3.5s forwards',
+        'fade-in-up-3': 'fade-in-up 0.5s ease-out 4s forwards',
       },
     },
   },
