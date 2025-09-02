@@ -21,10 +21,14 @@ export default function AuthPage() {
         </div>
       </div>
       <div className="hidden lg:flex flex-1 relative bg-muted items-center justify-center p-8">
-        <div className="max-w-md text-center animate-fade-in-up">
-            <h1 className="text-4xl font-bold tracking-tight text-foreground">Your Canadian Dream Starts Here</h1>
-            <p className="mt-4 text-lg text-muted-foreground">
-                Track programs, track all draws from east coast to west, check your score, and get AI-powered guidance for your immigration journey.
+        <div className="max-w-md text-left">
+          <div className="inline-block">
+            <h1 className="text-4xl font-bold tracking-tight text-foreground animate-typing overflow-hidden whitespace-nowrap border-r-4 border-r-accent pr-4">
+              Start Your Canadian Dream Today
+            </h1>
+          </div>
+            <p className="mt-4 text-lg text-muted-foreground animate-fade-in-up animation-delay-3000">
+                Track immigration programs and draws from coast to coast, check your eligibility score, and get personalized AI-powered guidance for every step of your journey.
             </p>
         </div>
       </div>
