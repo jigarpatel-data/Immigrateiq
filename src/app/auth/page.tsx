@@ -2,7 +2,6 @@
 import { AuthForm } from "@/components/auth-form";
 import { Landmark } from "lucide-react";
 import Link from 'next/link';
-import Image from 'next/image';
 
 export default function AuthPage() {
   return (
@@ -21,18 +20,12 @@ export default function AuthPage() {
           <AuthForm />
         </div>
       </div>
-      <div className="hidden lg:flex flex-1 relative">
-        <Image
-          src="https://picsum.photos/1200/800"
-          alt="Immigration journey"
-          fill
-          className="object-cover"
-          data-ai-hint="canada city skyline"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
-         <div className="absolute bottom-8 left-8 right-8 text-background p-4 rounded-lg bg-black/50">
-          <h2 className="text-2xl font-bold text-white">Your Canadian Dream Starts Here</h2>
-          <p className="text-white/80 mt-2">Track programs, check your score, and get AI-powered guidance for your immigration journey.</p>
+      <div className="hidden lg:flex flex-1 relative bg-muted items-center justify-center p-8">
+        <div className="max-w-md text-center animate-fade-in-up">
+            <h1 className="text-4xl font-bold tracking-tight text-foreground">Your Canadian Dream Starts Here</h1>
+            <p className="mt-4 text-lg text-muted-foreground">
+                Track programs, track all draws from east coast to west, check your score, and get AI-powered guidance for your immigration journey.
+            </p>
         </div>
       </div>
     </div>
