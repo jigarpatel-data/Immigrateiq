@@ -14,7 +14,6 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({ user: null, loading: true });
 
 const protectedPaths = [
-    "/dashboard",
     "/draw-tracker",
     "/program-tracker",
     "/chatbot",
@@ -22,7 +21,7 @@ const protectedPaths = [
     "/profile",
 ];
 
-const publicPaths = ["/auth"];
+const publicPaths = ["/auth", "/dashboard"];
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -41,27 +40,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (loading) return;
 
-    const isProtected = protectedPaths.some(path => pathname.startsWith(path));
-    const isPublic = publicPaths.includes(pathname);
-
-    if (!user && isProtected) {
+    const pathIsProtected = protectedPaths.some(path => pathname.startsWith(path));
+    
+    if (!user && pathIsProtected) {
       router.replace('/auth');
     }
     
-    if (user && isPublic) {
-        router.replace('/draw-tracker');
+    if (user && pathname.startsWith('/auth')) {
+        router.replace('/dashboard');
     }
 
   }, [user, loading, router, pathname]);
 
-  // Don't render anything until auth state is determined
-  // to prevent flicker or showing wrong UI
   if (loading) {
     return <div className="flex h-screen w-full items-center justify-center bg-background"></div>;
   }
   
-  const isProtected = protectedPaths.some(path => pathname.startsWith(path));
-  if (!user && isProtected) {
+  const pathIsProtected = protectedPaths.some(path => pathname.startsWith(path));
+  if (!user && pathIsProtected) {
     // While redirecting, show a loader
     return <div className="flex h-screen w-full items-center justify-center bg-background"></div>;
   }

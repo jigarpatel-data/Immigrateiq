@@ -58,7 +58,7 @@ export function AuthForm() {
         variant: "destructive",
       });
     } else {
-      router.push("/draw-tracker");
+      router.push("/dashboard");
     }
     setLoading(false);
   };
@@ -87,7 +87,7 @@ export function AuthForm() {
           variant: "destructive",
         });
       } else {
-        router.push("/draw-tracker");
+        router.push("/dashboard");
       }
       setLoading(false);
     }
@@ -104,7 +104,7 @@ export function AuthForm() {
         });
         setLoading(false);
     } else {
-      router.push("/draw-tracker");
+      router.push("/dashboard");
     }
   };
 
