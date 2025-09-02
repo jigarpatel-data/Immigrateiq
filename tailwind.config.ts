@@ -112,7 +112,7 @@ export default {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'fade-in-up': 'fade-in-up 0.5s ease-out forwards',
-        'typing': 'typing 2.5s steps(40, end), blink-caret .75s step-end infinite',
+        'typing': 'typing 2.5s steps(40, end) infinite, blink-caret .75s step-end infinite',
       },
     },
   },
