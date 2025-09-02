@@ -1,4 +1,6 @@
 
+"use client";
+
 import { ChatInterface } from "@/components/chat-interface";
 import { withAuth } from "@/hooks/use-auth";
 
