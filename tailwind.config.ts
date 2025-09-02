@@ -89,30 +89,28 @@ export default {
             height: '0',
           },
         },
-        'fade-in-up': {
-          '0%': {
-            opacity: '0',
-            transform: 'translateY(10px)'
-          },
-          '100%': {
-            opacity: '1',
-            transform: 'translateY(0)'
-          },
-        },
         'typing': {
-          "from": { width: "0" },
-          "to": { width: "100%" }
+          '0%': { width: '0' },
+          '40%': { width: '100%' },
+          '90%, 100%': { width: '100%' },
         },
         'blink-caret': {
-          "from, to": { borderColor: "transparent" },
-          "50%": { borderColor: "hsl(var(--accent))" },
-        }
+          'from, to': { borderColor: 'transparent' },
+          '50%': { borderColor: 'hsl(var(--accent))' },
+        },
+        'fade-in-up': {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        'typing-container': 'typing 8s steps(40, end) infinite, blink-caret .75s step-end infinite',
         'fade-in-up': 'fade-in-up 0.5s ease-out forwards',
-        'typing': 'typing 2.5s steps(40, end) infinite, blink-caret .75s step-end infinite',
+        'fade-in-up-1': 'fade-in-up 0.5s ease-out 3s forwards infinite',
+        'fade-in-up-2': 'fade-in-up 0.5s ease-out 3.5s forwards infinite',
+        'fade-in-up-3': 'fade-in-up 0.5s ease-out 4s forwards infinite',
       },
     },
   },
