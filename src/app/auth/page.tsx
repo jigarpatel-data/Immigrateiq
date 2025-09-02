@@ -34,7 +34,7 @@ export default function AuthPage() {
               </li>
               <li className="flex items-start gap-3 opacity-0 animate-fade-in-up animation-delay-3500">
                 <CheckCircle className="h-6 w-6 mt-1 text-accent shrink-0" />
-                <span>Check your eligibility score</span>
+                <span>Check & Calculate your eligibility score</span>
               </li>
               <li className="flex items-start gap-3 opacity-0 animate-fade-in-up animation-delay-4000">
                 <CheckCircle className="h-6 w-6 mt-1 text-accent shrink-0" />
@@ -46,5 +46,6 @@ export default function AuthPage() {
     </div>
   );
 }
+
 
 
