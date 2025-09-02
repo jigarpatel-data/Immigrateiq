@@ -58,7 +58,7 @@ export function AuthForm() {
         variant: "destructive",
       });
     } else {
-      router.push("/dashboard");
+      router.push("/draw-tracker");
     }
     setLoading(false);
   };
@@ -72,14 +72,25 @@ export function AuthForm() {
         description: error,
         variant: "destructive",
       });
+      setLoading(false);
     } else {
       toast({
         title: "Success!",
         description: "Your account has been created. Please log in.",
       });
-      // You could also redirect them to login tab here
+       // After successful sign-up, sign them in automatically
+      const { error: signInError } = await handleSignIn(values.email, values.password);
+      if (signInError) {
+         toast({
+          title: "Login Failed",
+          description: signInError,
+          variant: "destructive",
+        });
+      } else {
+        router.push("/draw-tracker");
+      }
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const onGoogleSignIn = async () => {
@@ -93,7 +104,7 @@ export function AuthForm() {
         });
         setLoading(false);
     } else {
-      router.push("/dashboard");
+      router.push("/draw-tracker");
     }
   };
 
