@@ -145,7 +145,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
+        <Card className="hidden sm:block">
           <CardHeader>
             <CardTitle>CRS Score Trend</CardTitle>
             <CardDescription>Your estimated score over the last 6 months.</CardDescription>
