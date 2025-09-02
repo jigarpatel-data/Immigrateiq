@@ -52,10 +52,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
   }, [user, loading, router, pathname]);
-
-  if (loading) {
-    return <div className="flex h-screen w-full items-center justify-center bg-background"></div>;
-  }
   
   return (
     <AuthContext.Provider value={{ user, loading }}>
