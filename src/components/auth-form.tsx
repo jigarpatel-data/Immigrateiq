@@ -18,7 +18,6 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -28,7 +27,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { CustomGoogleIcon } from "@/components/icons";
-import { Loader2 } from "lucide-react";
+import { Landmark, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { handleSignIn, handleSignUp, handleGoogleSignIn, handlePasswordReset } from "@/lib/auth";
 import { useRouter } from "next/navigation";
@@ -126,7 +125,14 @@ export function AuthForm() {
     } else {
         toast({
             title: "Password Reset Email Sent",
-            description: "Please check your inbox for instructions to reset your password.",
+            description: (
+              <p>
+                Please check your inbox for instructions to reset your password.{" "}
+                <Link href="/auth" className="underline font-bold" onClick={() => setIsResetDialogOpen(false)}>
+                  Login here.
+                </Link>
+              </p>
+            )
         });
         setIsResetDialogOpen(false);
         passwordResetForm.reset();
@@ -151,7 +157,6 @@ export function AuthForm() {
   };
 
   return (
-    <>
     <AlertDialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
       <Tabs defaultValue="login" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
@@ -277,7 +282,11 @@ export function AuthForm() {
       <AlertDialogContent>
         <Form {...passwordResetForm}>
           <form onSubmit={passwordResetForm.handleSubmit(onPasswordResetSubmit)}>
-            <AlertDialogHeader>
+            <AlertDialogHeader className="items-center text-center">
+               <Link href="/" className="flex items-center gap-2">
+                <Landmark className="w-8 h-8 text-accent" />
+                <span className="text-2xl font-semibold">TheCanIndian</span>
+              </Link>
               <AlertDialogTitle>Forgot Password?</AlertDialogTitle>
               <AlertDialogDescription>
                 Enter your email address below, and we'll send you a link to reset your password.
@@ -309,6 +318,5 @@ export function AuthForm() {
         </Form>
       </AlertDialogContent>
     </AlertDialog>
-    </>
   );
 }
