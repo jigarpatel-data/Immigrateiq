@@ -188,7 +188,7 @@ export function AuthForm() {
                       <div className="flex items-center">
                         <FormLabel>Password</FormLabel>
                         <AlertDialogTrigger asChild>
-                          <Button variant="link" className="ml-auto text-xs h-auto p-0">Forgot Password?</Button>
+                          <Button variant="link" className="ml-auto text-xs h-auto p-0 text-foreground">Forgot Password?</Button>
                         </AlertDialogTrigger>
                       </div>
                       <FormControl>
