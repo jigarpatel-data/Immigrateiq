@@ -152,162 +152,162 @@ export function AuthForm() {
 
   return (
     <>
-    <Tabs defaultValue="login" className="w-full">
-      <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="login">Login</TabsTrigger>
-        <TabsTrigger value="signup">Sign Up</TabsTrigger>
-      </TabsList>
-      <TabsContent value="login">
-        <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
-          <Form {...loginForm}>
-            <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
-              <FormField
-                control={loginForm.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="m@example.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={loginForm.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex items-center">
-                      <FormLabel>Password</FormLabel>
-                      <AlertDialogTrigger asChild>
-                         <Button variant="link" className="ml-auto text-xs h-auto p-0">Forgot Password?</Button>
-                      </AlertDialogTrigger>
-                    </div>
-                    <FormControl>
-                      <Input type="password" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Login
-              </Button>
-            </form>
-          </Form>
-          <div className="relative my-4">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
-            </div>
-          </div>
-          <Button variant="outline" className="w-full" onClick={onGoogleSignIn} disabled={loading}>
-             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CustomGoogleIcon className="mr-2 h-5 w-5" />}
-             Google
-          </Button>
-          <div className="mt-4 text-center text-sm">
-            <Link href="/dashboard" className="underline text-muted-foreground hover:text-primary">
-              Continue as Guest
-            </Link>
-          </div>
-        </div>
-      </TabsContent>
-      <TabsContent value="signup">
-        <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
-          <Form {...signUpForm}>
-            <form onSubmit={signUpForm.handleSubmit(onSignUpSubmit)} className="space-y-4">
-              <FormField
-                control={signUpForm.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="m@example.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={signUpForm.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input type="password" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="w-full" disabled={loading}>
-                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                 Sign Up
-              </Button>
-            </form>
-          </Form>
-           <div className="relative my-4">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">Or sign up with</span>
-            </div>
-          </div>
-          <Button variant="outline" className="w-full" onClick={onGoogleSignIn} disabled={loading}>
-             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CustomGoogleIcon className="mr-2 h-5 w-5" />}
-             Google
-          </Button>
-          <div className="mt-4 text-center text-sm">
-            <Link href="/dashboard" className="underline text-muted-foreground hover:text-primary">
-              Continue as Guest
-            </Link>
-          </div>
-        </div>
-      </TabsContent>
-    </Tabs>
     <AlertDialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
-        <AlertDialogContent>
-            <Form {...passwordResetForm}>
-                 <form onSubmit={passwordResetForm.handleSubmit(onPasswordResetSubmit)}>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Forgot Password?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Enter your email address below, and we'll send you a link to reset your password.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <div className="py-4">
-                        <FormField
-                            control={passwordResetForm.control}
-                            name="email"
-                            render={({ field }) => (
-                                <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                    <Input type="email" placeholder="your@email.com" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel type="button" onClick={() => passwordResetForm.reset()}>Cancel</AlertDialogCancel>
-                         <Button type="submit" disabled={loading}>
-                            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Send Reset Link
-                        </Button>
-                    </AlertDialogFooter>
-                </form>
+      <Tabs defaultValue="login" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="login">Login</TabsTrigger>
+          <TabsTrigger value="signup">Sign Up</TabsTrigger>
+        </TabsList>
+        <TabsContent value="login">
+          <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
+            <Form {...loginForm}>
+              <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
+                <FormField
+                  control={loginForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input type="email" placeholder="m@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={loginForm.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <div className="flex items-center">
+                        <FormLabel>Password</FormLabel>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="link" className="ml-auto text-xs h-auto p-0">Forgot Password?</Button>
+                        </AlertDialogTrigger>
+                      </div>
+                      <FormControl>
+                        <Input type="password" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Login
+                </Button>
+              </form>
             </Form>
-        </AlertDialogContent>
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+              </div>
+            </div>
+            <Button variant="outline" className="w-full" onClick={onGoogleSignIn} disabled={loading}>
+              {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CustomGoogleIcon className="mr-2 h-5 w-5" />}
+              Google
+            </Button>
+            <div className="mt-4 text-center text-sm">
+              <Link href="/dashboard" className="underline text-muted-foreground hover:text-primary">
+                Continue as Guest
+              </Link>
+            </div>
+          </div>
+        </TabsContent>
+        <TabsContent value="signup">
+          <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
+            <Form {...signUpForm}>
+              <form onSubmit={signUpForm.handleSubmit(onSignUpSubmit)} className="space-y-4">
+                <FormField
+                  control={signUpForm.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input type="email" placeholder="m@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={signUpForm.control}
+                  name="password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input type="password" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit" className="w-full" disabled={loading}>
+                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Sign Up
+                </Button>
+              </form>
+            </Form>
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground">Or sign up with</span>
+              </div>
+            </div>
+            <Button variant="outline" className="w-full" onClick={onGoogleSignIn} disabled={loading}>
+              {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CustomGoogleIcon className="mr-2 h-5 w-5" />}
+              Google
+            </Button>
+            <div className="mt-4 text-center text-sm">
+              <Link href="/dashboard" className="underline text-muted-foreground hover:text-primary">
+                Continue as Guest
+              </Link>
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
+      <AlertDialogContent>
+        <Form {...passwordResetForm}>
+          <form onSubmit={passwordResetForm.handleSubmit(onPasswordResetSubmit)}>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Forgot Password?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Enter your email address below, and we'll send you a link to reset your password.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <div className="py-4">
+              <FormField
+                control={passwordResetForm.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="your@email.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <AlertDialogFooter>
+              <AlertDialogCancel type="button" onClick={() => passwordResetForm.reset()}>Cancel</AlertDialogCancel>
+              <Button type="submit" disabled={loading}>
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Send Reset Link
+              </Button>
+            </AlertDialogFooter>
+          </form>
+        </Form>
+      </AlertDialogContent>
     </AlertDialog>
     </>
   );
