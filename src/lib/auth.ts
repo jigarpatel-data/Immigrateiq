@@ -9,6 +9,7 @@ import {
   setPersistence,
   browserLocalPersistence,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   type User
 } from "firebase/auth";
 
@@ -50,6 +51,15 @@ export async function handleSignOut(): Promise<{error: string | null}> {
     } catch(error: any) {
         return { error: error.message };
     }
+}
+
+export async function handlePasswordReset(email: string): Promise<{error: string | null}> {
+  try {
+    await sendPasswordResetEmail(auth, email);
+    return { error: null };
+  } catch (error: any) {
+    return { error: error.message };
+  }
 }
 
 export function initAuthListener(callback: (user: User | null) => void) {

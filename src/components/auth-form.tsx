@@ -16,10 +16,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { CustomGoogleIcon } from "@/components/icons";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { handleSignIn, handleSignUp, handleGoogleSignIn } from "@/lib/auth";
+import { handleSignIn, handleSignUp, handleGoogleSignIn, handlePasswordReset } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -33,8 +44,13 @@ const loginSchema = z.object({
   password: z.string().min(1, { message: "Password is required." }),
 });
 
+const passwordResetSchema = z.object({
+    email: z.string().email({ message: "Please enter a valid email address." }),
+});
+
 export function AuthForm() {
   const [loading, setLoading] = useState(false);
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -46,6 +62,11 @@ export function AuthForm() {
   const signUpForm = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: { email: "", password: "" },
+  });
+  
+  const passwordResetForm = useForm<z.infer<typeof passwordResetSchema>>({
+    resolver: zodResolver(passwordResetSchema),
+    defaultValues: { email: "" },
   });
 
   const onLoginSubmit = async (values: z.infer<typeof loginSchema>) => {
@@ -93,6 +114,27 @@ export function AuthForm() {
     }
   };
 
+  const onPasswordResetSubmit = async (values: z.infer<typeof passwordResetSchema>) => {
+    setLoading(true);
+    const { error } = await handlePasswordReset(values.email);
+    if (error) {
+        toast({
+            title: "Error",
+            description: error,
+            variant: "destructive",
+        });
+    } else {
+        toast({
+            title: "Password Reset Email Sent",
+            description: "Please check your inbox for instructions to reset your password.",
+        });
+        setIsResetDialogOpen(false);
+        passwordResetForm.reset();
+    }
+    setLoading(false);
+  };
+
+
   const onGoogleSignIn = async () => {
     setLoading(true);
     const { error } = await handleGoogleSignIn();
@@ -109,6 +151,7 @@ export function AuthForm() {
   };
 
   return (
+    <>
     <Tabs defaultValue="login" className="w-full">
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="login">Login</TabsTrigger>
@@ -136,7 +179,12 @@ export function AuthForm() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <div className="flex items-center">
+                      <FormLabel>Password</FormLabel>
+                      <AlertDialogTrigger asChild>
+                         <Button variant="link" className="ml-auto text-xs h-auto p-0">Forgot Password?</Button>
+                      </AlertDialogTrigger>
+                    </div>
                     <FormControl>
                       <Input type="password" {...field} />
                     </FormControl>
@@ -225,5 +273,42 @@ export function AuthForm() {
         </div>
       </TabsContent>
     </Tabs>
+    <AlertDialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
+        <AlertDialogContent>
+            <Form {...passwordResetForm}>
+                 <form onSubmit={passwordResetForm.handleSubmit(onPasswordResetSubmit)}>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Forgot Password?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Enter your email address below, and we'll send you a link to reset your password.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <div className="py-4">
+                        <FormField
+                            control={passwordResetForm.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                <FormLabel>Email</FormLabel>
+                                <FormControl>
+                                    <Input type="email" placeholder="your@email.com" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel type="button" onClick={() => passwordResetForm.reset()}>Cancel</AlertDialogCancel>
+                         <Button type="submit" disabled={loading}>
+                            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Send Reset Link
+                        </Button>
+                    </AlertDialogFooter>
+                </form>
+            </Form>
+        </AlertDialogContent>
+    </AlertDialog>
+    </>
   );
 }
