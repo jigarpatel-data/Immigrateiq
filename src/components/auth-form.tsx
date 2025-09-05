@@ -267,9 +267,11 @@ export function AuthForm() {
                               <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
                             </TooltipTrigger>
                             <TooltipContent>
-                              <p className="max-w-xs">
-                                Password must be 8-20 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.
-                              </p>
+                              <ul className="list-disc pl-4 text-left">
+                                <li>At least 8 characters long</li>
+                                <li>A number (0-9) and a symbol</li>
+                                <li>Lowercase (a-z) & uppercase (A-Z)</li>
+                              </ul>
                             </TooltipContent>
                           </Tooltip>
                         </div>
