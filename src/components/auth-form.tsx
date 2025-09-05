@@ -34,7 +34,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { CustomGoogleIcon } from "@/components/icons";
-import { Landmark, Loader2, Info } from "lucide-react";
+import { Landmark, Loader2, Info, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { handleSignIn, handleSignUp, handleGoogleSignIn, handlePasswordReset } from "@/lib/auth";
 import { useRouter } from "next/navigation";
@@ -64,6 +64,8 @@ const passwordResetSchema = z.object({
 export function AuthForm() {
   const [loading, setLoading] = useState(false);
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showSignUpPassword, setShowSignUpPassword] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -201,12 +203,23 @@ export function AuthForm() {
                     <FormItem>
                       <div className="flex items-center">
                         <FormLabel>Password</FormLabel>
-                        <Button variant="link" asChild className="ml-auto text-xs h-auto p-0 text-muted-foreground">
-                            <AlertDialogTrigger type="button">Forgot Password?</AlertDialogTrigger>
-                        </Button>
+                        <AlertDialogTrigger asChild>
+                           <Button variant="link" type="button" className="ml-auto text-xs h-auto p-0 text-muted-foreground">Forgot Password?</Button>
+                        </AlertDialogTrigger>
                       </div>
-                      <FormControl>
-                        <Input type="password" {...field} />
+                       <FormControl>
+                        <div className="relative">
+                          <Input type={showLoginPassword ? "text" : "password"} {...field} />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="absolute inset-y-0 right-0 h-full px-3 text-muted-foreground"
+                            onClick={() => setShowLoginPassword((prev) => !prev)}
+                          >
+                            {showLoginPassword ? <EyeOff /> : <Eye />}
+                          </Button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -261,9 +274,20 @@ export function AuthForm() {
                       <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                          <Input type="password" {...field} />
+                          <div className="relative">
+                            <Input type={showSignUpPassword ? "text" : "password"} {...field} />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="absolute inset-y-0 right-0 h-full px-3 text-muted-foreground"
+                              onClick={() => setShowSignUpPassword((prev) => !prev)}
+                            >
+                              {showSignUpPassword ? <EyeOff /> : <Eye />}
+                            </Button>
+                          </div>
                         </FormControl>
-                        <div className="text-xs text-muted-foreground space-y-1 pt-1">
+                         <div className="text-xs text-muted-foreground space-y-1 pt-1">
                           <div>At least 8 characters long</div>
                           <div>A number (0-9) and a symbol</div>
                           <div>Lowercase (a-z) & uppercase (A-Z)</div>
@@ -339,3 +363,5 @@ export function AuthForm() {
     </AlertDialog>
   );
 }
+
+    
