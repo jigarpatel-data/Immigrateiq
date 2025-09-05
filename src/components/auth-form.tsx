@@ -27,12 +27,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 import { CustomGoogleIcon } from "@/components/icons";
 import { Landmark, Loader2, Info, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -217,7 +211,7 @@ export function AuthForm() {
                             className="absolute inset-y-0 right-0 h-full px-3 text-muted-foreground"
                             onClick={() => setShowLoginPassword((prev) => !prev)}
                           >
-                            {showLoginPassword ? <EyeOff /> : <Eye />}
+                            {showLoginPassword ? <EyeOff className="h-5 w-5"/> : <Eye className="h-5 w-5"/>}
                           </Button>
                         </div>
                       </FormControl>
@@ -283,7 +277,7 @@ export function AuthForm() {
                               className="absolute inset-y-0 right-0 h-full px-3 text-muted-foreground"
                               onClick={() => setShowSignUpPassword((prev) => !prev)}
                             >
-                              {showSignUpPassword ? <EyeOff /> : <Eye />}
+                              {showSignUpPassword ? <EyeOff className="h-5 w-5"/> : <Eye className="h-5 w-5"/>}
                             </Button>
                           </div>
                         </FormControl>
@@ -332,10 +326,10 @@ export function AuthForm() {
               </Link>
               <AlertDialogTitle>Forgot Password?</AlertDialogTitle>
               <AlertDialogDescription>
-                Enter your email address below, and we'll send you a link to reset your password.
+                Enter your email address below, and we&apos;ll send you a link to reset your password.
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <div className="py-4">
+            <div className="py-4 space-y-4">
               <FormField
                 control={passwordResetForm.control}
                 name="email"
@@ -349,6 +343,12 @@ export function AuthForm() {
                   </FormItem>
                 )}
               />
+              <div className="text-xs text-muted-foreground space-y-1 pt-1 border-t pt-4">
+                  <p className="font-bold">Your new password must contain:</p>
+                  <div>- At least 8 characters long</div>
+                  <div>- A number (0-9) and a symbol</div>
+                  <div>- Lowercase (a-z) & uppercase (A-Z)</div>
+              </div>
             </div>
             <AlertDialogFooter>
               <AlertDialogCancel type="button" onClick={() => passwordResetForm.reset()}>Cancel</AlertDialogCancel>
