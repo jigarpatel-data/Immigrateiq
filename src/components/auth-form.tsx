@@ -96,7 +96,7 @@ export function AuthForm() {
     } else {
       toast({
         title: "Success!",
-        description: "Your account has been created. Please log in.",
+        description: "Welcome! Your account has been created.",
       });
        // After successful sign-up, sign them in automatically
       const { error: signInError } = await handleSignIn(values.email, values.password);
