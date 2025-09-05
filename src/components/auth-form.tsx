@@ -27,8 +27,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { CustomGoogleIcon } from "@/components/icons";
-import { Landmark, Loader2 } from "lucide-react";
+import { Landmark, Loader2, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { handleSignIn, handleSignUp, handleGoogleSignIn, handlePasswordReset } from "@/lib/auth";
 import { useRouter } from "next/navigation";
@@ -253,13 +259,24 @@ export function AuthForm() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
+                       <div className="flex items-center gap-2">
+                        <FormLabel>Password</FormLabel>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className="max-w-xs">
+                                Password must be 8-20 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
                       <FormControl>
                         <Input type="password" {...field} />
                       </FormControl>
-                      <FormDescription>
-                        Password must be 8-20 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
