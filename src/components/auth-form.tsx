@@ -260,24 +260,15 @@ export function AuthForm() {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <div className="flex items-center gap-2">
-                          <FormLabel>Password</FormLabel>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <ul className="list-disc pl-4 text-left">
-                                <li>At least 8 characters long</li>
-                                <li>A number (0-9) and a symbol</li>
-                                <li>Lowercase (a-z) & uppercase (A-Z)</li>
-                              </ul>
-                            </TooltipContent>
-                          </Tooltip>
-                        </div>
+                        <FormLabel>Password</FormLabel>
                         <FormControl>
                           <Input type="password" {...field} />
                         </FormControl>
+                        <FormDescription className="text-xs">
+                          <p>At least 8 characters long</p>
+                          <p>A number (0-9) and a symbol</p>
+                          <p>Lowercase (a-z) & uppercase (A-Z)</p>
+                        </FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
