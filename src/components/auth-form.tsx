@@ -238,7 +238,6 @@ export function AuthForm() {
           </div>
         </TabsContent>
         <TabsContent value="signup">
-          <TooltipProvider>
             <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
               <Form {...signUpForm}>
                 <form onSubmit={signUpForm.handleSubmit(onSignUpSubmit)} className="space-y-4">
@@ -265,9 +264,9 @@ export function AuthForm() {
                           <Input type="password" {...field} />
                         </FormControl>
                         <FormDescription className="text-xs">
-                          <p>At least 8 characters long</p>
-                          <p>A number (0-9) and a symbol</p>
-                          <p>Lowercase (a-z) & uppercase (A-Z)</p>
+                          <div>At least 8 characters long</div>
+                          <div>A number (0-9) and a symbol</div>
+                          <div>Lowercase (a-z) & uppercase (A-Z)</div>
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -297,7 +296,6 @@ export function AuthForm() {
                 </Link>
               </div>
             </div>
-          </TooltipProvider>
         </TabsContent>
       </Tabs>
       <AlertDialogContent>
