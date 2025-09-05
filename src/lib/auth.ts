@@ -19,6 +19,9 @@ export async function handleSignUp(email: string, password: string):Promise<{err
     await createUserWithEmailAndPassword(auth, email, password);
     return { error: null };
   } catch (error: any) {
+    if (error.code === 'auth/email-already-in-use') {
+      return { error: "Email already exists." };
+    }
     return { error: error.message };
   }
 }
