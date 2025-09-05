@@ -29,6 +29,9 @@ export async function handleSignIn(email: string, password: string): Promise<{er
     await signInWithEmailAndPassword(auth, email, password);
     return { error: null };
   } catch (error: any) {
+    if (error.code === 'auth/invalid-credential') {
+      return { error: "Incorrect password. Please try again." };
+    }
     return { error: error.message };
   }
 }
