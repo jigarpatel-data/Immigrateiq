@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -24,7 +25,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { CustomGoogleIcon } from "@/components/icons";
 import { Landmark, Loader2 } from "lucide-react";
@@ -35,7 +35,14 @@ import Link from "next/link";
 
 const signUpSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters long." })
+    .max(20, { message: "Password must be no more than 20 characters long." })
+    .regex(/[a-z]/, { message: "Password must contain at least one lowercase letter." })
+    .regex(/[A-Z]/, { message: "Password must contain at least one uppercase letter." })
+    .regex(/[0-9]/, { message: "Password must contain at least one number." })
+    .regex(/[^a-zA-Z0-9]/, { message: "Password must contain at least one special character." }),
 });
 
 const loginSchema = z.object({
@@ -187,9 +194,9 @@ export function AuthForm() {
                     <FormItem>
                       <div className="flex items-center">
                         <FormLabel>Password</FormLabel>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="link" className="ml-auto text-xs h-auto p-0 text-muted-foreground">Forgot Password?</Button>
-                        </AlertDialogTrigger>
+                        <Button variant="link" asChild className="ml-auto text-xs h-auto p-0 text-muted-foreground">
+                            <AlertDialogTrigger type="button">Forgot Password?</AlertDialogTrigger>
+                        </Button>
                       </div>
                       <FormControl>
                         <Input type="password" {...field} />
@@ -249,6 +256,9 @@ export function AuthForm() {
                       <FormControl>
                         <Input type="password" {...field} />
                       </FormControl>
+                      <FormDescription>
+                        Password must be 8-20 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
