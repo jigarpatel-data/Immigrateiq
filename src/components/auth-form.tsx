@@ -25,6 +25,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { CustomGoogleIcon } from "@/components/icons";
 import { Landmark, Loader2 } from "lucide-react";
