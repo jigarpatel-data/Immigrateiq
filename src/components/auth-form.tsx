@@ -263,11 +263,11 @@ export function AuthForm() {
                         <FormControl>
                           <Input type="password" {...field} />
                         </FormControl>
-                        <FormDescription className="text-xs">
+                        <div className="text-xs text-muted-foreground space-y-1 pt-1">
                           <div>At least 8 characters long</div>
                           <div>A number (0-9) and a symbol</div>
                           <div>Lowercase (a-z) & uppercase (A-Z)</div>
-                        </FormDescription>
+                        </div>
                         <FormMessage />
                       </FormItem>
                     )}
