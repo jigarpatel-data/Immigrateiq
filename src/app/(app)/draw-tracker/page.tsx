@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import {
   Card,
   CardContent,
@@ -30,10 +30,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { getAirtableDraws, type Draw } from '@/lib/airtable';
 
+const DRAWS_PER_PAGE = 9;
+
 function DrawTrackerPage() {
-  const [draws, setDraws] = useState<Draw[]>([]);
+  const [allDraws, setAllDraws] = useState<Draw[]>([]);
+  const [displayedDraws, setDisplayedDraws] = useState<Draw[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const observer = useRef<IntersectionObserver | null>(null);
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [provinceFilter, setProvinceFilter] = useState('All');
@@ -47,31 +53,32 @@ function DrawTrackerPage() {
         setError(fetchError);
       } else if (fetchedDraws) {
         const formattedDraws = fetchedDraws.map(d => ({ ...d.fields, id: d.id }));
-        setDraws(formattedDraws);
+        setAllDraws(formattedDraws);
       }
       setLoading(false);
     }
     fetchData();
   }, []);
 
-  const provinceOptions = useMemo(() => ["All", ...new Set(draws.map(d => d.Province))], [draws]);
-  const categoryOptions = useMemo(() => ["All", ...new Set(draws.map(d => d.Category))], [draws]);
+  const provinceOptions = useMemo(() => ["All", ...new Set(allDraws.map(d => d.Province))], [allDraws]);
+  const categoryOptions = useMemo(() => ["All", ...new Set(allDraws.map(d => d.Category))], [allDraws]);
 
   const filteredAndSortedDraws = useMemo(() => {
-    let result = [...draws];
+    let result = [...allDraws];
 
-    // Filtering
-    result = result.filter(draw => {
-      const matchesProvince = provinceFilter === 'All' || draw.Province === provinceFilter;
-      const matchesCategory = categoryFilter === 'All' || draw.Category === categoryFilter;
-      const matchesSearch = searchTerm === '' || 
-        (draw["NOC/Other"] && draw["NOC/Other"].toLowerCase().includes(searchTerm.toLowerCase())) ||
-        draw.Category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        draw.Province.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchesProvince && matchesCategory && matchesSearch;
-    });
+    const hasFilters = searchTerm !== '' || provinceFilter !== 'All' || categoryFilter !== 'All';
+    if(hasFilters) {
+        result = result.filter(draw => {
+          const matchesProvince = provinceFilter === 'All' || draw.Province === provinceFilter;
+          const matchesCategory = categoryFilter === 'All' || draw.Category === categoryFilter;
+          const matchesSearch = searchTerm === '' || 
+            (draw["NOC/Other"] && draw["NOC/Other"].toLowerCase().includes(searchTerm.toLowerCase())) ||
+            draw.Category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            draw.Province.toLowerCase().includes(searchTerm.toLowerCase());
+          return matchesProvince && matchesCategory && matchesSearch;
+        });
+    }
 
-    // Sorting
     result.sort((a, b) => {
       const dateA = new Date(a["Draw Date"]).getTime();
       const dateB = new Date(b["Draw Date"]).getTime();
@@ -79,7 +86,51 @@ function DrawTrackerPage() {
     });
 
     return result;
-  }, [draws, searchTerm, provinceFilter, categoryFilter, sortOrder]);
+  }, [allDraws, searchTerm, provinceFilter, categoryFilter, sortOrder]);
+
+  const hasMoreDraws = displayedDraws.length < filteredAndSortedDraws.length;
+
+  const loadMoreDraws = useCallback(() => {
+    if (hasMoreDraws) {
+      setPage(prevPage => prevPage + 1);
+    }
+  }, [hasMoreDraws]);
+
+  useEffect(() => {
+    setDisplayedDraws(filteredAndSortedDraws.slice(0, page * DRAWS_PER_PAGE));
+  }, [filteredAndSortedDraws, page]);
+
+  useEffect(() => {
+    setPage(1); // Reset page when filters change
+  }, [searchTerm, provinceFilter, categoryFilter, sortOrder]);
+
+  useEffect(() => {
+    const options = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 1.0,
+    };
+
+    const handleObserver = (entries: IntersectionObserverEntry[]) => {
+      const target = entries[0];
+      if (target.isIntersecting && hasMoreDraws && !loading) {
+        loadMoreDraws();
+      }
+    };
+    
+    observer.current = new IntersectionObserver(handleObserver, options);
+    
+    if (loadMoreRef.current) {
+      observer.current.observe(loadMoreRef.current);
+    }
+
+    return () => {
+      if(observer.current && loadMoreRef.current) {
+        observer.current.unobserve(loadMoreRef.current);
+      }
+    };
+  }, [hasMoreDraws, loading, loadMoreDraws]);
+
 
   const resetFilters = () => {
     setSearchTerm('');
@@ -90,7 +141,7 @@ function DrawTrackerPage() {
   
   const activeFilterCount = [searchTerm, provinceFilter, categoryFilter].filter(f => f && f !== 'All').length;
 
-  if (loading) {
+  if (loading && allDraws.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center">
         <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
@@ -176,8 +227,8 @@ function DrawTrackerPage() {
         </CardHeader>
         <CardContent>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredAndSortedDraws.length > 0 ? (
-                filteredAndSortedDraws.map((draw) => (
+              {displayedDraws.length > 0 ? (
+                displayedDraws.map((draw) => (
                   <Card key={draw.id} className="flex flex-col">
                     <CardHeader className="pb-4">
                       <div className="flex justify-between items-start">
@@ -231,6 +282,15 @@ function DrawTrackerPage() {
                 </div>
               )}
             </div>
+            <div ref={loadMoreRef} className="h-10 col-span-full" />
+             {hasMoreDraws && (
+                <div className="flex justify-center mt-6">
+                    <Button onClick={loadMoreDraws} variant="secondary">
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Loading More...
+                    </Button>
+                </div>
+            )}
         </CardContent>
       </Card>
     </div>
