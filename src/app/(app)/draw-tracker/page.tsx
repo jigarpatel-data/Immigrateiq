@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from '@/components/ui/button';
 import { withAuth } from '@/hooks/use-auth';
-import { Award, Building, Calendar, ChevronsUpDown, ExternalLink, Filter, Search, Users, X } from 'lucide-react';
+import { Award, Building, Calendar, ChevronsUpDown, ExternalLink, Filter, Loader2, Search, Users, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import {
@@ -27,29 +27,35 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
-// Mock data simulating Airtable structure
-const mockDrawData = [
-  { id: '1', "Draw Date": "2024-07-29", Province: "British Columbia", Category: "Tech", Score: "110", "Total Draw Invitations": "68", "NOC/Other": "Software engineers and designers (NOC 21231)", URL: "https://www.welcomebc.ca/Immigration-Programs/Invitations-to-Apply" },
-  { id: '2', "Draw Date": "2024-07-25", Province: "Manitoba", Category: "General", Score: "821", "Total Draw Invitations": "321", "NOC/Other": "All Occupations", URL: "https://immigratemanitoba.com/mpnp-latest-draw/" },
-  { id: '3', "Draw Date": "2024-07-24", Province: "Ontario", Category: "Employer Job Offer", Score: "50", "Total Draw Invitations": "212", "NOC/Other": "Foreign Worker stream", URL: "https://www.ontario.ca/page/oinp-employer-job-offer-foreign-worker-stream" },
-  { id: '4', "Draw Date": "2024-07-23", Province: "Federal", Category: "General", Score: "522", "Total Draw Invitations": "4500", "NOC/Other": "No Program Specified", URL: "https://www.canada.ca/en/immigration-refugees-citizenship/services/immigrate-canada/express-entry/submit-profile/rounds-invitations.html" },
-  { id: '5', "Draw Date": "2024-07-18", Province: "Alberta", Category: "Healthcare", Score: "305", "Total Draw Invitations": "40", "NOC/Other": "Dedicated Healthcare Pathway", URL: "https://www.alberta.ca/alberta-advantage-immigration-program/latest-draws" },
-  { id: '6', "Draw Date": "2024-07-16", Province: "Saskatchewan", Category: "Occupations In-Demand", Score: "88", "Total Draw Invitations": "120", "NOC/Other": "Various", URL: "https://www.saskatchewan.ca/residents/moving-to-saskatchewan/live-in-saskatchewan/by-immigrating/saskatchewan-immigrant-nominee-program/invitation-to-apply-for-a-sinp-nomination" },
-  { id: '7', "Draw Date": "2024-07-11", Province: "Quebec", Category: "Regular Skilled Worker", Score: "597", "Total Draw invitations": "1447", "NOC/Other": "Various", URL: "https://www.quebec.ca/en/immigration/immigration-programs/regular-skilled-worker-program" },
-  { id: '8', "Draw Date": "2024-06-27", Province: "Prince Edward Island", Category: "Labour & Express Entry", Score: "N/A", "Total Draw Invitations": "30", "NOC/Other": "Healthcare, Manufacturing", URL: "https://www.princeedwardisland.ca/en/information/office-of-immigration/pei-expression-of-interest-system" },
-];
-
-const provinceOptions = ["All", ...new Set(mockDrawData.map(d => d.Province))];
-const categoryOptions = ["All", ...new Set(mockDrawData.map(d => d.Category))];
+} from "@/components/ui/dropdown-menu";
+import { getAirtableDraws, type Draw } from '@/lib/airtable';
 
 function DrawTrackerPage() {
-  const [draws, setDraws] = useState(mockDrawData);
+  const [draws, setDraws] = useState<Draw[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [provinceFilter, setProvinceFilter] = useState('All');
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
+
+  useEffect(() => {
+    async function fetchData() {
+      const { draws: fetchedDraws, error: fetchError } = await getAirtableDraws();
+      if (fetchError) {
+        setError(fetchError);
+      } else if (fetchedDraws) {
+        const formattedDraws = fetchedDraws.map(d => ({ ...d.fields, id: d.id }));
+        setDraws(formattedDraws);
+      }
+      setLoading(false);
+    }
+    fetchData();
+  }, []);
+
+  const provinceOptions = useMemo(() => ["All", ...new Set(draws.map(d => d.Province))], [draws]);
+  const categoryOptions = useMemo(() => ["All", ...new Set(draws.map(d => d.Category))], [draws]);
 
   const filteredAndSortedDraws = useMemo(() => {
     let result = [...draws];
@@ -59,7 +65,7 @@ function DrawTrackerPage() {
       const matchesProvince = provinceFilter === 'All' || draw.Province === provinceFilter;
       const matchesCategory = categoryFilter === 'All' || draw.Category === categoryFilter;
       const matchesSearch = searchTerm === '' || 
-        draw["NOC/Other"].toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (draw["NOC/Other"] && draw["NOC/Other"].toLowerCase().includes(searchTerm.toLowerCase())) ||
         draw.Category.toLowerCase().includes(searchTerm.toLowerCase()) ||
         draw.Province.toLowerCase().includes(searchTerm.toLowerCase());
       return matchesProvince && matchesCategory && matchesSearch;
@@ -84,6 +90,25 @@ function DrawTrackerPage() {
   
   const activeFilterCount = [searchTerm, provinceFilter, categoryFilter].filter(f => f && f !== 'All').length;
 
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-full text-center">
+        <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
+        <h1 className="text-2xl font-bold tracking-tight">Loading Draws...</h1>
+        <p className="text-muted-foreground">Fetching the latest data from Airtable.</p>
+      </div>
+    );
+  }
+
+  if (error) {
+     return (
+      <div className="text-center py-16 bg-destructive/10 text-destructive border border-destructive rounded-lg p-4">
+        <X className="mx-auto h-12 w-12 mb-4" />
+        <p className="text-lg font-semibold">Failed to load draws</p>
+        <p>{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -171,14 +196,14 @@ function DrawTrackerPage() {
                           <div className="flex items-center gap-2">
                               <Award className="h-5 w-5 text-accent" />
                               <div>
-                                  <p className="font-bold text-lg">{draw.Score}</p>
+                                  <p className="font-bold text-lg">{draw.Score || 'N/A'}</p>
                                   <p className="text-xs text-muted-foreground">Min. Score</p>
                               </div>
                           </div>
                           <div className="flex items-center gap-2">
                               <Users className="h-5 w-5 text-accent" />
                               <div>
-                                  <p className="font-bold text-lg">{draw["Total Draw Invitations"]}</p>
+                                  <p className="font-bold text-lg">{draw["Total Draw Invitations"] || 'N/A'}</p>
                                   <p className="text-xs text-muted-foreground">Invitations</p>
                               </div>
                           </div>
