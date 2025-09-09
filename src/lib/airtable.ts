@@ -27,7 +27,12 @@ export type Draw = z.infer<typeof DrawFieldsSchema> & { id: string };
 export async function getAirtableDraws(): Promise<{ draws?: {id: string, fields: z.infer<typeof DrawFieldsSchema>}[], error?: string }> {
   const apiKey = process.env.AIRTABLE_API_KEY;
   const baseId = process.env.AIRTABLE_BASE_ID;
-  // IMPORTANT: Replace 'YourTableName' with the actual name of your table in Airtable.
+  // =================================================================
+  // IMPORTANT: Replace 'YourTableName' with your actual table name.
+  // This can be the Table ID or the name of the table as it appears in Airtable.
+  // For example: const tableName = 'tblxxxxxxxxxxxxxx';
+  // Or: const tableName = 'Immigration Draws';
+  // =================================================================
   const tableName = 'YourTableName'; 
 
   if (!apiKey || !baseId) {
