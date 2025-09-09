@@ -20,14 +20,14 @@ export default function AuthPage() {
           <AuthForm />
         </div>
       </div>
-      <div className="hidden lg:flex flex-1 relative bg-muted items-center justify-center p-8">
-        <div className="max-w-xl text-left">
+      <div className="hidden lg:flex flex-1 relative bg-white items-center justify-center p-8">
+        <div className="max-w-xl text-left text-black">
           <div className="inline-block">
             <h1 className="text-4xl font-bold tracking-tight text-foreground overflow-hidden whitespace-nowrap border-r-4 border-r-accent pr-4 animate-[typing_3s_steps(40,end),blink-caret_.75s_step-end_8]">
               Start Your Canadian Dream Today
             </h1>
           </div>
-            <ul className="mt-6 space-y-4 text-lg text-muted-foreground">
+            <ul className="mt-6 space-y-4 text-lg">
               <li className="flex items-start gap-3 opacity-0 animate-fade-in-up animation-delay-3000">
                 <CheckCircle className="h-6 w-6 mt-1 text-accent shrink-0" />
                 <span>Track immigration programs and draws from coast to coast</span>
@@ -46,6 +46,7 @@ export default function AuthPage() {
     </div>
   );
 }
+
 
 
 
