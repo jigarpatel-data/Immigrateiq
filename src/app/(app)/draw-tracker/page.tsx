@@ -260,6 +260,14 @@ function DrawTrackerPage() {
                       </div>
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-start text-center sm:text-left gap-4 sm:gap-6 pt-2 text-sm text-muted-foreground">
                         <div className="flex items-center justify-center gap-1.5">
+                            <Award className="h-4 w-4 text-accent" />
+                            <span className="font-semibold text-foreground">{draw.Score || 'N/A'}</span>
+                            <span className='hidden sm:inline'>Min. Score</span>
+                        </div>
+
+                        <Separator orientation="vertical" className="hidden sm:block h-5" />
+                        
+                        <div className="flex items-center justify-center gap-1.5">
                             <Users className="h-4 w-4 text-accent" />
                             <span className="font-semibold text-foreground">{draw["Total Draw Invitations"] || 'N/A'}</span>
                              <span className='hidden sm:inline'>Invitations</span>
@@ -278,14 +286,6 @@ function DrawTrackerPage() {
                                 </TooltipContent>
                               </Tooltip>
                             </TooltipProvider>
-                        </div>
-
-                        <Separator orientation="vertical" className="hidden sm:block h-5" />
-
-                        <div className="flex items-center justify-center gap-1.5">
-                            <Award className="h-4 w-4 text-accent" />
-                            <span className="font-semibold text-foreground">{draw.Score || 'N/A'}</span>
-                            <span className='hidden sm:inline'>Min. Score</span>
                         </div>
                          
                         <Separator orientation="vertical" className="hidden sm:block h-5" />
