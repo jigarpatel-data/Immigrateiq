@@ -83,7 +83,7 @@ function DrawTrackerPage() {
     result.sort((a, b) => {
       const dateA = new Date(a["Draw Date"]).getTime();
       const dateB = new Date(b["Draw Date"]).getTime();
-      return sortOrder === 'newest' ? dateB - dateA : dateA - b.getTime();
+      return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
     });
 
     return result;
@@ -262,10 +262,10 @@ function DrawTrackerPage() {
                                     <p className="text-xs">Invitations</p>
                                 </div>
                             </div>
-                             <Button variant="outline" size="sm" className="bg-background" asChild>
+                             <Button variant="outline" size="icon" className="bg-background" asChild>
                                 <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
-                                    Source
-                                    <ExternalLink className="ml-2 h-4 w-4" />
+                                    <ExternalLink className="h-4 w-4" />
+                                    <span className="sr-only">Source</span>
                                 </Link>
                             </Button>
                         </div>
