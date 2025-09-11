@@ -55,7 +55,7 @@ function FaqPage() {
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       <header className="text-center">
-        <h1 className="text-3xl font-bold tracking-tight">Frequently Asked Questions</h1>
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Frequently Asked Questions</h1>
         <p className="text-muted-foreground mt-2">
           Find answers to common questions about Canadian immigration.
         </p>
@@ -76,7 +76,7 @@ function FaqPage() {
         {filteredFaqs.length > 0 ? (
           filteredFaqs.map((faq, index) => (
             <AccordionItem key={index} value={`item-${index}`}>
-              <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
+              <AccordionTrigger className="text-left text-base">{faq.question}</AccordionTrigger>
               <AccordionContent className="text-muted-foreground">
                 {faq.answer}
               </AccordionContent>

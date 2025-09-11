@@ -99,7 +99,7 @@ function ProgramTrackerPage() {
   return (
     <div className="space-y-6">
        <header>
-        <h1 className="text-3xl font-bold tracking-tight">Program Tracker</h1>
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Program Tracker</h1>
         <p className="text-muted-foreground">
           Check your eligibility for various PR programs.
         </p>
@@ -188,7 +188,7 @@ function ProgramTrackerPage() {
               {!loading && results && results.map((result, index) => (
                 <Card key={index} className={result.eligible ? 'border-green-500' : 'border-red-500'}>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-2 text-base md:text-lg">
                       {result.eligible ? <CheckCircle className="h-5 w-5 text-green-500" /> : <XCircle className="h-5 w-5 text-red-500" />}
                       {result.program}
                     </CardTitle>

@@ -147,7 +147,7 @@ function DrawTrackerPage() {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center">
         <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
-        <h1 className="text-2xl font-bold tracking-tight">Loading Draws...</h1>
+        <h1 className="text-xl md:text-2xl font-bold tracking-tight">Loading Draws...</h1>
         <p className="text-muted-foreground">Fetching the latest data from Airtable.</p>
       </div>
     );
@@ -166,7 +166,7 @@ function DrawTrackerPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-3xl font-bold tracking-tight">Draw Tracker</h1>
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Draw Tracker</h1>
         <p className="text-muted-foreground">
           Explore the latest Provincial and Federal immigration draws.
         </p>
@@ -236,7 +236,7 @@ function DrawTrackerPage() {
                       <div className="flex justify-between items-start gap-4">
                           <div>
                             <p className="text-sm text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</p>
-                            <CardTitle className="text-xl pt-1">{draw.Category}</CardTitle>
+                            <CardTitle className="text-lg md:text-xl pt-1">{draw.Category}</CardTitle>
                           </div>
                           <Badge variant="secondary" className="flex items-center gap-1.5 whitespace-nowrap text-xs sm:text-sm">
                             <Building className="h-3.5 w-3.5" />
@@ -251,14 +251,14 @@ function DrawTrackerPage() {
                             <div className="flex items-center gap-1.5">
                                 <Award className="h-5 w-5 text-accent" />
                                 <div>
-                                    <p className="font-bold text-lg">{draw.Score || 'N/A'}</p>
+                                    <p className="font-bold text-base md:text-lg">{draw.Score || 'N/A'}</p>
                                     <p className="text-xs">Min. Score</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-1.5">
                                 <Users className="h-5 w-5 text-accent" />
                                 <div>
-                                    <p className="font-bold text-lg">{draw["Total Draw Invitations"] || 'N/A'}</p>
+                                    <p className="font-bold text-base md:text-lg">{draw["Total Draw Invitations"] || 'N/A'}</p>
                                     <p className="text-xs">Invitations</p>
                                 </div>
                             </div>

@@ -81,7 +81,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Dashboard</h1>
         <p className="text-muted-foreground">
           Your personalized Canadian immigration overview.
         </p>
@@ -96,7 +96,7 @@ export default function DashboardPage() {
             <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">498</div>
+            <div className="text-xl md:text-2xl font-bold">498</div>
             <p className="text-xs text-muted-foreground">
               +3 from last month
             </p>
@@ -110,7 +110,7 @@ export default function DashboardPage() {
             <CheckCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">Eligible</div>
+            <div className="text-xl md:text-2xl font-bold">Eligible</div>
             <p className="text-xs text-muted-foreground">
               For Express Entry Pool
             </p>
@@ -124,7 +124,7 @@ export default function DashboardPage() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">522</div>
+            <div className="text-xl md:text-2xl font-bold">522</div>
             <p className="text-xs text-muted-foreground">General Draw</p>
           </CardContent>
         </Card>
@@ -136,7 +136,7 @@ export default function DashboardPage() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">3</div>
+            <div className="text-xl md:text-2xl font-bold">3</div>
             <p className="text-xs text-muted-foreground">
               Programs you may be eligible for
             </p>
@@ -238,14 +238,14 @@ export default function DashboardPage() {
             {recentDraws.map((draw) => (
               <div key={draw.date} className="rounded-lg border p-4 space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="font-semibold">{draw.date}</span>
+                  <span className="font-semibold text-sm">{draw.date}</span>
                   <Badge variant={draw.program === 'General' ? 'default' : 'secondary'} className={draw.program === 'General' ? 'bg-accent text-accent-foreground' : ''}>{draw.program}</Badge>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Invitations:</span>
                   <span>{draw.invitations}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">CRS Score:</span>
                   <span className="font-bold text-accent">{draw.score}</span>
                 </div>
