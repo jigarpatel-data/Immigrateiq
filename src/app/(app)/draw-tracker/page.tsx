@@ -231,8 +231,8 @@ function DrawTrackerPage() {
             <div className="grid gap-4 grid-cols-1">
               {displayedDraws.length > 0 ? (
                 displayedDraws.map((draw) => (
-                  <Card key={draw.id} className="flex flex-col sm:flex-row">
-                    <div className='flex-1 p-6 space-y-4'>
+                  <Card key={draw.id}>
+                    <div className='p-6 space-y-4'>
                       <div className="flex justify-between items-start gap-4">
                           <div>
                             <p className="text-sm text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</p>
@@ -243,35 +243,35 @@ function DrawTrackerPage() {
                             {draw.Province}
                           </Badge>
                       </div>
-                      <div className="text-sm text-muted-foreground">
-                          <p className="font-semibold text-card-foreground">Program/Occupations:</p>
-                          <p>{draw["NOC/Other"] || 'Not specified'}</p>
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
+                        <div className="text-sm text-muted-foreground sm:max-w-md">
+                            <p className="font-semibold text-card-foreground">Program/Occupations:</p>
+                            <p>{draw["NOC/Other"] || 'Not specified'}</p>
+                        </div>
+                        <div className='flex items-center gap-4 text-sm'>
+                            <div className="flex items-center gap-1.5">
+                                <Award className="h-5 w-5 text-accent" />
+                                <div>
+                                    <p className="font-bold text-lg">{draw.Score || 'N/A'}</p>
+                                    <p className="text-xs">Min. Score</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <Users className="h-5 w-5 text-accent" />
+                                <div>
+                                    <p className="font-bold text-lg">{draw["Total Draw Invitations"] || 'N/A'}</p>
+                                    <p className="text-xs">Invitations</p>
+                                </div>
+                            </div>
+                             <Button variant="outline" size="sm" className="bg-background" asChild>
+                                <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
+                                    Source
+                                    <ExternalLink className="ml-2 h-4 w-4" />
+                                </Link>
+                            </Button>
+                        </div>
                       </div>
                     </div>
-
-                    <div className='flex-shrink-0 sm:w-56 bg-secondary/30 sm:border-l p-6 space-y-4 flex flex-row sm:flex-col justify-around sm:justify-center rounded-b-lg sm:rounded-r-lg sm:rounded-b-none'>
-                        <div className="flex items-center gap-2">
-                            <Award className="h-6 w-6 text-accent" />
-                            <div>
-                                <p className="font-bold text-lg">{draw.Score || 'N/A'}</p>
-                                <p className="text-xs text-muted-foreground">Min. Score</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <Users className="h-6 w-6 text-accent" />
-                            <div>
-                                <p className="font-bold text-lg">{draw["Total Draw Invitations"] || 'N/A'}</p>
-                                <p className="text-xs text-muted-foreground">Invitations</p>
-                            </div>
-                        </div>
-                         <Button variant="outline" size="sm" className="w-full mt-0 sm:mt-4 bg-background" asChild>
-                          <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
-                              Official Source
-                              <ExternalLink className="ml-2 h-4 w-4" />
-                          </Link>
-                      </Button>
-                    </div>
-
                   </Card>
                 ))
               ) : (
