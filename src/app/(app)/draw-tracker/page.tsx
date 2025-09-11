@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from '@/components/ui/button';
 import { withAuth } from '@/hooks/use-auth';
-import { Award, Building, Calendar, ChevronsUpDown, ExternalLink, Filter, Loader2, Search, Users, X } from 'lucide-react';
+import { Award, Building, Calendar, ChevronsUpDown, ExternalLink, Filter, Info, Loader2, Search, Users, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import {
@@ -28,6 +28,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { getAirtableDraws, type Draw } from '@/lib/airtable';
 import { Separator } from '@/components/ui/separator';
 
@@ -252,13 +258,13 @@ function DrawTrackerPage() {
                             </Button>
                           </div>
                       </div>
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-start gap-4 sm:gap-6 pt-2 text-sm text-muted-foreground">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-center text-center sm:text-left gap-4 sm:gap-6 pt-2 text-sm text-muted-foreground">
                         
                         <p className='truncate' title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</p>
                         
                         <Separator orientation="vertical" className="hidden sm:block h-5" />
 
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center justify-center gap-1.5">
                             <Award className="h-4 w-4 text-accent" />
                             <span className="font-semibold text-foreground">{draw.Score || 'N/A'}</span>
                             <span className='hidden sm:inline'>Min. Score</span>
@@ -266,10 +272,25 @@ function DrawTrackerPage() {
                          
                         <Separator orientation="vertical" className="hidden sm:block h-5" />
                         
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center justify-center gap-1.5">
                             <Users className="h-4 w-4 text-accent" />
                             <span className="font-semibold text-foreground">{draw["Total Draw Invitations"] || 'N/A'}</span>
                              <span className='hidden sm:inline'>Invitations</span>
+                             <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <button>
+                                    <Info className="h-4 w-4 text-muted-foreground" />
+                                    <span className="sr-only">More info</span>
+                                  </button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p className="max-w-xs">
+                                    These many invitations were issued in this draw, not for any specific occupation. This draw may have invited other occupations as well.
+                                  </p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
                         </div>
                       </div>
                     </div>
