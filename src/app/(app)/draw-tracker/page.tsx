@@ -83,7 +83,7 @@ function DrawTrackerPage() {
     result.sort((a, b) => {
       const dateA = new Date(a["Draw Date"]).getTime();
       const dateB = new Date(b["Draw Date"]).getTime();
-      return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+      return sortOrder === 'newest' ? dateB - dateA : dateA - b.getTime();
     });
 
     return result;
@@ -245,7 +245,6 @@ function DrawTrackerPage() {
                       </div>
                       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
                         <div className="text-sm text-muted-foreground sm:max-w-md">
-                            <p className="font-semibold text-card-foreground">Program/Occupations:</p>
                             <p>{draw["NOC/Other"] || 'Not specified'}</p>
                         </div>
                         <div className='flex items-center gap-4 text-sm'>
