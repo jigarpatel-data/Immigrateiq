@@ -29,6 +29,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getAirtableDraws, type Draw } from '@/lib/airtable';
+import { Separator } from '@/components/ui/separator';
 
 const DRAWS_PER_PAGE = 10;
 
@@ -236,38 +237,39 @@ function DrawTrackerPage() {
                       <div className="flex justify-between items-start gap-4">
                           <div>
                             <p className="text-sm text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</p>
-                            <CardTitle className="text-lg md:text-xl pt-1">{draw.Category}</CardTitle>
+                            <CardTitle className="text-base font-semibold pt-1">{draw.Category}</CardTitle>
                           </div>
-                          <Badge variant="secondary" className="flex items-center gap-1.5 whitespace-nowrap text-xs sm:text-sm">
-                            <Building className="h-3.5 w-3.5" />
-                            {draw.Province}
-                          </Badge>
-                      </div>
-                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4">
-                        <div className="text-sm text-muted-foreground sm:max-w-md">
-                            <p>{draw["NOC/Other"] || 'Not specified'}</p>
-                        </div>
-                        <div className='flex items-center gap-4 text-sm'>
-                            <div className="flex items-center gap-1.5">
-                                <Award className="h-5 w-5 text-accent" />
-                                <div>
-                                    <p className="font-bold text-base md:text-lg">{draw.Score || 'N/A'}</p>
-                                    <p className="text-xs">Min. Score</p>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                                <Users className="h-5 w-5 text-accent" />
-                                <div>
-                                    <p className="font-bold text-base md:text-lg">{draw["Total Draw Invitations"] || 'N/A'}</p>
-                                    <p className="text-xs">Invitations</p>
-                                </div>
-                            </div>
-                             <Button variant="outline" size="icon" className="bg-background" asChild>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="secondary" className="flex items-center gap-1.5 whitespace-nowrap text-xs sm:text-sm">
+                              <Building className="h-3.5 w-3.5" />
+                              {draw.Province}
+                            </Badge>
+                             <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
                                 <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
                                     <ExternalLink className="h-4 w-4" />
                                     <span className="sr-only">Source</span>
                                 </Link>
                             </Button>
+                          </div>
+                      </div>
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-start gap-4 sm:gap-6 pt-2 text-sm text-muted-foreground">
+                        
+                        <p className='truncate' title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</p>
+                        
+                        <Separator orientation="vertical" className="hidden sm:block h-5" />
+
+                        <div className="flex items-center gap-1.5">
+                            <Award className="h-4 w-4 text-accent" />
+                            <span className="font-semibold text-foreground">{draw.Score || 'N/A'}</span>
+                            <span className='hidden sm:inline'>Min. Score</span>
+                        </div>
+                         
+                        <Separator orientation="vertical" className="hidden sm:block h-5" />
+                        
+                        <div className="flex items-center gap-1.5">
+                            <Users className="h-4 w-4 text-accent" />
+                            <span className="font-semibold text-foreground">{draw["Total Draw Invitations"] || 'N/A'}</span>
+                             <span className='hidden sm:inline'>Invitations</span>
                         </div>
                       </div>
                     </div>
@@ -297,3 +299,5 @@ function DrawTrackerPage() {
 }
 
 export default withAuth(DrawTrackerPage);
+
+    
