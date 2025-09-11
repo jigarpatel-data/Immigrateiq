@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { getAirtableDraws, type Draw } from '@/lib/airtable';
 
-const DRAWS_PER_PAGE = 9;
+const DRAWS_PER_PAGE = 10;
 
 function DrawTrackerPage() {
   const [allDraws, setAllDraws] = useState<Draw[]>([]);
@@ -60,8 +60,9 @@ function DrawTrackerPage() {
     fetchData();
   }, []);
 
-  const provinceOptions = useMemo(() => ["All", ...new Set(allDraws.map(d => d.Province))], [allDraws]);
-  const categoryOptions = useMemo(() => ["All", ...new Set(allDraws.map(d => d.Category))], [allDraws]);
+  const provinceOptions = useMemo(() => ["All", ...new Set(allDraws.map(d => d.Province).filter(Boolean).sort())], [allDraws]);
+  const categoryOptions = useMemo(() => ["All", ...new Set(allDraws.map(d => d.Category).filter(Boolean).sort())], [allDraws]);
+
 
   const filteredAndSortedDraws = useMemo(() => {
     let result = [...allDraws];
@@ -95,7 +96,7 @@ function DrawTrackerPage() {
       setPage(prevPage => prevPage + 1);
     }
   }, [hasMoreDraws]);
-
+  
   useEffect(() => {
     setDisplayedDraws(filteredAndSortedDraws.slice(0, page * DRAWS_PER_PAGE));
   }, [filteredAndSortedDraws, page]);
@@ -107,8 +108,8 @@ function DrawTrackerPage() {
   useEffect(() => {
     const options = {
       root: null,
-      rootMargin: '0px',
-      threshold: 1.0,
+      rootMargin: '200px', // Start loading a bit before the user hits the bottom
+      threshold: 0,
     };
 
     const handleObserver = (entries: IntersectionObserverEntry[]) => {
@@ -120,13 +121,14 @@ function DrawTrackerPage() {
     
     observer.current = new IntersectionObserver(handleObserver, options);
     
-    if (loadMoreRef.current) {
-      observer.current.observe(loadMoreRef.current);
+    const currentLoadMoreRef = loadMoreRef.current;
+    if (currentLoadMoreRef) {
+      observer.current.observe(currentLoadMoreRef);
     }
 
     return () => {
-      if(observer.current && loadMoreRef.current) {
-        observer.current.unobserve(loadMoreRef.current);
+      if(observer.current && currentLoadMoreRef) {
+        observer.current.unobserve(currentLoadMoreRef);
       }
     };
   }, [hasMoreDraws, loading, loadMoreDraws]);
@@ -226,52 +228,50 @@ function DrawTrackerPage() {
           </div>
         </CardHeader>
         <CardContent>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 grid-cols-1">
               {displayedDraws.length > 0 ? (
                 displayedDraws.map((draw) => (
-                  <Card key={draw.id} className="flex flex-col">
-                    <CardHeader className="pb-4">
-                      <div className="flex justify-between items-start">
+                  <Card key={draw.id} className="flex flex-col sm:flex-row">
+                    <div className='flex-1 p-6 space-y-4'>
+                      <div className="flex justify-between items-start gap-4">
                           <div>
                             <p className="text-sm text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</p>
                             <CardTitle className="text-xl pt-1">{draw.Category}</CardTitle>
                           </div>
-                          <Badge variant="secondary" className="flex items-center gap-1.5 whitespace-nowrap">
+                          <Badge variant="secondary" className="flex items-center gap-1.5 whitespace-nowrap text-xs sm:text-sm">
                             <Building className="h-3.5 w-3.5" />
                             {draw.Province}
                           </Badge>
                       </div>
-                    </CardHeader>
-                    <CardContent className="flex-grow space-y-4">
-                      <div className="flex gap-4">
-                          <div className="flex items-center gap-2">
-                              <Award className="h-5 w-5 text-accent" />
-                              <div>
-                                  <p className="font-bold text-lg">{draw.Score || 'N/A'}</p>
-                                  <p className="text-xs text-muted-foreground">Min. Score</p>
-                              </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                              <Users className="h-5 w-5 text-accent" />
-                              <div>
-                                  <p className="font-bold text-lg">{draw["Total Draw Invitations"] || 'N/A'}</p>
-                                  <p className="text-xs text-muted-foreground">Invitations</p>
-                              </div>
-                          </div>
+                      <div className="text-sm text-muted-foreground">
+                          <p className="font-semibold text-card-foreground">Program/Occupations:</p>
+                          <p>{draw["NOC/Other"] || 'Not specified'}</p>
                       </div>
-                       <div>
-                          <p className="text-sm font-semibold">Program/Occupations:</p>
-                          <p className="text-sm text-muted-foreground">{draw["NOC/Other"]}</p>
-                      </div>
-                    </CardContent>
-                    <CardFooter>
-                       <Button variant="outline" className="w-full" asChild>
+                    </div>
+
+                    <div className='flex-shrink-0 sm:w-56 bg-secondary/30 sm:border-l p-6 space-y-4 flex flex-row sm:flex-col justify-around sm:justify-center rounded-b-lg sm:rounded-r-lg sm:rounded-b-none'>
+                        <div className="flex items-center gap-2">
+                            <Award className="h-6 w-6 text-accent" />
+                            <div>
+                                <p className="font-bold text-lg">{draw.Score || 'N/A'}</p>
+                                <p className="text-xs text-muted-foreground">Min. Score</p>
+                            </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Users className="h-6 w-6 text-accent" />
+                            <div>
+                                <p className="font-bold text-lg">{draw["Total Draw Invitations"] || 'N/A'}</p>
+                                <p className="text-xs text-muted-foreground">Invitations</p>
+                            </div>
+                        </div>
+                         <Button variant="outline" size="sm" className="w-full mt-0 sm:mt-4 bg-background" asChild>
                           <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
                               Official Source
                               <ExternalLink className="ml-2 h-4 w-4" />
                           </Link>
                       </Button>
-                    </CardFooter>
+                    </div>
+
                   </Card>
                 ))
               ) : (
@@ -282,10 +282,10 @@ function DrawTrackerPage() {
                 </div>
               )}
             </div>
-            <div ref={loadMoreRef} className="h-10 col-span-full" />
+            <div ref={loadMoreRef} className="h-1 col-span-full" />
              {hasMoreDraws && (
                 <div className="flex justify-center mt-6">
-                    <Button onClick={loadMoreDraws} variant="secondary">
+                    <Button onClick={loadMoreDraws} variant="secondary" disabled={loading}>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Loading More...
                     </Button>
