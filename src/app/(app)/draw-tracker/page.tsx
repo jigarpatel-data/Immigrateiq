@@ -90,7 +90,7 @@ function DrawTrackerPage() {
     result.sort((a, b) => {
       const dateA = new Date(a["Draw Date"]).getTime();
       const dateB = new Date(b["Draw Date"]).getTime();
-      return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+      return sortOrder === 'newest' ? dateB - dateA : dateA - b.id.localeCompare(a.id);
     });
 
     return result;
@@ -310,11 +310,12 @@ function DrawTrackerPage() {
                         <p className="text-base font-semibold">{draw.Category}</p>
                         <Separator/>
                         <div className="space-y-2 text-sm">
-                            <div className="flex items-center gap-2">
-                                <span className="text-muted-foreground">Min. Score:</span>
-                                <span className="font-semibold text-foreground">{draw.Score || 'N/A'}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-4 text-sm">
+                                <div className="flex items-center gap-1.5">
+                                    <span className="text-muted-foreground">Min. Score:</span>
+                                    <span className="font-semibold text-foreground">{draw.Score || 'N/A'}</span>
+                                </div>
+                                <Separator orientation="vertical" className="h-4" />
                                 <div className='flex items-center gap-1.5'>
                                     <span className="text-muted-foreground">Invitations:</span>
                                     <span className="font-semibold text-foreground">{draw["Total Draw Invitations"] || 'N/A'}</span>
