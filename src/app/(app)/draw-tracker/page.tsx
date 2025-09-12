@@ -259,14 +259,14 @@ function DrawTrackerPage() {
                             </Button>
                           </div>
                       </div>
-                      <div className="flex items-center justify-center text-center sm:text-left gap-4 sm:gap-6 pt-2 text-sm text-muted-foreground">
-                        <div className="flex items-center justify-center gap-1.5">
+                      <div className="flex items-center text-center sm:text-left gap-4 sm:gap-6 pt-2 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-1.5">
                             <Award className="h-4 w-4 text-accent" />
                             <span className="font-semibold text-foreground">{draw.Score || 'N/A'}</span>
                             <span className='hidden sm:inline'>Min. Score</span>
                         </div>
                         <Separator orientation="vertical" className="h-5" />
-                        <div className="flex items-center justify-center gap-1.5">
+                        <div className="flex items-center gap-1.5">
                             <Users className="h-4 w-4 text-accent" />
                             <span className="font-semibold text-foreground">{draw["Total Draw Invitations"] || 'N/A'}</span>
                              <span className='hidden sm:inline'>Invitations</span>
@@ -310,12 +310,12 @@ function DrawTrackerPage() {
                         <p className="text-base font-semibold">{draw.Category}</p>
                         <Separator/>
                         <div className="space-y-2 text-sm">
-                            <div className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">Min. Score:</span>
+                            <div className="flex text-sm">
+                                <span className="text-muted-foreground mr-2">Min. Score:</span>
                                 <span className="font-semibold text-foreground">{draw.Score || 'N/A'}</span>
                             </div>
-                            <div className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">Invitations:</span>
+                            <div className="flex text-sm">
+                                <span className="text-muted-foreground mr-2">Invitations:</span>
                                 <div className='flex items-center gap-1.5'>
                                   <span className="font-semibold text-foreground">{draw["Total Draw Invitations"] || 'N/A'}</span>
                                   <TooltipProvider>
