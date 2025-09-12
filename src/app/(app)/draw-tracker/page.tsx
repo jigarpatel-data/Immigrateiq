@@ -310,13 +310,13 @@ function DrawTrackerPage() {
                         <p className="text-base font-semibold">{draw.Category}</p>
                         <Separator/>
                         <div className="space-y-2 text-sm">
-                            <div className="flex justify-between">
+                            <div className="flex items-center gap-2">
                                 <span className="text-muted-foreground">Min. Score:</span>
                                 <span className="font-semibold text-foreground">{draw.Score || 'N/A'}</span>
                             </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-muted-foreground">Invitations:</span>
+                            <div className="flex items-center gap-2">
                                 <div className='flex items-center gap-1.5'>
+                                    <span className="text-muted-foreground">Invitations:</span>
                                     <span className="font-semibold text-foreground">{draw["Total Draw Invitations"] || 'N/A'}</span>
                                     <TooltipProvider>
                                     <Tooltip>
