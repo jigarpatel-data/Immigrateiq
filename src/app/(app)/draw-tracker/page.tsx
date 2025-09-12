@@ -19,15 +19,9 @@ import {
 } from "@/components/ui/select";
 import { Button } from '@/components/ui/button';
 import { withAuth } from '@/hooks/use-auth';
-import { Award, Building, Calendar, ChevronsUpDown, ExternalLink, Filter, Info, Loader2, Search, Users, X } from 'lucide-react';
+import { Award, Building, Calendar, ExternalLink, Filter, Info, Loader2, Search, Users, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
@@ -51,7 +45,6 @@ function DrawTrackerPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [provinceFilter, setProvinceFilter] = useState('All');
   const [categoryFilter, setCategoryFilter] = useState('All');
-  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest');
 
   useEffect(() => {
     async function fetchData() {
@@ -103,11 +96,11 @@ function DrawTrackerPage() {
     result.sort((a, b) => {
       const dateA = new Date(a["Draw Date"]).getTime();
       const dateB = new Date(b["Draw Date"]).getTime();
-      return sortOrder === 'newest' ? dateB - dateA : dateA - b.id.localeCompare(a.id);
+      return dateB - dateA;
     });
 
     return result;
-  }, [allDraws, searchTerm, provinceFilter, categoryFilter, sortOrder]);
+  }, [allDraws, searchTerm, provinceFilter, categoryFilter]);
 
   const hasMoreDraws = displayedDraws.length < filteredAndSortedDraws.length;
 
@@ -123,7 +116,7 @@ function DrawTrackerPage() {
 
   useEffect(() => {
     setPage(1); // Reset page when filters change
-  }, [searchTerm, provinceFilter, categoryFilter, sortOrder]);
+  }, [searchTerm, provinceFilter, categoryFilter]);
 
   useEffect(() => {
     const options = {
@@ -158,7 +151,6 @@ function DrawTrackerPage() {
     setSearchTerm('');
     setProvinceFilter('All');
     setCategoryFilter('All');
-    setSortOrder('newest');
   };
   
   const activeFilterCount = [searchTerm, provinceFilter, categoryFilter].filter(f => f && f !== 'All').length;
@@ -225,20 +217,7 @@ function DrawTrackerPage() {
                       ))}
                   </SelectContent>
               </Select>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="w-full sm:w-auto">
-                        <ChevronsUpDown className="mr-2 h-4 w-4" />
-                        Sort by Date
-                        <Badge variant="secondary" className="ml-2">{sortOrder === 'newest' ? 'Newest' : 'Oldest'}</Badge>
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setSortOrder('newest')}>Newest First</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setSortOrder('oldest')}>Oldest First</DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
-
+            
             {activeFilterCount > 0 && (
                 <Button variant="ghost" onClick={resetFilters} className="w-full sm:w-auto">
                     <X className="mr-2 h-4 w-4" />
@@ -379,3 +358,6 @@ function DrawTrackerPage() {
 }
 
 export default withAuth(DrawTrackerPage);
+
+    
+    
