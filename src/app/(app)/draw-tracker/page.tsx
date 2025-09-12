@@ -90,7 +90,7 @@ function DrawTrackerPage() {
     result.sort((a, b) => {
       const dateA = new Date(a["Draw Date"]).getTime();
       const dateB = new Date(b["Draw Date"]).getTime();
-      return sortOrder === 'newest' ? dateB - dateA : dateA - bB;
+      return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
     });
 
     return result;
@@ -293,7 +293,7 @@ function DrawTrackerPage() {
                     {/* Mobile View */}
                     <div className="sm:hidden p-4 space-y-3">
                         <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</span>
+                            <span className="text-xs text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</span>
                             <div className="flex items-center gap-2">
                                 <Badge variant="secondary" className="flex items-center gap-1.5 text-xs">
                                 <Building className="h-3.5 w-3.5" />
@@ -335,9 +335,8 @@ function DrawTrackerPage() {
                                     </TooltipProvider>
                                 </div>
                             </div>
-                             <div className="flex justify-between">
-                                <span className="text-muted-foreground truncate">NOC/Other:</span>
-                                <span className='font-semibold text-foreground truncate pl-2' title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</span>
+                             <div className="flex justify-between items-start">
+                                <span className='text-xs text-muted-foreground truncate' title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</span>
                             </div>
                         </div>
                     </div>
