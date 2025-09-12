@@ -118,6 +118,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
             </SidebarFooter>
         </Sidebar>
         <SidebarInset className="flex flex-col min-h-screen">
+          {/* Mobile Header */}
           <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6 lg:hidden">
               <div className="flex items-center gap-2">
                   <SidebarTrigger />
@@ -134,6 +135,10 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
                     </Avatar>
                   </Link>
                )}
+          </header>
+          {/* Desktop Header */}
+          <header className="sticky top-0 z-10 hidden h-14 items-center gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6 lg:flex">
+              <SidebarTrigger />
           </header>
           <main className="flex-1 overflow-auto p-4 sm:p-6">
             {mainContent}
