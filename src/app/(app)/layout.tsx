@@ -54,7 +54,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
   // This inner component is necessary to use the useSidebar hook
   const SidebarLayout = ({ children: mainContent }: { children: React.ReactNode }) => {
     const pathname = usePathname();
-    const { setOpenMobile, state } = useSidebar();
+    const { setOpenMobile } = useSidebar();
     
     const handleLinkClick = () => {
       setOpenMobile(false);
@@ -64,12 +64,11 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
       <>
         <Sidebar>
           <SidebarHeader>
-            <div className="flex items-center justify-between gap-2 p-2">
+            <div className="flex items-center gap-2 p-2">
               <Link href="/dashboard" className="flex items-center gap-2">
                 <Landmark className="w-8 h-8 text-accent" />
                 <span className="text-lg font-semibold group-data-[collapsible=icon]:hidden">TheCanIndian</span>
               </Link>
-              <SidebarTrigger className="group-data-[collapsible=icon]:hidden"/>
             </div>
           </SidebarHeader>
           <SidebarContent>
@@ -118,8 +117,8 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
             </SidebarFooter>
         </Sidebar>
         <SidebarInset className="flex flex-col min-h-screen">
-          {/* Mobile Header */}
-          <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6 lg:hidden">
+          {/* Unified Header for Mobile and Desktop */}
+          <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6">
               <div className="flex items-center gap-2">
                   <SidebarTrigger />
                   <Link href="/dashboard" className="flex items-center gap-2">
@@ -128,17 +127,13 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
                   </Link>
               </div>
                {user && (
-                  <Link href="/profile">
-                    <Avatar className="h-8 w-8">
-                        <AvatarImage src={user.photoURL ?? `https://i.pravatar.cc/150?u=${user.uid}`} alt={user.displayName ?? "User"} data-ai-hint="profile avatar" />
-                        <AvatarFallback>{user.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
-                    </Avatar>
-                  </Link>
+                <Link href="/profile" className="lg:hidden">
+                  <Avatar className="h-8 w-8">
+                      <AvatarImage src={user.photoURL ?? `https://i.pravatar.cc/150?u=${user.uid}`} alt={user.displayName ?? "User"} data-ai-hint="profile avatar" />
+                      <AvatarFallback>{user.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
+                  </Avatar>
+                </Link>
                )}
-          </header>
-          {/* Desktop Header */}
-          <header className="sticky top-0 z-10 hidden h-14 items-center gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6 lg:flex">
-              <SidebarTrigger />
           </header>
           <main className="flex-1 overflow-auto p-4 sm:p-6">
             {mainContent}
