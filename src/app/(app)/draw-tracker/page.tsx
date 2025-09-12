@@ -193,7 +193,7 @@ function DrawTrackerPage() {
                   />
               </div>
               <Select value={provinceFilter} onValueChange={setProvinceFilter}>
-                  <SelectTrigger className="w-full sm:w-[180px]">
+                  <SelectTrigger className="w-full sm:w-auto flex-grow sm:flex-grow-0 sm:basis-48">
                       <SelectValue placeholder="Filter by province" />
                   </SelectTrigger>
                   <SelectContent>
@@ -203,7 +203,7 @@ function DrawTrackerPage() {
                   </SelectContent>
               </Select>
                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                  <SelectTrigger className="w-full sm:w-[180px]">
+                  <SelectTrigger className="w-full sm:w-auto flex-grow sm:flex-grow-0 sm:basis-48">
                       <SelectValue placeholder="Filter by category" />
                   </SelectTrigger>
                   <SelectContent>

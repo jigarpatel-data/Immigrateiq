@@ -208,7 +208,7 @@ export default function DashboardPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="hidden md:block">
+          <div className="hidden sm:block">
             <div className="relative w-full overflow-auto">
               <Table>
                 <TableHeader>
@@ -234,7 +234,7 @@ export default function DashboardPage() {
               </Table>
             </div>
           </div>
-          <div className="grid gap-4 md:hidden">
+          <div className="grid gap-4 sm:hidden">
             {recentDraws.map((draw) => (
               <div key={draw.date} className="rounded-lg border p-4 space-y-3">
                 <div className="flex justify-between items-center">
