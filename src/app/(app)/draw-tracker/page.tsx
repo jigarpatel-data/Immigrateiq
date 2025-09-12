@@ -193,7 +193,7 @@ function DrawTrackerPage() {
                   />
               </div>
               <Select value={provinceFilter} onValueChange={setProvinceFilter}>
-                  <SelectTrigger className="w-full sm:w-auto flex-grow sm:flex-grow-0 sm:basis-48">
+                  <SelectTrigger className="w-full sm:w-auto flex-grow sm:flex-grow-0 sm:min-w-40">
                       <SelectValue placeholder="Filter by province" />
                   </SelectTrigger>
                   <SelectContent>
@@ -203,7 +203,7 @@ function DrawTrackerPage() {
                   </SelectContent>
               </Select>
                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                  <SelectTrigger className="w-full sm:w-auto flex-grow sm:flex-grow-0 sm:basis-48">
+                  <SelectTrigger className="w-full sm:w-auto flex-grow sm:flex-grow-0 sm:min-w-40">
                       <SelectValue placeholder="Filter by category" />
                   </SelectTrigger>
                   <SelectContent>
@@ -291,7 +291,7 @@ function DrawTrackerPage() {
                       </div>
                     </div>
                     {/* Mobile View */}
-                    <div className="sm:hidden p-4 space-y-3">
+                    <div className="sm:hidden p-3 space-y-3">
                         <div className="flex justify-between items-center">
                             <span className="text-xs text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</span>
                             <div className="flex items-center gap-2">
@@ -335,7 +335,7 @@ function DrawTrackerPage() {
                                     </TooltipProvider>
                                 </div>
                             </div>
-                             <div className="flex justify-between items-start">
+                             <div className="flex items-center">
                                 <span className='text-xs text-muted-foreground truncate' title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</span>
                             </div>
                         </div>
