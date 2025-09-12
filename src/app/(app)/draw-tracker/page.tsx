@@ -68,7 +68,20 @@ function DrawTrackerPage() {
   }, []);
 
   const provinceOptions = useMemo(() => ["All", ...new Set(allDraws.map(d => d.Province).filter(Boolean).sort())], [allDraws]);
-  const categoryOptions = useMemo(() => ["All", ...new Set(allDraws.map(d => d.Category).filter(Boolean).sort())], [allDraws]);
+
+  const categoryOptions = useMemo(() => {
+    let relevantDraws = allDraws;
+    if (provinceFilter !== 'All') {
+      relevantDraws = allDraws.filter(draw => draw.Province === provinceFilter);
+    }
+    const categories = new Set(relevantDraws.map(d => d.Category).filter(Boolean));
+    return ["All", ...Array.from(categories).sort()];
+  }, [allDraws, provinceFilter]);
+
+  // When province filter changes, reset category filter
+  useEffect(() => {
+    setCategoryFilter('All');
+  }, [provinceFilter]);
 
 
   const filteredAndSortedDraws = useMemo(() => {
