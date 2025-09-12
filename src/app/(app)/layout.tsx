@@ -64,11 +64,12 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
       <>
         <Sidebar>
           <SidebarHeader>
-            <div className="flex items-center gap-2 p-2">
+            <div className="flex items-center justify-between p-2">
               <Link href="/dashboard" className="flex items-center gap-2">
                 <Landmark className="w-8 h-8 text-accent" />
                 <span className="text-lg font-semibold group-data-[collapsible=icon]:hidden">TheCanIndian</span>
               </Link>
+               <SidebarTrigger className="lg:hidden" />
             </div>
           </SidebarHeader>
           <SidebarContent>
