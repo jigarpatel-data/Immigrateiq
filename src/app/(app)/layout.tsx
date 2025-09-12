@@ -54,7 +54,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
   // This inner component is necessary to use the useSidebar hook
   const SidebarLayout = ({ children: mainContent }: { children: React.ReactNode }) => {
     const pathname = usePathname();
-    const { setOpenMobile } = useSidebar();
+    const { setOpenMobile, state } = useSidebar();
     
     const handleLinkClick = () => {
       setOpenMobile(false);
@@ -64,11 +64,12 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
       <>
         <Sidebar>
           <SidebarHeader>
-            <div className="flex items-center gap-2 p-2">
+            <div className="flex items-center justify-between gap-2 p-2">
               <Link href="/dashboard" className="flex items-center gap-2">
                 <Landmark className="w-8 h-8 text-accent" />
-                <span className="text-lg font-semibold">TheCanIndian</span>
+                <span className="text-lg font-semibold group-data-[collapsible=icon]:hidden">TheCanIndian</span>
               </Link>
+              <SidebarTrigger className="group-data-[collapsible=icon]:hidden"/>
             </div>
           </SidebarHeader>
           <SidebarContent>
