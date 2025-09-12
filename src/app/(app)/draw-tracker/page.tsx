@@ -239,14 +239,15 @@ function DrawTrackerPage() {
               {displayedDraws.length > 0 ? (
                 displayedDraws.map((draw) => (
                   <Card key={draw.id}>
-                    <div className='p-6 space-y-4'>
+                    {/* Desktop View */}
+                    <div className='hidden sm:block p-6 space-y-4'>
                       <div className="flex justify-between items-start gap-4">
                           <div>
                             <p className="text-sm text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</p>
                             <CardTitle className="text-base font-semibold pt-1">{draw.Category}</CardTitle>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Badge variant="secondary" className="flex items-center gap-1.5 whitespace-nowrap text-xs sm:text-sm">
+                            <Badge variant="secondary" className="flex items-center gap-1.5 whitespace-nowrap text-xs">
                               <Building className="h-3.5 w-3.5" />
                               {draw.Province}
                             </Badge>
@@ -258,15 +259,13 @@ function DrawTrackerPage() {
                             </Button>
                           </div>
                       </div>
-                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-start text-center sm:text-left gap-4 sm:gap-6 pt-2 text-sm text-muted-foreground">
+                      <div className="flex items-center justify-center text-center sm:text-left gap-4 sm:gap-6 pt-2 text-sm text-muted-foreground">
                         <div className="flex items-center justify-center gap-1.5">
                             <Award className="h-4 w-4 text-accent" />
                             <span className="font-semibold text-foreground">{draw.Score || 'N/A'}</span>
                             <span className='hidden sm:inline'>Min. Score</span>
                         </div>
-
-                        <Separator orientation="vertical" className="hidden sm:block h-5" />
-                        
+                        <Separator orientation="vertical" className="h-5" />
                         <div className="flex items-center justify-center gap-1.5">
                             <Users className="h-4 w-4 text-accent" />
                             <span className="font-semibold text-foreground">{draw["Total Draw Invitations"] || 'N/A'}</span>
@@ -287,11 +286,60 @@ function DrawTrackerPage() {
                               </Tooltip>
                             </TooltipProvider>
                         </div>
-                         
-                        <Separator orientation="vertical" className="hidden sm:block h-5" />
-                        
+                        <Separator orientation="vertical" className="h-5" />
                         <p className='truncate' title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</p>
                       </div>
+                    </div>
+                    {/* Mobile View */}
+                    <div className="sm:hidden p-4 space-y-3">
+                        <div className="flex justify-between items-center">
+                            <span className="text-sm text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</span>
+                            <div className="flex items-center gap-2">
+                                <Badge variant="secondary" className="flex items-center gap-1.5 text-xs">
+                                <Building className="h-3.5 w-3.5" />
+                                {draw.Province}
+                                </Badge>
+                                <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+                                    <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
+                                        <ExternalLink className="h-4 w-4" />
+                                        <span className="sr-only">Source</span>
+                                    </Link>
+                                </Button>
+                            </div>
+                        </div>
+                        <p className="text-base font-semibold">{draw.Category}</p>
+                        <Separator/>
+                        <div className="space-y-2 text-sm">
+                            <div className="flex justify-between">
+                                <span className="text-muted-foreground">Min. Score:</span>
+                                <span className="font-semibold text-foreground">{draw.Score || 'N/A'}</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                                <span className="text-muted-foreground">Invitations:</span>
+                                <div className='flex items-center gap-1.5'>
+                                    <span className="font-semibold text-foreground">{draw["Total Draw Invitations"] || 'N/A'}</span>
+                                    <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                        <button>
+                                            <Info className="h-4 w-4 text-muted-foreground" />
+                                            <span className="sr-only">More info</span>
+                                        </button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                        <p className="max-w-xs">
+                                            These many invitations were issued in this draw, not for any specific occupation. This draw may have invited other occupations as well.
+                                        </p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                    </TooltipProvider>
+                                </div>
+                            </div>
+                             <div className="flex justify-between">
+                                <span className="text-muted-foreground truncate">NOC/Other:</span>
+                                <span className='font-semibold text-foreground truncate pl-2' title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</span>
+                            </div>
+                        </div>
                     </div>
                   </Card>
                 ))
