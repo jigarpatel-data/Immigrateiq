@@ -67,9 +67,9 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
         <Sidebar collapsible="icon">
           <SidebarHeader>
             <div className="flex items-center justify-between p-2 group-data-[collapsible=icon]:justify-center">
-              <Link href="/dashboard" className="flex items-center gap-2 group-data-[collapsible=icon]:hidden">
+              <Link href="/dashboard" className="flex items-center gap-2">
                 <Landmark className="w-8 h-8 text-accent" />
-                <span className="text-lg font-semibold">TheCanIndian</span>
+                <span className="text-lg font-semibold group-data-[collapsible=icon]:hidden">TheCanIndian</span>
               </Link>
                <SidebarTrigger className="lg:hidden">
                   <PanelLeft />
