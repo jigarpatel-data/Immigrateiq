@@ -64,7 +64,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
       <>
         <Sidebar collapsible="icon">
           <SidebarHeader>
-            <div className="flex items-center justify-between p-2">
+            <div className="flex items-center justify-center p-2 group-data-[collapsible=icon]:justify-center">
               <Link href="/dashboard" className="flex items-center gap-2">
                 <Landmark className="w-8 h-8 text-accent" />
                 <span className="text-lg font-semibold group-data-[collapsible=icon]:hidden">TheCanIndian</span>
@@ -72,7 +72,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
                <SidebarTrigger className="lg:hidden" />
             </div>
           </SidebarHeader>
-          <SidebarContent>
+          <SidebarContent className="justify-center">
             <SidebarMenu>
               {visibleNavItems.map((item) => (
                 <SidebarMenuItem key={item.href}>
