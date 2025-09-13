@@ -26,6 +26,7 @@ import {
   ListChecks,
   Landmark,
   LogOut,
+  PanelLeft,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
 import { useAuth } from "@/hooks/use-auth";
@@ -64,12 +65,14 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
       <>
         <Sidebar collapsible="icon">
           <SidebarHeader>
-            <div className="flex items-center justify-center p-2 group-data-[collapsible=icon]:justify-center">
-              <Link href="/dashboard" className="flex items-center gap-2">
+            <div className="flex items-center justify-between p-2 group-data-[collapsible=icon]:justify-center">
+              <Link href="/dashboard" className="flex items-center gap-2 group-data-[collapsible=icon]:hidden">
                 <Landmark className="w-8 h-8 text-accent" />
-                <span className="text-lg font-semibold group-data-[collapsible=icon]:hidden">TheCanIndian</span>
+                <span className="text-lg font-semibold">TheCanIndian</span>
               </Link>
-               <SidebarTrigger className="lg:hidden" />
+               <SidebarTrigger className="lg:hidden">
+                  <PanelLeft />
+               </SidebarTrigger>
             </div>
           </SidebarHeader>
           <SidebarContent>
