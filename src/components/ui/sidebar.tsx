@@ -414,6 +414,7 @@ const SidebarContent = React.forwardRef<
     />
   )
 })
+
 SidebarContent.displayName = "SidebarContent"
 
 const SidebarGroup = React.forwardRef<
