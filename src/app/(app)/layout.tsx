@@ -72,7 +72,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
                <SidebarTrigger className="lg:hidden" />
             </div>
           </SidebarHeader>
-          <SidebarContent className="justify-center">
+          <SidebarContent>
             <SidebarMenu>
               {visibleNavItems.map((item) => (
                 <SidebarMenuItem key={item.href}>
