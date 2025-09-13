@@ -62,7 +62,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
 
     return (
       <>
-        <Sidebar>
+        <Sidebar collapsible="icon">
           <SidebarHeader>
             <div className="flex items-center justify-between p-2">
               <Link href="/dashboard" className="flex items-center gap-2">
