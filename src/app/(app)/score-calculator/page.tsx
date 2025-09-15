@@ -51,8 +51,8 @@ const formSchema = z.object({
     hasSpouse: z.enum(["no", "yes"]),
     age: z.coerce.number().min(17, "Age must be 17 or over."),
     education: z.enum(educationLevels),
-    canadianWorkExperience: z.coerce.number().min(0),
-    foreignWorkExperience: z.coerce.number().min(0),
+    canadianWorkExperience: z.coerce.number().min(0).max(5),
+    foreignWorkExperience: z.coerce.number().min(0).max(3),
     
     firstLanguage_listening: z.coerce.number().min(0).max(12),
     firstLanguage_reading: z.coerce.number().min(0).max(12),
@@ -66,7 +66,7 @@ const formSchema = z.object({
     secondLanguage_speaking: z.coerce.number().min(0).max(12).optional(),
     
     spouse_education: z.enum(educationLevels).optional(),
-    spouse_canadianWorkExperience: z.coerce.number().min(0).optional(),
+    spouse_canadianWorkExperience: z.coerce.number().min(0).max(5).optional(),
     spouse_firstLanguage_listening: z.coerce.number().min(0).max(12).optional(),
     spouse_firstLanguage_reading: z.coerce.number().min(0).max(12).optional(),
     spouse_firstLanguage_writing: z.coerce.number().min(0).max(12).optional(),
@@ -150,7 +150,7 @@ function ScoreCalculatorPage() {
                 provincialNomination: data.provincialNomination === "yes",
                 siblingInCanada: data.siblingInCanada === "yes",
                 postSecondaryEducationInCanada: data.postSecondaryEducationInCanada,
-                frenchSkills: false, // This is derived inside the calculator
+                frenchSkills: 0,
                 points: 0,
             },
             certificateOfQualification: data.certificateOfQualification === 'yes',
@@ -275,10 +275,37 @@ function ScoreCalculatorPage() {
                              {step === 4 && (
                                 <div className="space-y-6">
                                     <FormField control={form.control} name="canadianWorkExperience" render={({ field }) => (
-                                        <FormItem><FormLabel>Years of skilled work experience in Canada</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormDescription>In the last 10 years.</FormDescription><FormMessage /></FormItem>
+                                        <FormItem>
+                                            <FormLabel>Years of skilled work experience in Canada</FormLabel>
+                                            <Select onValueChange={(val) => field.onChange(Number(val))} defaultValue={String(field.value)}>
+                                                <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="0">None or less than a year</SelectItem>
+                                                    <SelectItem value="1">1 year</SelectItem>
+                                                    <SelectItem value="2">2 years</SelectItem>
+                                                    <SelectItem value="3">3 years</SelectItem>
+                                                    <SelectItem value="4">4 years</SelectItem>
+                                                    <SelectItem value="5">5 years or more</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormDescription>In the last 10 years.</FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
                                     )} />
                                      <FormField control={form.control} name="foreignWorkExperience" render={({ field }) => (
-                                        <FormItem><FormLabel>Years of foreign skilled work experience</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormDescription>In the last 10 years.</FormDescription><FormMessage /></FormItem>
+                                        <FormItem>
+                                            <FormLabel>Years of foreign skilled work experience</FormLabel>
+                                            <Select onValueChange={(val) => field.onChange(Number(val))} defaultValue={String(field.value)}>
+                                                <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="0">None or less than a year</SelectItem>
+                                                    <SelectItem value="1">1 or 2 years</SelectItem>
+                                                    <SelectItem value="3">3 years or more</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormDescription>In the last 10 years.</FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
                                     )} />
                                 </div>
                             )}
@@ -297,7 +324,21 @@ function ScoreCalculatorPage() {
                                         </FormItem>
                                     )}/>
                                     <FormField control={form.control} name="spouse_canadianWorkExperience" render={({ field }) => (
-                                        <FormItem><FormLabel>Spouse's years of Canadian work experience</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
+                                       <FormItem>
+                                            <FormLabel>Spouse's years of Canadian work experience</FormLabel>
+                                            <Select onValueChange={(val) => field.onChange(Number(val))} defaultValue={String(field.value)}>
+                                                <FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="0">None or less than a year</SelectItem>
+                                                    <SelectItem value="1">1 year</SelectItem>
+                                                    <SelectItem value="2">2 years</SelectItem>
+                                                    <SelectItem value="3">3 years</SelectItem>
+                                                    <SelectItem value="4">4 years</SelectItem>
+                                                    <SelectItem value="5">5 years or more</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
                                     )} />
                                      <div>
                                         <h3 className="text-md font-medium mb-4">Spouse's Language Proficiency</h3>
@@ -397,21 +438,22 @@ function ScoreBreakdownTable({ details }: { details: CrsFactors }) {
             </CardHeader>
             <CardContent>
                 <div className="space-y-4">
-                    <div>
-                        <h3 className="font-semibold">Core / Human Capital Factors: {coreHumanCapital}</h3>
+                    <div className="border-b pb-2">
+                        <h3 className="font-semibold flex justify-between"><span>Core / Human Capital Factors</span> <span>{coreHumanCapital}</span></h3>
                         <Table>
                             <TableBody>
                                 <TableRow><TableCell>Age</TableCell><TableCell className="text-right">{details.age.points}</TableCell></TableRow>
                                 <TableRow><TableCell>Level of Education</TableCell><TableCell className="text-right">{details.education.points}</TableCell></TableRow>
-                                <TableRow><TableCell>Official Languages</TableCell><TableCell className="text-right">{details.firstLanguage.points + details.secondLanguage.points}</TableCell></TableRow>
+                                <TableRow><TableCell>First Official Language</TableCell><TableCell className="text-right">{details.firstLanguage.points}</TableCell></TableRow>
+                                <TableRow><TableCell>Second Official Language</TableCell><TableCell className="text-right">{details.secondLanguage.points}</TableCell></TableRow>
                                 <TableRow><TableCell>Canadian Work Experience</TableCell><TableCell className="text-right">{details.canadianWorkExperience.points}</TableCell></TableRow>
                             </TableBody>
                         </Table>
                     </div>
 
                     {details.hasSpouse && (
-                        <div>
-                            <h3 className="font-semibold">Spouse Factors: {spousePoints}</h3>
+                        <div className="border-b pb-2">
+                            <h3 className="font-semibold flex justify-between"><span>Spouse Factors</span> <span>{spousePoints}</span></h3>
                             <Table>
                                 <TableBody>
                                      <TableRow><TableCell>Level of Education</TableCell><TableCell className="text-right">{details.spouse.education.points}</TableCell></TableRow>
@@ -422,10 +464,10 @@ function ScoreBreakdownTable({ details }: { details: CrsFactors }) {
                         </div>
                     )}
 
-                    <div>
-                        <h3 className="font-semibold">Skill Transferability Factors: {skillTransferability}</h3>
+                    <div className="border-b pb-2">
+                        <h3 className="font-semibold flex justify-between"><span>Skill Transferability Factors</span> <span>{skillTransferability}</span></h3>
                         <Table>
-                            <TableBody>
+                             <TableBody>
                                 <TableRow><TableCell>Education</TableCell><TableCell className="text-right">{details.skillTransferability.education.points}</TableCell></TableRow>
                                 <TableRow><TableCell>Foreign Work Experience</TableCell><TableCell className="text-right">{details.skillTransferability.foreignWorkExperience.points}</TableCell></TableRow>
                                 <TableRow><TableCell>Certificate of Qualification</TableCell><TableCell className="text-right">{details.skillTransferability.qualification.points}</TableCell></TableRow>
@@ -433,19 +475,19 @@ function ScoreBreakdownTable({ details }: { details: CrsFactors }) {
                         </Table>
                     </div>
 
-                     <div>
-                        <h3 className="font-semibold">Additional Points: {additionalPoints}</h3>
+                     <div className="border-b pb-2">
+                        <h3 className="font-semibold flex justify-between"><span>Additional Points</span> <span>{additionalPoints}</span></h3>
                          <Table>
                             <TableBody>
                                 <TableRow><TableCell>Provincial Nomination</TableCell><TableCell className="text-right">{details.additional.provincialNomination ? 600 : 0}</TableCell></TableRow>
                                 <TableRow><TableCell>Study in Canada</TableCell><TableCell className="text-right">{details.additional.postSecondaryEducationInCanada === '1-2 years' ? 15 : details.additional.postSecondaryEducationInCanada === '3+ years' ? 30 : 0}</TableCell></TableRow>
                                 <TableRow><TableCell>Sibling in Canada</TableCell><TableCell className="text-right">{details.additional.siblingInCanada ? 15 : 0}</TableCell></TableRow>
-                                <TableRow><TableCell>French-language skills</TableCell><TableCell className="text-right">{details.additional.frenchSkills ? 'TBD' : 0}</TableCell></TableRow>
+                                <TableRow><TableCell>French-language skills</TableCell><TableCell className="text-right">{details.additional.frenchSkills}</TableCell></TableRow>
                             </TableBody>
                         </Table>
                     </div>
 
-                     <div className="font-bold text-lg flex justify-between border-t pt-4">
+                     <div className="font-bold text-lg flex justify-between pt-2">
                         <span>Grand Total</span>
                         <span>{total}</span>
                     </div>
