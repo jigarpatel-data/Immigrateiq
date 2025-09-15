@@ -34,7 +34,7 @@ import { Separator } from '@/components/ui/separator';
 const DRAWS_PER_PAGE = 10;
 
 function DrawTrackerPage() {
-  const [allDraws, setAllDraws] = useState<Draw[]>([]);
+  const [allDraws, setAllDraws] = useState<Map<string, Draw>>(new Map());
   const [displayedDraws, setDisplayedDraws] = useState<Draw[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -58,8 +58,14 @@ function DrawTrackerPage() {
     if (fetchError) {
       setError(fetchError);
     } else if (fetchedDraws) {
-      const formattedDraws = fetchedDraws.map(d => ({ ...d.fields, id: d.id }));
-      setAllDraws(prevDraws => [...prevDraws, ...formattedDraws]);
+      setAllDraws(prevDraws => {
+        const newDrawsMap = new Map(prevDraws);
+        fetchedDraws.forEach(d => {
+            const drawData: Draw = { ...d.fields, id: d.id };
+            newDrawsMap.set(d.id, drawData);
+        });
+        return newDrawsMap;
+      });
       airtableOffset.current = newOffset;
     }
     setLoading(false);
@@ -70,17 +76,18 @@ function DrawTrackerPage() {
     fetchDraws(true);
   }, [fetchDraws]);
 
+  const allDrawsArray = useMemo(() => Array.from(allDraws.values()), [allDraws]);
 
-  const provinceOptions = useMemo(() => ["All", ...new Set(allDraws.map(d => d.Province).filter(Boolean).sort())], [allDraws]);
+  const provinceOptions = useMemo(() => ["All", ...new Set(allDrawsArray.map(d => d.Province).filter(Boolean).sort())], [allDrawsArray]);
 
   const categoryOptions = useMemo(() => {
-    let relevantDraws = allDraws;
+    let relevantDraws = allDrawsArray;
     if (provinceFilter !== 'All') {
-      relevantDraws = allDraws.filter(draw => draw.Province === provinceFilter);
+      relevantDraws = allDrawsArray.filter(draw => draw.Province === provinceFilter);
     }
     const categories = new Set(relevantDraws.map(d => d.Category).filter(Boolean));
     return ["All", ...Array.from(categories).sort()];
-  }, [allDraws, provinceFilter]);
+  }, [allDrawsArray, provinceFilter]);
 
   // When province filter changes, reset category filter
   useEffect(() => {
@@ -89,7 +96,7 @@ function DrawTrackerPage() {
 
 
   const filteredAndSortedDraws = useMemo(() => {
-    let result = [...allDraws];
+    let result = [...allDrawsArray];
 
     const hasFilters = searchTerm !== '' || provinceFilter !== 'All' || categoryFilter !== 'All';
     if(hasFilters) {
@@ -98,8 +105,8 @@ function DrawTrackerPage() {
           const matchesCategory = categoryFilter === 'All' || draw.Category === categoryFilter;
           const matchesSearch = searchTerm === '' || 
             (draw["NOC/Other"] && draw["NOC/Other"].toLowerCase().includes(searchTerm.toLowerCase())) ||
-            draw.Category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            draw.Province.toLowerCase().includes(searchTerm.toLowerCase());
+            (draw.Category && draw.Category.toLowerCase().includes(searchTerm.toLowerCase())) ||
+            (draw.Province && draw.Province.toLowerCase().includes(searchTerm.toLowerCase()));
           return matchesProvince && matchesCategory && matchesSearch;
         });
     }
@@ -111,7 +118,7 @@ function DrawTrackerPage() {
     });
 
     return result;
-  }, [allDraws, searchTerm, provinceFilter, categoryFilter]);
+  }, [allDrawsArray, searchTerm, provinceFilter, categoryFilter]);
 
   const hasMoreLocalDraws = displayedDraws.length < filteredAndSortedDraws.length;
   const hasMoreRemoteDraws = airtableOffset.current !== undefined;
@@ -175,7 +182,7 @@ function DrawTrackerPage() {
   
   const activeFilterCount = [searchTerm, provinceFilter, categoryFilter].filter(f => f && f !== 'All').length;
 
-  if (loading && allDraws.length === 0) {
+  if (loading && allDraws.size === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center">
         <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
