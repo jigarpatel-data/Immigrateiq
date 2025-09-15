@@ -22,8 +22,8 @@ export default function AuthPage() {
       </div>
       <div className="hidden lg:flex flex-1 relative bg-muted items-center justify-center p-8">
         <div className="max-w-xl text-left text-foreground">
-          <div className="inline-block">
-            <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground overflow-hidden whitespace-nowrap border-r-4 border-r-accent animate-[typing_3s_steps(40,end),blink-caret_.75s_step-end_8]">
+          <div className="inline-block overflow-hidden">
+            <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground whitespace-nowrap border-r-4 border-r-accent animate-[typing_3s_steps(40,end),blink-caret_.75s_step-end_8]">
               Start Your Canadian Dream Today
             </h1>
           </div>
