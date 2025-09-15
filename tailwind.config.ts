@@ -90,8 +90,8 @@ export default {
           },
         },
         'typing': {
-          'from': { width: '0' },
-          'to': { width: '100%' },
+          'from': { width: '0', 'min-width': '0' },
+          'to': { width: '100%', 'min-width': '100%' },
         },
         'blink-caret': {
           'from, to': { borderColor: 'transparent' },
