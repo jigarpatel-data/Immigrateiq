@@ -104,8 +104,13 @@ const crsCalculatorFlow = ai.defineFlow(
     outputSchema: CrsCalculatorOutputSchema,
   },
   async (input) => {
-    const llmResponse = await prompt(input);
-    const toolCall = llmResponse.output?.toolCalls?.[0];
+    const {output} = await prompt(input);
+
+    if (!output) {
+      throw new Error('The model did not return a response.');
+    }
+
+    const toolCall = output.toolCalls?.[0];
 
     if (toolCall?.name === 'calculateCrsScore') {
       const toolResult = await calculateCrsScoreTool(toolCall.args as CrsFactors);
@@ -119,8 +124,16 @@ const crsCalculatorFlow = ai.defineFlow(
       };
     }
 
+    if (output.response) {
+       return {
+        response: output.response,
+        isComplete: false,
+      };
+    }
+
+    // Fallback if the model returns neither a tool call nor a direct response
     return {
-      response: llmResponse.output!.response,
+      response: "I'm sorry, I encountered an issue. Could you please rephrase your last message?",
       isComplete: false,
     };
   }
