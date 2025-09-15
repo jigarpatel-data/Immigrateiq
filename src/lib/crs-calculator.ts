@@ -10,7 +10,7 @@ const languageSchema = z.object({
   points: z.number().default(0),
 });
 
-const educationLevels = [
+export const educationLevels = [
   "Less than secondary school (high school)",
   "Secondary diploma (high school graduation)",
   "One-year degree, diploma or certificate",
@@ -231,8 +231,9 @@ export function calculateCrsScore(factors: CrsFactors): { totalScore: number, fa
   factors.secondLanguage.points = Math.min(secondLangPts, hasSpouse ? 22 : 24);
 
   let corePoints = factors.age.points + factors.education.points + factors.canadianWorkExperience.points + factors.firstLanguage.points + factors.secondLanguage.points;
-
+  
   // Spouse factors
+  let spouseTotalPoints = 0;
   if (hasSpouse) {
       factors.spouse.education.points = getSpouseEducationPoints(factors.spouse.education.value);
       
@@ -245,9 +246,11 @@ export function calculateCrsScore(factors: CrsFactors): { totalScore: number, fa
 
       factors.spouse.canadianWorkExperience.points = getSpouseCanadianWorkExpPoints(factors.spouse.canadianWorkExperience.value);
 
-      factors.spouse.points = factors.spouse.education.points + factors.spouse.firstLanguage.points + factors.spouse.canadianWorkExperience.points;
-      corePoints += factors.spouse.points;
+      spouseTotalPoints = factors.spouse.education.points + factors.spouse.firstLanguage.points + factors.spouse.canadianWorkExperience.points;
+      factors.spouse.points = spouseTotalPoints;
   }
+  
+  corePoints = Math.min(corePoints, hasSpouse ? 460 : 500);
 
   // Skill transferability
   const { eduPoints, fwePoints, qualPoints } = getSkillTransferabilityPoints(factors);
@@ -260,7 +263,9 @@ export function calculateCrsScore(factors: CrsFactors): { totalScore: number, fa
   // Additional points
   factors.additional.points = getAdditionalPoints(factors);
 
-  totalScore = corePoints + factors.skillTransferability.points + factors.additional.points;
+  totalScore = corePoints + spouseTotalPoints + factors.skillTransferability.points + factors.additional.points;
 
   return { totalScore: Math.min(totalScore, 1200), factors };
 }
+
+    
