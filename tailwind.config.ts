@@ -90,7 +90,7 @@ export default {
           },
         },
         'typing': {
-          'from': { width: '0', 'min-width': '0' },
+          'from': { width: '0', 'min-width': '0px' },
           'to': { width: '100%', 'min-width': '100%' },
         },
         'blink-caret': {
