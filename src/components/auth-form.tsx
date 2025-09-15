@@ -27,8 +27,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { CustomGoogleIcon } from "@/components/icons";
-import { Landmark, Loader2, Info, Eye, EyeOff } from "lucide-react";
+import { CustomGoogleIcon, PandaIcon } from "@/components/icons";
+import { Loader2, Info, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { handleSignIn, handleSignUp, handleGoogleSignIn, handlePasswordReset } from "@/lib/auth";
 import { useRouter } from "next/navigation";
@@ -321,7 +321,7 @@ export function AuthForm() {
           <form onSubmit={passwordResetForm.handleSubmit(onPasswordResetSubmit)}>
             <AlertDialogHeader className="items-center text-center">
                <Link href="/" className="flex items-center gap-2">
-                <Landmark className="w-8 h-8 text-accent" />
+                <PandaIcon className="w-8 h-8 text-accent" />
                 <span className="text-2xl font-semibold">TheCanIndian</span>
               </Link>
               <AlertDialogTitle>Forgot Password?</AlertDialogTitle>
@@ -363,5 +363,3 @@ export function AuthForm() {
     </AlertDialog>
   );
 }
-
-    

@@ -33,6 +33,7 @@ import { Footer } from "@/components/footer";
 import { useAuth } from "@/hooks/use-auth";
 import { handleSignOut } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
+import { PandaIcon } from "@/components/icons";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -68,7 +69,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
           <SidebarHeader>
             <div className="flex items-center justify-between p-2 group-data-[collapsible=icon]:justify-center">
               <Link href="/dashboard" className="flex items-center gap-2">
-                <Landmark className="w-8 h-8 text-accent" />
+                <PandaIcon className="w-8 h-8 text-accent" />
                 <span className="text-lg font-semibold group-data-[collapsible=icon]:hidden">TheCanIndian</span>
               </Link>
                <SidebarTrigger className="lg:hidden">
@@ -129,7 +130,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
                     <Menu />
                   </SidebarTrigger>
                   <Link href="/dashboard" className="flex items-center gap-2">
-                      <Landmark className="w-6 h-6 text-accent" />
+                      <PandaIcon className="w-6 h-6 text-accent" />
                       <h1 className="text-lg font-semibold">TheCanIndian</h1>
                   </Link>
               </div>

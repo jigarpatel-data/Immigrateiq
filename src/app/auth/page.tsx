@@ -1,6 +1,6 @@
 
 import { AuthForm } from "@/components/auth-form";
-import { Landmark, CheckCircle } from "lucide-react";
+import { PandaIcon, CheckCircle } from "lucide-react";
 import Link from 'next/link';
 
 export default function AuthPage() {
@@ -10,7 +10,7 @@ export default function AuthPage() {
         <div className="w-full max-w-md space-y-6">
           <div className="flex justify-center flex-col items-center gap-2">
             <Link href="/" className="flex items-center gap-2">
-              <Landmark className="w-8 h-8 text-accent" />
+              <PandaIcon className="w-8 h-8 text-accent" />
               <span className="text-xl md:text-2xl font-semibold">TheCanIndian</span>
             </Link>
              <p className="text-muted-foreground text-center">
