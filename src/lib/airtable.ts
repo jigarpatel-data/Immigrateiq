@@ -1,3 +1,4 @@
+
 'use server';
 
 import { z } from 'zod';
@@ -27,65 +28,58 @@ const AirtableResponseSchema = z.object({
 
 export type Draw = z.infer<typeof DrawFieldsSchema> & { id: string };
 
-export async function getAirtableDraws(): Promise<{ draws?: {id: string, fields: z.infer<typeof DrawFieldsSchema>}[], error?: string }> {
+type AirtableResult = { 
+  draws?: {id: string, fields: z.infer<typeof DrawFieldsSchema>}[], 
+  error?: string,
+  offset?: string 
+};
+
+export async function getAirtableDraws(offset?: string): Promise<AirtableResult> {
   const apiKey = process.env.AIRTABLE_API_KEY;
   const baseId = process.env.AIRTABLE_BASE_ID;
-  const tableName = 'Draww Tracker'; 
+  const tableName = 'Draww Tracker';
 
   if (!apiKey || !baseId) {
     console.error("Airtable environment variables not set. Please add AIRTABLE_API_KEY and AIRTABLE_BASE_ID to your .env.local file.");
     return { error: 'Server configuration error. The app is not connected to Airtable.' };
   }
   
-  let allRecords: {id: string, fields: z.infer<typeof DrawFieldsSchema>}[] = [];
-  let offset: string | undefined = undefined;
   const baseUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`;
 
   try {
-    do {
-      const url = new URL(baseUrl);
-      if (offset) {
-        url.searchParams.append('offset', offset);
-      }
-      // Airtable sorts by created time by default, which is not ideal for 'newest' draws.
-      // We will fetch all and sort manually.
-      
-      const response = await fetch(url.toString(), {
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-        },
-        next: { revalidate: 600 } // Re-fetch data from Airtable at most every 10 minutes.
-      });
-
-      if (!response.ok) {
-        console.error('Failed to fetch from Airtable:', response.statusText);
-        const errorBody = await response.json();
-        const errorMessage = errorBody?.error?.message || 'Failed to load draw data from Airtable.';
-        return { error: errorMessage };
-      }
-
-      const data = await response.json();
-      const validatedResponse = AirtableResponseSchema.safeParse(data);
-
-      if (!validatedResponse.success) {
-        console.error("Airtable data validation error:", validatedResponse.error.flatten());
-        return { error: "Invalid data format received from Airtable. Check that your table columns match the required format." };
-      }
-      
-      const recordsWithFields = validatedResponse.data.records.map(r => ({id: r.id, fields: r.fields}));
-      allRecords.push(...recordsWithFields);
-      offset = validatedResponse.data.offset;
-
-    } while (offset);
+    const url = new URL(baseUrl);
+    url.searchParams.append('pageSize', '100');
+    url.searchParams.append('sort[0][field]', 'Draw Date');
+    url.searchParams.append('sort[0][direction]', 'desc');
+    if (offset) {
+      url.searchParams.append('offset', offset);
+    }
     
-    // Sort all records by "Draw Date" descending after fetching them
-    allRecords.sort((a, b) => {
-        const dateA = new Date(a.fields["Draw Date"]).getTime();
-        const dateB = new Date(b.fields["Draw Date"]).getTime();
-        return dateB - dateA;
+    const response = await fetch(url.toString(), {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+      },
+      next: { revalidate: 600 } // Re-fetch data from Airtable at most every 10 minutes.
     });
 
-    return { draws: allRecords };
+    if (!response.ok) {
+      console.error('Failed to fetch from Airtable:', response.statusText);
+      const errorBody = await response.json();
+      const errorMessage = errorBody?.error?.message || 'Failed to load draw data from Airtable.';
+      return { error: errorMessage };
+    }
+
+    const data = await response.json();
+    const validatedResponse = AirtableResponseSchema.safeParse(data);
+
+    if (!validatedResponse.success) {
+      console.error("Airtable data validation error:", validatedResponse.error.flatten());
+      return { error: "Invalid data format received from Airtable. Check that your table columns match the required format." };
+    }
+    
+    const recordsWithFields = validatedResponse.data.records.map(r => ({id: r.id, fields: r.fields}));
+
+    return { draws: recordsWithFields, offset: validatedResponse.data.offset };
 
   } catch (error) {
     console.error('Error fetching from Airtable:', error);

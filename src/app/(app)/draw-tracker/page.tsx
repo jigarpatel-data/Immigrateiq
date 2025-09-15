@@ -37,28 +37,39 @@ function DrawTrackerPage() {
   const [allDraws, setAllDraws] = useState<Draw[]>([]);
   const [displayedDraws, setDisplayedDraws] = useState<Draw[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const observer = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const airtableOffset = useRef<string | undefined>(undefined);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [provinceFilter, setProvinceFilter] = useState('All');
   const [categoryFilter, setCategoryFilter] = useState('All');
 
-  useEffect(() => {
-    async function fetchData() {
-      const { draws: fetchedDraws, error: fetchError } = await getAirtableDraws();
-      if (fetchError) {
-        setError(fetchError);
-      } else if (fetchedDraws) {
-        const formattedDraws = fetchedDraws.map(d => ({ ...d.fields, id: d.id }));
-        setAllDraws(formattedDraws);
-      }
-      setLoading(false);
+  const fetchDraws = useCallback(async (isInitialLoad = false) => {
+    if (isInitialLoad) {
+      setLoading(true);
+    } else {
+      setLoadingMore(true);
     }
-    fetchData();
+    const { draws: fetchedDraws, offset: newOffset, error: fetchError } = await getAirtableDraws(airtableOffset.current);
+    if (fetchError) {
+      setError(fetchError);
+    } else if (fetchedDraws) {
+      const formattedDraws = fetchedDraws.map(d => ({ ...d.fields, id: d.id }));
+      setAllDraws(prevDraws => [...prevDraws, ...formattedDraws]);
+      airtableOffset.current = newOffset;
+    }
+    setLoading(false);
+    setLoadingMore(false);
   }, []);
+
+  useEffect(() => {
+    fetchDraws(true);
+  }, [fetchDraws]);
+
 
   const provinceOptions = useMemo(() => ["All", ...new Set(allDraws.map(d => d.Province).filter(Boolean).sort())], [allDraws]);
 
@@ -102,13 +113,22 @@ function DrawTrackerPage() {
     return result;
   }, [allDraws, searchTerm, provinceFilter, categoryFilter]);
 
-  const hasMoreDraws = displayedDraws.length < filteredAndSortedDraws.length;
+  const hasMoreLocalDraws = displayedDraws.length < filteredAndSortedDraws.length;
+  const hasMoreRemoteDraws = airtableOffset.current !== undefined;
+  const hasMoreDraws = hasMoreLocalDraws || hasMoreRemoteDraws;
 
   const loadMoreDraws = useCallback(() => {
-    if (hasMoreDraws) {
+    const hasFilters = searchTerm !== '' || provinceFilter !== 'All' || categoryFilter !== 'All';
+    
+    // If we have local draws to display, just increase the page
+    if (hasMoreLocalDraws) {
       setPage(prevPage => prevPage + 1);
+    } 
+    // If no more local draws, no filters active, and there are more remote draws, fetch them
+    else if (!hasFilters && hasMoreRemoteDraws) {
+      fetchDraws();
     }
-  }, [hasMoreDraws]);
+  }, [hasMoreLocalDraws, hasMoreRemoteDraws, fetchDraws, searchTerm, provinceFilter, categoryFilter]);
   
   useEffect(() => {
     setDisplayedDraws(filteredAndSortedDraws.slice(0, page * DRAWS_PER_PAGE));
@@ -127,7 +147,7 @@ function DrawTrackerPage() {
 
     const handleObserver = (entries: IntersectionObserverEntry[]) => {
       const target = entries[0];
-      if (target.isIntersecting && hasMoreDraws && !loading) {
+      if (target.isIntersecting && hasMoreDraws && !loading && !loadingMore) {
         loadMoreDraws();
       }
     };
@@ -144,7 +164,7 @@ function DrawTrackerPage() {
         observer.current.unobserve(currentLoadMoreRef);
       }
     };
-  }, [hasMoreDraws, loading, loadMoreDraws]);
+  }, [hasMoreDraws, loading, loadingMore, loadMoreDraws]);
 
 
   const resetFilters = () => {
@@ -160,7 +180,6 @@ function DrawTrackerPage() {
       <div className="flex flex-col items-center justify-center h-full text-center">
         <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
         <h1 className="text-xl md:text-2xl font-bold tracking-tight">Loading Draws...</h1>
-        <p className="text-muted-foreground">Fetching the latest data from Airtable.</p>
       </div>
     );
   }
@@ -343,9 +362,9 @@ function DrawTrackerPage() {
               )}
             </div>
             <div ref={loadMoreRef} className="h-1 col-span-full" />
-             {hasMoreDraws && (
+             {loadingMore && (
                 <div className="flex justify-center mt-6">
-                    <Button onClick={loadMoreDraws} variant="secondary" disabled={loading}>
+                    <Button variant="secondary" disabled>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Loading More...
                     </Button>
@@ -358,6 +377,3 @@ function DrawTrackerPage() {
 }
 
 export default withAuth(DrawTrackerPage);
-
-    
-    
