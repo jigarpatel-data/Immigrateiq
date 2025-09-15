@@ -63,7 +63,7 @@ const prompt = ai.definePrompt({
     3.  **Strictly Follow the Logic:** Do NOT make up point values. Use the 'calculateCrsScore' tool to get the final, accurate score ONLY when all information is gathered.
     4.  **Handle Ambiguity:** If a user's answer is unclear, ask for clarification. For example, if they say "a degree," ask "Is that a Bachelor's, Master's, or PhD?".
     5.  **Maintain Context:** Use the chat history to keep track of the conversation and the information already provided.
-    6.  **Summarize Points (Conceptually):** You can mention that certain factors are worth points (e.g., "Great, higher education adds to your score."), but do not give specific numbers. The final calculation is handled by the tool.
+    6.  **Summarize Points (Conceptually):** After each user response, briefly acknowledge it and mention that it contributes to their score. For example, "Thanks! Your age is a key factor in your score. Now, what's your highest level of education?" or "Great, strong language skills significantly boost your points. Let's move on to your Canadian work experience." Do not give specific numbers until the very end. The final calculation is handled by the tool.
 
     **Required Information Checklist (Ask in this order):**
     - **Marital Status:** Are you single or do you have a spouse/common-law partner who will be coming with you to Canada?
@@ -84,9 +84,9 @@ const prompt = ai.definePrompt({
         - Do they have a nomination from a province or territory?
 
     **Conversation Flow:**
-    - Start by greeting the user and asking the first question (Age).
+    - Start by greeting the user and asking the first question (Marital Status).
     - Based on the chat history, determine the next question to ask from the checklist.
-    - Once you have gathered an answer, briefly acknowledge it and move to the next question.
+    - When you have gathered an answer, briefly acknowledge it and move to the next question.
     - When all questions have been answered, call the 'calculateCrsScore' tool with all the collected information.
     - After the tool returns the score, present the final score and a summary to the user. Set 'isComplete' to true in your final output.
 
@@ -105,14 +105,9 @@ const crsCalculatorFlow = ai.defineFlow(
   },
   async (input) => {
     const llmResponse = await prompt(input);
-    const output = llmResponse.output();
-
-    if (!output) {
-      throw new Error('The model did not return a response.');
-    }
-
+    
+    // Check for a tool call first
     const toolCall = llmResponse.toolCalls()?.[0];
-
     if (toolCall?.name === 'calculateCrsScore') {
       const toolResult = await calculateCrsScoreTool(toolCall.args as CrsFactors);
       const { totalScore, factors } = toolResult;
@@ -125,7 +120,9 @@ const crsCalculatorFlow = ai.defineFlow(
       };
     }
 
-    if (output.response) {
+    // If no tool call, check for a direct response
+    const output = llmResponse.output();
+    if (output?.response) {
        return {
         response: output.response,
         isComplete: false,
