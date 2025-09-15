@@ -69,14 +69,14 @@ const prompt = ai.definePrompt({
     - **Marital Status:** Are you single or do you have a spouse/common-law partner who will be coming with you to Canada?
     - **Age:** The user's age.
     - **Education:** The user's highest level of education. (e.g., High School, Bachelor's, Master's, PhD).
-    - **Canadian Work Experience:** Years of skilled work experience in Canada.
     - **First Language Proficiency:** CLB levels for speaking, listening, reading, and writing. Ask for all four scores.
     - **Second Language Proficiency:** (Optional) Ask if they have scores for a second official language. If yes, get CLB levels for all four abilities.
+    - **Canadian Work Experience:** Years of skilled work experience in Canada.
+    - **Foreign Work Experience:** Years of skilled work experience outside Canada.
     - **Spouse's Information (if applicable):**
         - Spouse's highest level of education.
         - Spouse's first language proficiency (CLB for all 4 abilities).
         - Spouse's Canadian work experience.
-    - **Foreign Work Experience:** Years of skilled work experience outside Canada.
     - **Certificate of Qualification:** Does the user have a certificate of qualification from a Canadian province, territory, or federal body?
     - **Additional Factors:**
         - Do they have a brother or sister living in Canada who is a citizen or permanent resident?
@@ -106,7 +106,6 @@ const crsCalculatorFlow = ai.defineFlow(
   async (input) => {
     const llmResponse = await prompt(input);
     
-    // Check for a tool call first
     const toolCall = llmResponse.toolCalls()?.[0];
     if (toolCall?.name === 'calculateCrsScore') {
       const toolResult = await calculateCrsScoreTool(toolCall.args as CrsFactors);
@@ -120,16 +119,23 @@ const crsCalculatorFlow = ai.defineFlow(
       };
     }
 
-    // If no tool call, check for a direct response
+    const textResponse = llmResponse.text;
+    if (textResponse) {
+       return {
+        response: textResponse,
+        isComplete: false,
+      };
+    }
+    
+    // Fallback for cases where the model response is not in the expected format.
     const output = llmResponse.output();
     if (output?.response) {
-       return {
+      return {
         response: output.response,
         isComplete: false,
       };
     }
 
-    // Fallback if the model returns neither a tool call nor a direct response
     return {
       response: "I'm sorry, I encountered an issue. Could you please rephrase your last message?",
       isComplete: false,
