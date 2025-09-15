@@ -28,6 +28,7 @@ import {
   LogOut,
   PanelLeft,
   Menu,
+  Calculator,
 } from "lucide-react";
 import { Footer } from "@/components/footer";
 import { useAuth } from "@/hooks/use-auth";
@@ -39,6 +40,7 @@ const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/draw-tracker", icon: GanttChart, label: "Draw Tracker" },
   { href: "/program-tracker", icon: ListChecks, label: "Program Tracker" },
+  { href: "/score-calculator", icon: Calculator, label: "Score Calculator" },
   { href: "/chatbot", icon: Bot, label: "Chatbot" },
   { href: "/faq", icon: HelpCircle, label: "FAQ" },
 ];
