@@ -267,5 +267,3 @@ export function calculateCrsScore(factors: CrsFactors): { totalScore: number, fa
 
   return { totalScore: Math.min(totalScore, 1200), factors };
 }
-
-    
