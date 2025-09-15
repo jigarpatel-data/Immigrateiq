@@ -110,7 +110,7 @@ function getCanadianWorkExpPoints(years: number, hasSpouse: boolean): number {
 function getSpouseEducationPoints(level: typeof educationLevels[number]): number {
     const pointsMap = {
         "Less than secondary school (high school)": 0,
-        "Secondary diploma (high school graduation)": 2,
+        "Secondary school (high school graduation)": 2,
         "One-year degree, diploma or certificate": 6,
         "Two-year program": 7,
         "Bachelor's degree or three-year program": 8,
@@ -136,73 +136,61 @@ function getSpouseCanadianWorkExpPoints(years: number): number {
 }
 
 function getSkillTransferabilityPoints(factors: CrsFactors): { eduPoints: number, fwePoints: number, qualPoints: number } {
-    const { firstLanguage: lang, education, canadianWorkExperience: cwe, foreignWorkExperience: fwe, certificateOfQualification } = factors;
+    const { firstLanguage, education, canadianWorkExperience, foreignWorkExperience, certificateOfQualification } = factors;
     
-    const allLangCLB7 = lang.listening >= 7 && lang.reading >= 7 && lang.writing >= 7 && lang.speaking >= 7;
-    const allLangCLB9 = lang.listening >= 9 && lang.reading >= 9 && lang.writing >= 9 && lang.speaking >= 9;
+    const allLangCLB7 = firstLanguage.listening >= 7 && firstLanguage.reading >= 7 && firstLanguage.writing >= 7 && firstLanguage.speaking >= 7;
+    const allLangCLB9 = firstLanguage.listening >= 9 && firstLanguage.reading >= 9 && firstLanguage.writing >= 9 && firstLanguage.speaking >= 9;
 
-    // Education Points
-    let eduPoints = 0;
-    const highCreds = ["Two or more certificates, diplomas, or degrees (one must be 3+ years)", "Master's degree or professional degree", "Doctoral level university degree (PhD)"];
-    const hasPostSecondary = education.value !== educationLevels[0] && education.value !== educationLevels[1];
-
-    if (hasPostSecondary) {
-        let langEduPoints = 0;
-        if(allLangCLB7) {
-            langEduPoints = highCreds.includes(education.value) ? 25 : 13;
-        }
+    // Education
+    let educationAndLangPoints = 0;
+    if (education.value !== educationLevels[0] && education.value !== educationLevels[1]) {
         if (allLangCLB9) {
-            langEduPoints = highCreds.includes(education.value) ? 50 : 25;
+            educationAndLangPoints = (education.value === "Doctoral level university degree (PhD)" || education.value === "Master's degree or professional degree" || education.value === "Two or more certificates, diplomas, or degrees (one must be 3+ years)") ? 50 : 25;
+        } else if (allLangCLB7) {
+            educationAndLangPoints = (education.value === "Doctoral level university degree (PhD)" || education.value === "Master's degree or professional degree" || education.value === "Two or more certificates, diplomas, or degrees (one must be 3+ years)") ? 25 : 13;
         }
+    }
 
-        let cweEduPoints = 0;
-        if (cwe.value > 0) {
-            cweEduPoints = highCreds.includes(education.value) ? 25 : 13;
+    let educationAndCWEPoints = 0;
+    if (education.value !== educationLevels[0] && education.value !== educationLevels[1]) {
+        if (canadianWorkExperience.value >= 2) {
+            educationAndCWEPoints = (education.value === "Doctoral level university degree (PhD)" || education.value === "Master's degree or professional degree" || education.value === "Two or more certificates, diplomas, or degrees (one must be 3+ years)") ? 50 : 25;
+        } else if (canadianWorkExperience.value === 1) {
+            educationAndCWEPoints = (education.value === "Doctoral level university degree (PhD)" || education.value === "Master's degree or professional degree" || education.value === "Two or more certificates, diplomas, or degrees (one must be 3+ years)") ? 25 : 13;
         }
-        if (cwe.value >= 2) {
-             cweEduPoints = highCreds.includes(education.value) ? 50 : 25;
+    }
+
+    const eduPoints = Math.min(educationAndLangPoints + educationAndCWEPoints, 50);
+    
+    // Foreign Work Experience
+    let fweAndLangPoints = 0;
+    if (foreignWorkExperience.value > 0) {
+        if (allLangCLB9) {
+            fweAndLangPoints = foreignWorkExperience.value >= 3 ? 50 : 25;
+        } else if (allLangCLB7) {
+            fweAndLangPoints = foreignWorkExperience.value >= 3 ? 25 : 13;
         }
-        eduPoints = Math.max(langEduPoints, cweEduPoints);
     }
     
-
-    // Foreign Work Experience points
-    let fwePoints = 0;
-    const fweYears = fwe.value;
-    if (fweYears > 0) {
-        const isOneOrTwo = fweYears === 1 || fweYears === 2;
-        const isThreeOrMore = fweYears >= 3;
-
-        let langFwePoints = 0;
-        if(allLangCLB7) {
-            langFwePoints = isThreeOrMore ? 25 : (isOneOrTwo ? 13 : 0);
+    let fweAndCWEPoints = 0;
+    if (foreignWorkExperience.value > 0 && canadianWorkExperience.value > 0) {
+        if (canadianWorkExperience.value >= 2) {
+            fweAndCWEPoints = foreignWorkExperience.value >= 3 ? 50 : 25;
+        } else if (canadianWorkExperience.value === 1) {
+            fweAndCWEPoints = foreignWorkExperience.value >= 3 ? 25 : 13;
         }
-        if(allLangCLB9) {
-            langFwePoints = isThreeOrMore ? 50 : (isOneOrTwo ? 25 : 0);
-        }
-        
-        let cweFwePoints = 0;
-        if(cwe.value === 1) {
-            cweFwePoints = isThreeOrMore ? 25 : (isOneOrTwo ? 13 : 0);
-        }
-        if(cwe.value >= 2) {
-            cweFwePoints = isThreeOrMore ? 50 : (isOneOrTwo ? 25 : 0);
-        }
-        
-        fwePoints = Math.max(langFwePoints, cweFwePoints);
     }
+    const fwePoints = Math.min(fweAndLangPoints + fweAndCWEPoints, 50);
 
-    // Certificate of Qualification points
+    // Certificate of Qualification
     let qualPoints = 0;
     if (certificateOfQualification) {
-        const allLangCLB5 = lang.listening >= 5 && lang.reading >= 5 && lang.writing >= 5 && lang.speaking >= 5;
+        const allLangCLB5 = firstLanguage.listening >= 5 && firstLanguage.reading >= 5 && firstLanguage.writing >= 5 && firstLanguage.speaking >= 5;
         if(allLangCLB5) {
             qualPoints = allLangCLB7 ? 50 : 25;
         }
     }
     
-    const totalSkillPoints = eduPoints + fwePoints + qualPoints;
-
     return { eduPoints, fwePoints, qualPoints };
 }
 

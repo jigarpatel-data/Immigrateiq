@@ -390,36 +390,66 @@ function ScoreBreakdownTable({ details }: { details: CrsFactors }) {
     const additionalPoints = details.additional?.points ?? 0;
     const total = coreHumanCapital + spousePoints + skillTransferability + additionalPoints;
 
-    const scoreCategories = [
-        { name: "Core / Human Capital", score: coreHumanCapital },
-        { name: "Spouse Factors", score: spousePoints },
-        { name: "Skill Transferability", score: skillTransferability },
-        { name: "Additional Points", score: additionalPoints },
-        { name: "Total Score", score: total, isTotal: true },
-    ];
-
     return (
-         <Card className="w-full max-w-md">
+         <Card className="w-full max-w-2xl">
             <CardHeader>
                 <CardTitle>Score Breakdown</CardTitle>
             </CardHeader>
             <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                        <TableHead>Category</TableHead>
-                        <TableHead className="text-right">Points</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {scoreCategories.map((item) => (
-                            <TableRow key={item.name} className={cn(item.isTotal && "bg-muted/50 font-bold")}>
-                            <TableCell>{item.name}</TableCell>
-                            <TableCell className="text-right font-medium">{item.score}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                <div className="space-y-4">
+                    <div>
+                        <h3 className="font-semibold">Core / Human Capital Factors: {coreHumanCapital}</h3>
+                        <Table>
+                            <TableBody>
+                                <TableRow><TableCell>Age</TableCell><TableCell className="text-right">{details.age.points}</TableCell></TableRow>
+                                <TableRow><TableCell>Level of Education</TableCell><TableCell className="text-right">{details.education.points}</TableCell></TableRow>
+                                <TableRow><TableCell>Official Languages</TableCell><TableCell className="text-right">{details.firstLanguage.points + details.secondLanguage.points}</TableCell></TableRow>
+                                <TableRow><TableCell>Canadian Work Experience</TableCell><TableCell className="text-right">{details.canadianWorkExperience.points}</TableCell></TableRow>
+                            </TableBody>
+                        </Table>
+                    </div>
+
+                    {details.hasSpouse && (
+                        <div>
+                            <h3 className="font-semibold">Spouse Factors: {spousePoints}</h3>
+                            <Table>
+                                <TableBody>
+                                     <TableRow><TableCell>Level of Education</TableCell><TableCell className="text-right">{details.spouse.education.points}</TableCell></TableRow>
+                                     <TableRow><TableCell>Official Languages</TableCell><TableCell className="text-right">{details.spouse.firstLanguage.points}</TableCell></TableRow>
+                                     <TableRow><TableCell>Canadian Work Experience</TableCell><TableCell className="text-right">{details.spouse.canadianWorkExperience.points}</TableCell></TableRow>
+                                </TableBody>
+                            </Table>
+                        </div>
+                    )}
+
+                    <div>
+                        <h3 className="font-semibold">Skill Transferability Factors: {skillTransferability}</h3>
+                        <Table>
+                            <TableBody>
+                                <TableRow><TableCell>Education</TableCell><TableCell className="text-right">{details.skillTransferability.education.points}</TableCell></TableRow>
+                                <TableRow><TableCell>Foreign Work Experience</TableCell><TableCell className="text-right">{details.skillTransferability.foreignWorkExperience.points}</TableCell></TableRow>
+                                <TableRow><TableCell>Certificate of Qualification</TableCell><TableCell className="text-right">{details.skillTransferability.qualification.points}</TableCell></TableRow>
+                            </TableBody>
+                        </Table>
+                    </div>
+
+                     <div>
+                        <h3 className="font-semibold">Additional Points: {additionalPoints}</h3>
+                         <Table>
+                            <TableBody>
+                                <TableRow><TableCell>Provincial Nomination</TableCell><TableCell className="text-right">{details.additional.provincialNomination ? 600 : 0}</TableCell></TableRow>
+                                <TableRow><TableCell>Study in Canada</TableCell><TableCell className="text-right">{details.additional.postSecondaryEducationInCanada === '1-2 years' ? 15 : details.additional.postSecondaryEducationInCanada === '3+ years' ? 30 : 0}</TableCell></TableRow>
+                                <TableRow><TableCell>Sibling in Canada</TableCell><TableCell className="text-right">{details.additional.siblingInCanada ? 15 : 0}</TableCell></TableRow>
+                                <TableRow><TableCell>French-language skills</TableCell><TableCell className="text-right">{details.additional.frenchSkills ? 'TBD' : 0}</TableCell></TableRow>
+                            </TableBody>
+                        </Table>
+                    </div>
+
+                     <div className="font-bold text-lg flex justify-between border-t pt-4">
+                        <span>Grand Total</span>
+                        <span>{total}</span>
+                    </div>
+                </div>
             </CardContent>
         </Card>
     );
