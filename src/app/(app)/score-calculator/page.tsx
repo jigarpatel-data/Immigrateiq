@@ -33,7 +33,7 @@ type Inputs = {
 
 const initialMessage: ChatMessage = {
     role: "assistant",
-    content: "Welcome to the CRS Score Calculator! To start, please tell me your age.",
+    content: "Welcome to the CRS Score Calculator! I will ask you a series of questions to help estimate your score. To start, are you single, or do you have a spouse/common-law partner who will be coming with you to Canada?",
 };
 
 
@@ -81,7 +81,7 @@ function ScoreCalculatorPage() {
       };
       setMessages((prev) => [...prev, assistantMessage]);
 
-      if (result.isComplete && result.finalScore && result.scoreDetails) {
+      if (result.isComplete && result.finalScore !== undefined && result.scoreDetails) {
           setIsComplete(true);
           setFinalScore(result.finalScore);
           setScoreDetails(result.scoreDetails);
@@ -100,15 +100,23 @@ function ScoreCalculatorPage() {
   
   const scoreCategories = useMemo(() => {
       if (!scoreDetails) return [];
+      const coreHumanCapital = (scoreDetails.age?.points ?? 0) +
+        (scoreDetails.education?.points ?? 0) +
+        (scoreDetails.firstLanguage?.points ?? 0) +
+        (scoreDetails.secondLanguage?.points ?? 0) +
+        (scoreDetails.canadianWorkExperience?.points ?? 0);
+
+      const spousePoints = scoreDetails.spouse?.points ?? 0;
+      const skillTransferability = scoreDetails.skillTransferability?.points ?? 0;
+      const additionalPoints = scoreDetails.additional?.points ?? 0;
+      const total = coreHumanCapital + spousePoints + skillTransferability + additionalPoints;
+
       return [
-        { name: "Age", score: scoreDetails.age.points },
-        { name: "Level of Education", score: scoreDetails.education.points },
-        { name: "First Language Proficiency", score: scoreDetails.firstLanguage.points },
-        { name: "Second Language Proficiency", score: scoreDetails.secondLanguage.points },
-        { name: "Canadian Work Experience", score: scoreDetails.canadianWorkExperience.points },
-        { name: "Spouse Factors", score: scoreDetails.spouse.points },
-        { name: "Skill Transferability", score: scoreDetails.skillTransferability.points },
-        { name: "Additional Points", score: scoreDetails.additional.points },
+        { name: "Core / Human Capital", score: coreHumanCapital },
+        { name: "Spouse Factors", score: spousePoints },
+        { name: "Skill Transferability", score: skillTransferability },
+        { name: "Additional Points", score: additionalPoints },
+        { name: "Total Score", score: total, isTotal: true },
       ];
   }, [scoreDetails])
 
@@ -194,6 +202,7 @@ function ScoreCalculatorPage() {
                                 }
                             }}
                             disabled={isLoading}
+                            autoFocus
                             />
                             <Button type="submit" size="icon" disabled={isLoading}>
                             <Send className="h-4 w-4" />
@@ -231,15 +240,11 @@ function ScoreCalculatorPage() {
                         </TableHeader>
                         <TableBody>
                             {scoreCategories.map((item) => (
-                                <TableRow key={item.name}>
+                                <TableRow key={item.name} className={cn(item.isTotal && "bg-muted/50 font-bold")}>
                                 <TableCell>{item.name}</TableCell>
                                 <TableCell className="text-right font-medium">{isComplete ? item.score : '-'}</TableCell>
                                 </TableRow>
                             ))}
-                             <TableRow className="bg-muted/50 font-bold">
-                                <TableCell>Total Core Points</TableCell>
-                                <TableCell className="text-right">{isComplete ? finalScore : '-'}</TableCell>
-                            </TableRow>
                         </TableBody>
                     </Table>
                 </CardContent>
