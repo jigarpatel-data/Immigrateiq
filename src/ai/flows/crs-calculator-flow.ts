@@ -104,13 +104,14 @@ const crsCalculatorFlow = ai.defineFlow(
     outputSchema: CrsCalculatorOutputSchema,
   },
   async (input) => {
-    const {output} = await prompt(input);
+    const llmResponse = await prompt(input);
+    const output = llmResponse.output();
 
     if (!output) {
       throw new Error('The model did not return a response.');
     }
 
-    const toolCall = output.toolCalls?.[0];
+    const toolCall = llmResponse.toolCalls()?.[0];
 
     if (toolCall?.name === 'calculateCrsScore') {
       const toolResult = await calculateCrsScoreTool(toolCall.args as CrsFactors);
