@@ -1,6 +1,7 @@
 
 import { AuthForm } from "@/components/auth-form";
-import { PandaIcon, CheckCircle } from "lucide-react";
+import { CheckCircle } from "lucide-react";
+import { PandaIcon } from "@/components/icons";
 import Link from 'next/link';
 
 export default function AuthPage() {
