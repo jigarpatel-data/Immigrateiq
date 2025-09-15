@@ -97,7 +97,7 @@ const crsCalculatorFlow = ai.defineFlow(
   },
   async (input) => {
     const llmResponse = await prompt(input);
-    
+
     // Check if the model decided to call the calculation tool
     const toolCall = llmResponse.toolCall();
     if (toolCall?.name === 'calculateCrsScore') {
@@ -114,6 +114,7 @@ const crsCalculatorFlow = ai.defineFlow(
     }
 
     // If no tool was called, it means the model is continuing the conversation.
+    // We need to extract the text response from the model.
     const textResponse = llmResponse.text;
     if (textResponse) {
        return {
@@ -122,7 +123,7 @@ const crsCalculatorFlow = ai.defineFlow(
       };
     }
     
-    // Fallback for unexpected cases.
+    // Fallback for unexpected cases. This might happen if the model's response is not in a recognized format.
     const output = llmResponse.output();
     if (output?.response) {
       return {
