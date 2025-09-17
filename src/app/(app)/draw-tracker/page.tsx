@@ -1,34 +1,34 @@
 
 "use client";
 
-import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from '@/ui/input';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/ui/select";
-import { Button } from '@/ui/button';
+} from "@/components/ui/select";
+import { Button } from '@/components/ui/button';
 import { withAuth } from '@/hooks/use-auth';
 import { Award, Building, Calendar, ExternalLink, Filter, Info, Loader2, Search, Users, X } from 'lucide-react';
-import { Badge } from '@/ui/badge';
+import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/ui/tooltip";
+} from "@/components/ui/tooltip";
 import { getAirtableDraws, getUniqueFieldValues, type Draw } from '@/lib/airtable';
-import { Separator } from '@/ui/separator';
+import { Separator } from '@/components/ui/separator';
 
 function DrawTrackerPage() {
   const [allDraws, setAllDraws] = useState<Draw[]>([]);
@@ -109,7 +109,7 @@ function DrawTrackerPage() {
   // Effect to fetch draws when filters change
   useEffect(() => {
     fetchDraws(undefined, true);
-  }, [fetchDraws, searchTerm, provinceFilter, categoryFilter]);
+  }, [fetchDraws]);
 
 
   // Infinite scroll observer
@@ -137,11 +137,21 @@ function DrawTrackerPage() {
     };
   }, [hasMore, loadingMore, loading, offset, fetchDraws]);
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    fetchDraws(undefined, true);
+  }
 
   const resetFilters = () => {
     setSearchTerm('');
     setProvinceFilter('All');
     setCategoryFilter('All');
+    // We need to trigger the fetch manually since the effect only depends on fetchDraws
+    // A better approach might be to have the effect depend on the filters themselves
+    // But for now, this will work.
+    setTimeout(() => {
+       document.getElementById('manual-search-button')?.click()
+    }, 0)
   };
   
   const activeFilterCount = [searchTerm, provinceFilter, categoryFilter].filter(f => f && f !== 'All').length;
@@ -158,7 +168,7 @@ function DrawTrackerPage() {
       <Card>
         <CardHeader>
           <CardTitle>Filter and Sort Draws</CardTitle>
-          <div className="flex flex-wrap gap-4 pt-4">
+          <form onSubmit={handleSearch} className="flex flex-wrap gap-4 pt-4">
               <div className="relative flex-grow min-w-[200px]">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input 
@@ -188,14 +198,18 @@ function DrawTrackerPage() {
                       ))}
                   </SelectContent>
               </Select>
+              <Button type="submit" id="manual-search-button" className="w-full sm:w-auto">
+                <Search className="mr-2 h-4 w-4" />
+                Search
+              </Button>
             
             {activeFilterCount > 0 && (
-                <Button variant="ghost" onClick={resetFilters} className="w-full sm:w-auto">
+                <Button variant="ghost" type="button" onClick={resetFilters} className="w-full sm:w-auto">
                     <X className="mr-2 h-4 w-4" />
                     Reset
                 </Button>
             )}
-          </div>
+          </form>
         </CardHeader>
         <CardContent>
             {loading && allDraws.length === 0 ? (
