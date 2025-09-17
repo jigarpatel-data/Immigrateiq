@@ -27,7 +27,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { getAirtableDraws, type Draw } from '@/lib/airtable';
+import { getAirtableDraws, getUniqueFieldValues, type Draw } from '@/lib/airtable';
 import { Separator } from '@/components/ui/separator';
 
 const DRAWS_PER_PAGE = 10;
@@ -46,55 +46,63 @@ function DrawTrackerPage() {
   const [provinceFilter, setProvinceFilter] = useState('All');
   const [categoryFilter, setCategoryFilter] = useState('All');
 
-  const fetchAllDraws = useCallback(async () => {
+  const [provinceOptions, setProvinceOptions] = useState<string[]>(['All']);
+  const [categoryOptions, setCategoryOptions] = useState<string[]>(['All']);
+  const [loadingProvinces, setLoadingProvinces] = useState(false);
+  const [loadingCategories, setLoadingCategories] = useState(false);
+
+  const fetchInitialDraws = useCallback(async () => {
     setLoading(true);
-    let accumulatedDraws: Draw[] = [];
-    let offset: string | undefined = undefined;
-    let fetchError: string | undefined;
-
-    do {
-      const { draws: fetchedDraws, offset: newOffset, error } = await getAirtableDraws(offset);
-      if (error) {
-        fetchError = error;
-        break;
-      }
-      if (fetchedDraws) {
-        const drawsWithId = fetchedDraws.map(d => ({ ...d.fields, id: d.id }));
-        accumulatedDraws = [...accumulatedDraws, ...drawsWithId];
-      }
-      offset = newOffset;
-    } while (offset);
-
-    if (fetchError) {
-      setError(fetchError);
-    } else {
-      setAllDraws(accumulatedDraws);
+    const { draws, error } = await getAirtableDraws();
+    if (error) {
+      setError(error);
+    } else if (draws) {
+      const drawsWithId = draws.map(d => ({ ...d.fields, id: d.id }));
+      setAllDraws(drawsWithId);
+      setDisplayedDraws(drawsWithId.slice(0, DRAWS_PER_PAGE));
     }
     setLoading(false);
   }, []);
 
   useEffect(() => {
-    fetchAllDraws();
-  }, [fetchAllDraws]);
+    fetchInitialDraws();
+  }, [fetchInitialDraws]);
 
-  const provinceOptions = useMemo(() => ["All", ...new Set(allDraws.map(d => d.Province).filter(Boolean).sort())], [allDraws]);
-
-  const categoryOptions = useMemo(() => {
-    let relevantDraws = allDraws;
-    if (provinceFilter !== 'All') {
-      relevantDraws = allDraws.filter(draw => draw.Province === provinceFilter);
+  const fetchProvinceOptions = useCallback(async () => {
+    if (provinceOptions.length > 1) return; // Already fetched
+    setLoadingProvinces(true);
+    const { values, error } = await getUniqueFieldValues('Province');
+    if (error) {
+      setError(error);
+    } else if (values) {
+      setProvinceOptions(['All', ...values]);
     }
-    const categories = new Set(relevantDraws.map(d => d.Category).filter(Boolean));
-    return ["All", ...Array.from(categories).sort()];
-  }, [allDraws, provinceFilter]);
+    setLoadingProvinces(false);
+  }, [provinceOptions.length]);
 
-  // When province filter changes, reset category filter
+  const fetchCategoryOptions = useCallback(async () => {
+    if (categoryOptions.length > 1 && provinceFilter === 'All') return;
+    setLoadingCategories(true);
+    const { values, error } = await getUniqueFieldValues('Category', provinceFilter !== 'All' ? provinceFilter : undefined);
+    if (error) {
+      setError(error);
+    } else if (values) {
+      setCategoryOptions(['All', ...values]);
+    }
+    setLoadingCategories(false);
+  }, [provinceFilter]);
+
+
+  // When province filter changes, reset category filter and its options
   useEffect(() => {
     setCategoryFilter('All');
+    setCategoryOptions(['All']);
   }, [provinceFilter]);
 
 
   const filteredAndSortedDraws = useMemo(() => {
+    // This filtering is now client-side on the currently loaded draws.
+    // A full server-side search would be needed for larger datasets.
     let result = [...allDraws];
 
     const hasFilters = searchTerm !== '' || provinceFilter !== 'All' || categoryFilter !== 'All';
@@ -109,7 +117,8 @@ function DrawTrackerPage() {
           return matchesProvince && matchesCategory && matchesSearch;
         });
     }
-
+    
+    // The sorting logic remains the same
     result.sort((a, b) => {
       const dateA = new Date(a["Draw Date"]).getTime();
       const dateB = new Date(b["Draw Date"]).getTime();
@@ -122,22 +131,55 @@ function DrawTrackerPage() {
   const hasMoreDraws = displayedDraws.length < filteredAndSortedDraws.length;
 
   const loadMoreDraws = useCallback(() => {
-    if (hasMoreDraws) {
-        setLoadingMore(true);
-        // Simulate a small delay to show loading indicator
-        setTimeout(() => {
-            setPage(prevPage => prevPage + 1);
+    if (loadingMore || !hasMoreDraws) return;
+    setLoadingMore(true);
+
+    const nextPage = page + 1;
+    const nextDraws = filteredAndSortedDraws.slice(0, nextPage * DRAWS_PER_PAGE);
+
+    const newDrawsToFetchCount = nextDraws.length - allDraws.length;
+
+    if (newDrawsToFetchCount > 0 && !searchTerm && provinceFilter === 'All' && categoryFilter === 'All') {
+        // We need to fetch more data from the server
+        getAirtableDraws(allDraws[allDraws.length - 1]?.id).then(({ draws, error }) => {
+            if (error) {
+                setError(error);
+            } else if (draws) {
+                const newDrawsWithId = draws.map(d => ({ ...d.fields, id: d.id }));
+                setAllDraws(prev => [...prev, ...newDrawsWithId]);
+            }
             setLoadingMore(false);
-        }, 300);
+        });
+    } else {
+        // We have enough data client-side for the next page of filtered results
+        setDisplayedDraws(nextDraws);
+        setLoadingMore(false);
     }
-  }, [hasMoreDraws]);
+     setPage(nextPage);
+  }, [loadingMore, hasMoreDraws, page, filteredAndSortedDraws, allDraws, searchTerm, provinceFilter, categoryFilter]);
   
   useEffect(() => {
+    // This effect now sets the displayed draws based on the client-side filtered results.
     setDisplayedDraws(filteredAndSortedDraws.slice(0, page * DRAWS_PER_PAGE));
   }, [filteredAndSortedDraws, page]);
 
   useEffect(() => {
     setPage(1); // Reset page when filters change
+    getAirtableDraws(undefined, {
+      province: provinceFilter !== 'All' ? provinceFilter : undefined,
+      category: categoryFilter !== 'All' ? categoryFilter : undefined,
+      search: searchTerm || undefined,
+    }).then(({ draws, error }) => {
+      setLoading(false);
+      if (error) {
+        setError(error);
+      } else if (draws) {
+        const drawsWithId = draws.map(d => ({ ...d.fields, id: d.id }));
+        setAllDraws(drawsWithId);
+        setDisplayedDraws(drawsWithId.slice(0, DRAWS_PER_PAGE));
+      }
+    });
+
   }, [searchTerm, provinceFilter, categoryFilter]);
 
   useEffect(() => {
@@ -157,7 +199,7 @@ function DrawTrackerPage() {
     observer.current = new IntersectionObserver(handleObserver, options);
     
     const currentLoadMoreRef = loadMoreRef.current;
-    if (currentLoadMoreRef) {
+    if (currentLoadMoreRef && hasMoreDraws) {
       observer.current.observe(currentLoadMoreRef);
     }
 
@@ -181,7 +223,7 @@ function DrawTrackerPage() {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center">
         <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
-        <h1 className="text-xl md:text-2xl font-bold tracking-tight">Loading All Draws...</h1>
+        <h1 className="text-xl md:text-2xl font-bold tracking-tight">Loading Draws...</h1>
         <p className="text-muted-foreground">This may take a moment.</p>
       </div>
     );
@@ -219,22 +261,22 @@ function DrawTrackerPage() {
                       className="pl-10"
                   />
               </div>
-              <Select value={provinceFilter} onValueChange={setProvinceFilter}>
+              <Select value={provinceFilter} onValueChange={setProvinceFilter} onOpenChange={(isOpen) => isOpen && fetchProvinceOptions()}>
                   <SelectTrigger className="w-full sm:w-auto flex-grow sm:flex-grow-0 sm:min-w-40">
                       <SelectValue placeholder="Filter by province" />
                   </SelectTrigger>
                   <SelectContent>
-                      {provinceOptions.map(option => (
+                      {loadingProvinces ? <div className="flex items-center justify-center p-2"><Loader2 className="h-4 w-4 animate-spin"/></div> : provinceOptions.map(option => (
                           <SelectItem key={option} value={option}>{option}</SelectItem>
                       ))}
                   </SelectContent>
               </Select>
-               <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+               <Select value={categoryFilter} onValueChange={setCategoryFilter} onOpenChange={(isOpen) => isOpen && fetchCategoryOptions()}>
                   <SelectTrigger className="w-full sm:w-auto flex-grow sm:flex-grow-0 sm:min-w-40">
                       <SelectValue placeholder="Filter by category" />
                   </SelectTrigger>
                   <SelectContent>
-                      {categoryOptions.map(option => (
+                      {loadingCategories ? <div className="flex items-center justify-center p-2"><Loader2 className="h-4 w-4 animate-spin"/></div> : categoryOptions.map(option => (
                           <SelectItem key={option} value={option}>{option}</SelectItem>
                       ))}
                   </SelectContent>
@@ -364,7 +406,7 @@ function DrawTrackerPage() {
                 </div>
               )}
             </div>
-            <div ref={loadMoreRef} className="h-1 col-span-full" />
+            {hasMoreDraws && <div ref={loadMoreRef} className="h-1 col-span-full" />}
              {loadingMore && (
                 <div className="flex justify-center mt-6">
                     <Button variant="secondary" disabled>
@@ -385,5 +427,3 @@ function DrawTrackerPage() {
 }
 
 export default withAuth(DrawTrackerPage);
-
-    

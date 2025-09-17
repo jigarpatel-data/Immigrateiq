@@ -34,7 +34,13 @@ type AirtableResult = {
   offset?: string 
 };
 
-export async function getAirtableDraws(offset?: string): Promise<AirtableResult> {
+type FilterOptions = {
+    province?: string;
+    category?: string;
+    search?: string;
+}
+
+export async function getAirtableDraws(offset?: string, filters?: FilterOptions): Promise<AirtableResult> {
   const apiKey = process.env.AIRTABLE_API_KEY;
   const baseId = process.env.AIRTABLE_BASE_ID;
   const tableName = 'Draww Tracker';
@@ -48,11 +54,32 @@ export async function getAirtableDraws(offset?: string): Promise<AirtableResult>
 
   try {
     const url = new URL(baseUrl);
-    url.searchParams.append('pageSize', '100');
+    url.searchParams.append('pageSize', '10'); // Keep page size small for infinite scroll
     url.searchParams.append('sort[0][field]', 'Draw Date');
     url.searchParams.append('sort[0][direction]', 'desc');
+    
     if (offset) {
       url.searchParams.append('offset', offset);
+    }
+
+    const filterParts: string[] = [];
+    if(filters?.province) {
+        filterParts.push(`{Province} = "${filters.province}"`);
+    }
+    if(filters?.category) {
+        filterParts.push(`{Category} = "${filters.category}"`);
+    }
+    if(filters?.search) {
+        const searchLower = filters.search.toLowerCase();
+        filterParts.push(`OR(
+            SEARCH("${searchLower}", LOWER({NOC/Other})),
+            SEARCH("${searchLower}", LOWER({Category})),
+            SEARCH("${searchLower}", LOWER({Province}))
+        )`);
+    }
+
+    if (filterParts.length > 0) {
+        url.searchParams.append('filterByFormula', `AND(${filterParts.join(', ')})`);
     }
     
     const response = await fetch(url.toString(), {
@@ -87,5 +114,62 @@ export async function getAirtableDraws(offset?: string): Promise<AirtableResult>
         return { error: 'Network error: Could not connect to Airtable.'}
     }
     return { error: 'An unexpected error occurred while fetching data.' };
+  }
+}
+
+export async function getUniqueFieldValues(field: 'Province' | 'Category', provinceFilter?: string): Promise<{ values?: string[], error?: string }> {
+  const apiKey = process.env.AIRTABLE_API_KEY;
+  const baseId = process.env.AIRTABLE_BASE_ID;
+  const tableName = 'Draww Tracker';
+
+  if (!apiKey || !baseId) {
+    return { error: 'Server configuration error.' };
+  }
+
+  const baseUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`;
+  const uniqueValues = new Set<string>();
+  let offset: string | undefined;
+
+  try {
+    do {
+      const url = new URL(baseUrl);
+      url.searchParams.append('fields[]', field);
+      if (provinceFilter && field === 'Category') {
+        url.searchParams.append('filterByFormula', `{Province} = "${provinceFilter}"`);
+      }
+      if (offset) {
+        url.searchParams.append('offset', offset);
+      }
+
+      const response = await fetch(url.toString(), {
+        headers: { Authorization: `Bearer ${apiKey}` },
+        next: { revalidate: 3600 } // Cache for 1 hour
+      });
+
+      if (!response.ok) {
+        const errorBody = await response.json();
+        return { error: errorBody?.error?.message || 'Failed to load filter options.' };
+      }
+
+      const data = await response.json();
+      const validated = AirtableResponseSchema.safeParse(data);
+      if(!validated.success) {
+        return { error: 'Invalid data format for filter options.'}
+      }
+
+      validated.data.records.forEach(record => {
+        const value = record.fields[field];
+        if (value) {
+          uniqueValues.add(value);
+        }
+      });
+
+      offset = validated.data.offset;
+    } while (offset);
+
+    return { values: Array.from(uniqueValues).sort() };
+  } catch (error) {
+    console.error(`Error fetching unique values for ${field}:`, error);
+    return { error: 'An unexpected error occurred while fetching filter options.' };
   }
 }
