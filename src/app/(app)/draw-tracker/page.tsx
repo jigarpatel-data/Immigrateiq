@@ -8,37 +8,36 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from '@/components/ui/input';
+import { Input } from '@/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from '@/components/ui/button';
+} from "@/ui/select";
+import { Button } from '@/ui/button';
 import { withAuth } from '@/hooks/use-auth';
 import { Award, Building, Calendar, ExternalLink, Filter, Info, Loader2, Search, Users, X } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/ui/badge';
 import Link from 'next/link';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/ui/tooltip";
 import { getAirtableDraws, getUniqueFieldValues, type Draw } from '@/lib/airtable';
-import { Separator } from '@/components/ui/separator';
-
-const DRAWS_PER_PAGE = 10;
+import { Separator } from '@/ui/separator';
 
 function DrawTrackerPage() {
   const [allDraws, setAllDraws] = useState<Draw[]>([]);
-  const [displayedDraws, setDisplayedDraws] = useState<Draw[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [page, setPage] = useState(1);
+  const [offset, setOffset] = useState<string | undefined>(undefined);
+  const [hasMore, setHasMore] = useState(true);
+  
   const observer = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
@@ -49,133 +48,85 @@ function DrawTrackerPage() {
   const [provinceOptions, setProvinceOptions] = useState<string[]>(['All']);
   const [categoryOptions, setCategoryOptions] = useState<string[]>(['All']);
   const [loadingFilters, setLoadingFilters] = useState(true);
-  
-  // Fetch initial data and filter options
-  useEffect(() => {
-    const fetchInitialData = async () => {
-      setLoading(true);
-      setLoadingFilters(true);
 
-      const [drawsResult, provincesResult, categoriesResult] = await Promise.all([
-        getAirtableDraws(),
+  const fetchDraws = useCallback(async (currentOffset?: string, isNewFilter = false) => {
+      if (isNewFilter) {
+        setLoading(true);
+        setAllDraws([]);
+      } else {
+        setLoadingMore(true);
+      }
+      setError(null);
+
+      const filters = {
+        province: provinceFilter,
+        category: categoryFilter,
+        search: searchTerm,
+      };
+
+      const { draws, error, offset: newOffset } = await getAirtableDraws(currentOffset, filters);
+      
+      if (error) {
+        setError(error);
+      } else if (draws) {
+        const newDrawsWithId = draws.map(d => ({ ...d.fields, id: d.id }));
+        setAllDraws(prev => isNewFilter ? newDrawsWithId : [...prev, ...newDrawsWithId]);
+        setOffset(newOffset);
+        setHasMore(!!newOffset);
+      } else {
+        setHasMore(false);
+      }
+      setLoading(false);
+      setLoadingMore(false);
+  }, [provinceFilter, categoryFilter, searchTerm]);
+
+  // Fetch unique filter options on initial load
+  useEffect(() => {
+    const fetchFilterOptions = async () => {
+      setLoadingFilters(true);
+      const [provincesResult, categoriesResult] = await Promise.all([
         getUniqueFieldValues('Province'),
         getUniqueFieldValues('Category')
       ]);
 
-      if (drawsResult.error) {
-        setError(drawsResult.error);
-      } else if (drawsResult.draws) {
-        const drawsWithId = drawsResult.draws.map(d => ({ ...d.fields, id: d.id }));
-        setAllDraws(drawsWithId);
-        setDisplayedDraws(drawsWithId.slice(0, DRAWS_PER_PAGE));
-      }
-
-      if (provincesResult.error) {
-         // Non-critical error, filters just won't be populated
-        console.error("Failed to load province filters:", provincesResult.error);
-      } else if (provincesResult.values) {
+      if (provincesResult.values) {
         setProvinceOptions(['All', ...provincesResult.values]);
+      } else {
+        console.error("Failed to load province filters:", provincesResult.error);
       }
       
-      if (categoriesResult.error) {
-        console.error("Failed to load category filters:", categoriesResult.error);
-      } else if (categoriesResult.values) {
+      if (categoriesResult.values) {
         setCategoryOptions(['All', ...categoriesResult.values]);
+      } else {
+        console.error("Failed to load category filters:", categoriesResult.error);
       }
-      
-      setLoading(false);
       setLoadingFilters(false);
     };
 
-    fetchInitialData();
+    fetchFilterOptions();
   }, []);
 
-
-  const filteredAndSortedDraws = useMemo(() => {
-    let result = [...allDraws];
-
-    const hasFilters = searchTerm !== '' || provinceFilter !== 'All' || categoryFilter !== 'All';
-    if(hasFilters) {
-        result = result.filter(draw => {
-          const matchesProvince = provinceFilter === 'All' || draw.Province === provinceFilter;
-          const matchesCategory = categoryFilter === 'All' || draw.Category === categoryFilter;
-          const matchesSearch = searchTerm === '' || 
-            (draw["NOC/Other"] && draw["NOC/Other"].toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (draw.Category && draw.Category.toLowerCase().includes(searchTerm.toLowerCase())) ||
-            (draw.Province && draw.Province.toLowerCase().includes(searchTerm.toLowerCase()));
-          return matchesProvince && matchesCategory && matchesSearch;
-        });
-    }
-    
-    result.sort((a, b) => {
-      const dateA = new Date(a["Draw Date"]).getTime();
-      const dateB = new Date(b["Draw Date"]).getTime();
-      return dateB - dateA;
-    });
-
-    return result;
-  }, [allDraws, searchTerm, provinceFilter, categoryFilter]);
-
-  const hasMoreDraws = displayedDraws.length < filteredAndSortedDraws.length;
-
-  const loadMoreDraws = useCallback(() => {
-    if (loadingMore || !hasMoreDraws) return;
-    setLoadingMore(true);
-
-    const nextPage = page + 1;
-    const currentOffsetId = allDraws.length > 0 ? allDraws[allDraws.length - 1].id : undefined;
-    
-    const noFiltersApplied = !searchTerm && provinceFilter === 'All' && categoryFilter === 'All';
-
-    // Only fetch from server if we're at the end of the client-side list AND no filters are applied
-    if (page * DRAWS_PER_PAGE >= allDraws.length && noFiltersApplied) {
-        getAirtableDraws(currentOffsetId).then(({ draws, error }) => {
-            if (error) {
-                setError(error);
-            } else if (draws) {
-                const newDrawsWithId = draws.map(d => ({ ...d.fields, id: d.id }));
-                setAllDraws(prev => [...prev, ...newDrawsWithId]);
-            }
-            setLoadingMore(false);
-        });
-    } else {
-      // We have enough data client-side for the next page
-      const nextDraws = filteredAndSortedDraws.slice(0, nextPage * DRAWS_PER_PAGE);
-      setDisplayedDraws(nextDraws);
-      setLoadingMore(false);
-    }
-    setPage(nextPage);
-  }, [loadingMore, hasMoreDraws, page, allDraws, filteredAndSortedDraws, searchTerm, provinceFilter, categoryFilter]);
-  
-  // This effect updates the displayed draws whenever the filtered list changes
+  // Effect to fetch draws when filters change
   useEffect(() => {
-    setDisplayedDraws(filteredAndSortedDraws.slice(0, page * DRAWS_PER_PAGE));
-  }, [filteredAndSortedDraws, page]);
-  
-  // Reset page to 1 when filters change
+    fetchDraws(undefined, true);
+  }, [fetchDraws, searchTerm, provinceFilter, categoryFilter]);
+
+
+  // Infinite scroll observer
   useEffect(() => {
-    setPage(1);
-  }, [searchTerm, provinceFilter, categoryFilter]);
-
-
-  useEffect(() => {
-    const options = {
-      root: null,
-      rootMargin: '200px', // Start loading a bit before the user hits the bottom
-      threshold: 0,
-    };
-
     const handleObserver = (entries: IntersectionObserverEntry[]) => {
       const target = entries[0];
-      if (target.isIntersecting && hasMoreDraws && !loading && !loadingMore) {
-        loadMoreDraws();
+      if (target.isIntersecting && hasMore && !loadingMore && !loading) {
+        fetchDraws(offset);
       }
     };
     
-    observer.current = new IntersectionObserver(handleObserver, options);
+    observer.current = new IntersectionObserver(handleObserver, {
+      rootMargin: '200px',
+    });
     
     const currentLoadMoreRef = loadMoreRef.current;
-    if (currentLoadMoreRef && hasMoreDraws) {
+    if (currentLoadMoreRef) {
       observer.current.observe(currentLoadMoreRef);
     }
 
@@ -184,7 +135,7 @@ function DrawTrackerPage() {
         observer.current.unobserve(currentLoadMoreRef);
       }
     };
-  }, [hasMoreDraws, loading, loadingMore, loadMoreDraws]);
+  }, [hasMore, loadingMore, loading, offset, fetchDraws]);
 
 
   const resetFilters = () => {
@@ -194,26 +145,6 @@ function DrawTrackerPage() {
   };
   
   const activeFilterCount = [searchTerm, provinceFilter, categoryFilter].filter(f => f && f !== 'All').length;
-
-  if (loading && allDraws.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full text-center">
-        <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
-        <h1 className="text-xl md:text-2xl font-bold tracking-tight">Loading Draws...</h1>
-        <p className="text-muted-foreground">This may take a moment.</p>
-      </div>
-    );
-  }
-
-  if (error) {
-     return (
-      <div className="text-center py-16 bg-destructive/10 text-destructive border border-destructive rounded-lg p-4">
-        <X className="mx-auto h-12 w-12 mb-4" />
-        <p className="text-lg font-semibold">Failed to load draws</p>
-        <p>{error}</p>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
@@ -267,69 +198,35 @@ function DrawTrackerPage() {
           </div>
         </CardHeader>
         <CardContent>
-            <div className="grid gap-4 grid-cols-1">
-              {displayedDraws.length > 0 ? (
-                displayedDraws.map((draw) => (
-                  <Card key={draw.id}>
-                    {/* Desktop View */}
-                    <div className='hidden sm:block p-6 space-y-4'>
-                      <div className="flex justify-between items-start gap-4">
-                          <div>
-                            <p className="text-sm text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</p>
-                            <CardTitle className="text-base font-semibold pt-1">{draw.Category}</CardTitle>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Badge variant="secondary" className="flex items-center gap-1.5 whitespace-nowrap text-xs">
-                              <Building className="h-3.5 w-3.5" />
-                              {draw.Province}
-                            </Badge>
-                             <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
-                                <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
-                                    <ExternalLink className="h-4 w-4" />
-                                    <span className="sr-only">Source</span>
-                                </Link>
-                            </Button>
-                          </div>
-                      </div>
-                      <div className="flex items-center text-center sm:text-left gap-4 sm:gap-6 pt-2 text-sm text-muted-foreground">
-                        <div className="flex items-center gap-1.5">
-                            <Award className="h-4 w-4 text-accent" />
-                            <span className="font-semibold text-foreground">{draw.Score || 'N/A'}</span>
-                            <span className='hidden sm:inline'>Min. Score</span>
-                        </div>
-                        <Separator orientation="vertical" className="h-5" />
-                        <div className="flex items-center gap-1.5">
-                            <Users className="h-4 w-4 text-accent" />
-                            <span className="font-semibold text-foreground">{draw["Total Draw Invitations"] || 'N/A'}</span>
-                             <span className='hidden sm:inline'>Invitations</span>
-                             <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <button>
-                                    <Info className="h-4 w-4 text-muted-foreground" />
-                                    <span className="sr-only">More info</span>
-                                  </button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p className="max-w-xs">
-                                    These many invitations were issued in this draw, not for any specific occupation. This draw may have invited other occupations as well.
-                                  </p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                        </div>
-                        <Separator orientation="vertical" className="h-5" />
-                        <p className='truncate' title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</p>
-                      </div>
-                    </div>
-                    {/* Mobile View */}
-                    <div className="sm:hidden p-3 space-y-3">
-                        <div className="flex justify-between items-center">
-                            <span className="text-xs text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</span>
-                            <div className="flex items-center gap-2">
-                                <Badge variant="secondary" className="flex items-center gap-1.5 text-xs">
-                                <Building className="h-3.5 w-3.5" />
-                                {draw.Province}
+            {loading && allDraws.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-full text-center py-16">
+                    <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
+                    <h1 className="text-xl md:text-2xl font-bold tracking-tight">Loading Draws...</h1>
+                    <p className="text-muted-foreground">This may take a moment.</p>
+                </div>
+            ) : error ? (
+                <div className="text-center py-16 bg-destructive/10 text-destructive border border-destructive rounded-lg p-4">
+                    <X className="mx-auto h-12 w-12 mb-4" />
+                    <p className="text-lg font-semibold">Failed to load draws</p>
+                    <p>{error}</p>
+                </div>
+            ) : (
+              <>
+                <div className="grid gap-4 grid-cols-1">
+                  {allDraws.length > 0 ? (
+                    allDraws.map((draw) => (
+                      <Card key={draw.id}>
+                        {/* Desktop View */}
+                        <div className='hidden sm:block p-6 space-y-4'>
+                          <div className="flex justify-between items-start gap-4">
+                              <div>
+                                <p className="text-sm text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</p>
+                                <CardTitle className="text-base font-semibold pt-1">{draw.Category}</CardTitle>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Badge variant="secondary" className="flex items-center gap-1.5 whitespace-nowrap text-xs">
+                                  <Building className="h-3.5 w-3.5" />
+                                  {draw.Province}
                                 </Badge>
                                 <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
                                     <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
@@ -337,64 +234,114 @@ function DrawTrackerPage() {
                                         <span className="sr-only">Source</span>
                                     </Link>
                                 </Button>
-                            </div>
-                        </div>
-                        <p className="text-base font-semibold">{draw.Category}</p>
-                        <Separator/>
-                        <div className="space-y-2 text-sm">
-                            <div className="flex text-sm">
-                                <span className="text-muted-foreground mr-2">Min. Score:</span>
+                              </div>
+                          </div>
+                          <div className="flex items-center text-center sm:text-left gap-4 sm:gap-6 pt-2 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-1.5">
+                                <Award className="h-4 w-4 text-accent" />
                                 <span className="font-semibold text-foreground">{draw.Score || 'N/A'}</span>
+                                <span className='hidden sm:inline'>Min. Score</span>
                             </div>
-                            <div className="flex text-sm">
-                                <span className="text-muted-foreground mr-2">Invitations:</span>
-                                <div className='flex items-center gap-1.5'>
-                                  <span className="font-semibold text-foreground">{draw["Total Draw Invitations"] || 'N/A'}</span>
-                                  <TooltipProvider>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                        <button>
-                                            <Info className="h-4 w-4 text-muted-foreground" />
-                                            <span className="sr-only">More info</span>
-                                        </button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                        <p className="max-w-xs">
-                                            These many invitations were issued in this draw, not for any specific occupation. This draw may have invited other occupations as well.
-                                        </p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                  </TooltipProvider>
+                            <Separator orientation="vertical" className="h-5" />
+                            <div className="flex items-center gap-1.5">
+                                <Users className="h-4 w-4 text-accent" />
+                                <span className="font-semibold text-foreground">{draw["Total Draw Invitations"] || 'N/A'}</span>
+                                <span className='hidden sm:inline'>Invitations</span>
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <button>
+                                        <Info className="h-4 w-4 text-muted-foreground" />
+                                        <span className="sr-only">More info</span>
+                                      </button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p className="max-w-xs">
+                                        These many invitations were issued in this draw, not for any specific occupation. This draw may have invited other occupations as well.
+                                      </p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                            </div>
+                            <Separator orientation="vertical" className="h-5" />
+                            <p className='truncate' title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</p>
+                          </div>
+                        </div>
+                        {/* Mobile View */}
+                        <div className="sm:hidden p-3 space-y-3">
+                            <div className="flex justify-between items-center">
+                                <span className="text-xs text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</span>
+                                <div className="flex items-center gap-2">
+                                    <Badge variant="secondary" className="flex items-center gap-1.5 text-xs">
+                                    <Building className="h-3.5 w-3.5" />
+                                    {draw.Province}
+                                    </Badge>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8" asChild>
+                                        <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
+                                            <ExternalLink className="h-4 w-4" />
+                                            <span className="sr-only">Source</span>
+                                        </Link>
+                                    </Button>
                                 </div>
                             </div>
-                             <div className="flex items-center">
-                                <span className='text-xs text-muted-foreground truncate' title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</span>
+                            <p className="text-base font-semibold">{draw.Category}</p>
+                            <Separator/>
+                            <div className="space-y-2 text-sm">
+                                <div className="flex text-sm">
+                                    <span className="text-muted-foreground mr-2">Min. Score:</span>
+                                    <span className="font-semibold text-foreground">{draw.Score || 'N/A'}</span>
+                                </div>
+                                <div className="flex text-sm">
+                                    <span className="text-muted-foreground mr-2">Invitations:</span>
+                                    <div className='flex items-center gap-1.5'>
+                                      <span className="font-semibold text-foreground">{draw["Total Draw Invitations"] || 'N/A'}</span>
+                                      <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                            <button>
+                                                <Info className="h-4 w-4 text-muted-foreground" />
+                                                <span className="sr-only">More info</span>
+                                            </button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                            <p className="max-w-xs">
+                                                These many invitations were issued in this draw, not for any specific occupation. This draw may have invited other occupations as well.
+                                            </p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                      </TooltipProvider>
+                                    </div>
+                                </div>
+                                <div className="flex items-center">
+                                    <span className='text-xs text-muted-foreground truncate' title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</span>
+                                </div>
                             </div>
                         </div>
+                      </Card>
+                    ))
+                  ) : (
+                    <div className="text-center py-16 text-muted-foreground col-span-full">
+                      <Filter className="mx-auto h-12 w-12 mb-4" />
+                      <p className="text-lg font-semibold">No draws found</p>
+                      <p>Try adjusting your search or filters.</p>
                     </div>
-                  </Card>
-                ))
-              ) : (
-                <div className="text-center py-16 text-muted-foreground col-span-full">
-                  <Filter className="mx-auto h-12 w-12 mb-4" />
-                  <p className="text-lg font-semibold">No draws found</p>
-                  <p>Try adjusting your search or filters.</p>
+                  )}
                 </div>
-              )}
-            </div>
-            {hasMoreDraws && <div ref={loadMoreRef} className="h-1 col-span-full" />}
-             {loadingMore && (
-                <div className="flex justify-center mt-6">
-                    <Button variant="secondary" disabled>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Loading More...
-                    </Button>
-                </div>
-            )}
-             {!loadingMore && !hasMoreDraws && displayedDraws.length > 0 && (
-                <div className="text-center text-muted-foreground mt-6">
-                    <p>You've reached the end of the list.</p>
-                </div>
+                {hasMore && <div ref={loadMoreRef} className="h-1 col-span-full" />}
+                {loadingMore && (
+                    <div className="flex justify-center mt-6">
+                        <Button variant="secondary" disabled>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Loading More...
+                        </Button>
+                    </div>
+                )}
+                {!loading && !loadingMore && !hasMore && allDraws.length > 0 && (
+                    <div className="text-center text-muted-foreground mt-6">
+                        <p>You've reached the end of the list.</p>
+                    </div>
+                )}
+              </>
             )}
         </CardContent>
       </Card>

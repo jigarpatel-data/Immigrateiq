@@ -69,7 +69,7 @@ export async function getAirtableDraws(offset?: string, filters?: FilterOptions)
 
   try {
     const url = new URL(baseUrl);
-    url.searchParams.append('pageSize', '10'); // Keep page size small for infinite scroll
+    url.searchParams.append('pageSize', '10');
     url.searchParams.append('sort[0][field]', 'Draw Date');
     url.searchParams.append('sort[0][direction]', 'desc');
     
