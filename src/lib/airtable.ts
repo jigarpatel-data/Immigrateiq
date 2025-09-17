@@ -26,6 +26,21 @@ const AirtableResponseSchema = z.object({
 });
 
 
+// Schema for fetching unique values, which returns partial records
+const UniqueValueFieldsSchema = z.record(z.string(), z.string().optional());
+
+const AirtableUniqueValueRecordSchema = z.object({
+    id: z.string(),
+    fields: UniqueValueFieldsSchema,
+    createdTime: z.string(),
+});
+
+const AirtableUniqueValueResponseSchema = z.object({
+    records: z.array(AirtableUniqueValueRecordSchema),
+    offset: z.string().optional(),
+});
+
+
 export type Draw = z.infer<typeof DrawFieldsSchema> & { id: string };
 
 type AirtableResult = { 
@@ -152,8 +167,9 @@ export async function getUniqueFieldValues(field: 'Province' | 'Category', provi
       }
 
       const data = await response.json();
-      const validated = AirtableResponseSchema.safeParse(data);
+      const validated = AirtableUniqueValueResponseSchema.safeParse(data);
       if(!validated.success) {
+        console.error("Airtable filter data validation error:", validated.error.flatten());
         return { error: 'Invalid data format for filter options.'}
       }
 
