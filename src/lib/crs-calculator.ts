@@ -1,4 +1,3 @@
-
 import { z } from 'zod';
 
 // Schemas for input validation using Zod
@@ -141,26 +140,26 @@ function getSkillTransferabilityPoints(factors: CrsFactors): { eduPoints: number
     const allLangCLB7 = firstLanguage.listening >= 7 && firstLanguage.reading >= 7 && firstLanguage.writing >= 7 && firstLanguage.speaking >= 7;
     const allLangCLB9 = firstLanguage.listening >= 9 && firstLanguage.reading >= 9 && firstLanguage.writing >= 9 && firstLanguage.speaking >= 9;
     
-    const postSecondaryLevels = educationLevels.slice(2);
-    const twoOrMoreCredsOrHigher = educationLevels.slice(5);
+    const postSecondaryOneYearOrLonger = educationLevels.slice(2).includes(education.value);
+    const twoOrMoreCredsOrHigher = educationLevels.slice(5).includes(education.value);
 
-    if (postSecondaryLevels.includes(education.value)) {
+    if (postSecondaryOneYearOrLonger) {
         if (allLangCLB9) {
-            eduAndLangPoints = twoOrMoreCredsOrHigher.includes(education.value) ? 50 : 25;
+            eduAndLangPoints = twoOrMoreCredsOrHigher ? 50 : 25;
         } else if (allLangCLB7) {
-            eduAndLangPoints = twoOrMoreCredsOrHigher.includes(education.value) ? 25 : 13;
+            eduAndLangPoints = twoOrMoreCredsOrHigher ? 25 : 13;
         }
     }
 
     let eduAndCWEPoints = 0;
-     if (postSecondaryLevels.includes(education.value)) {
+     if (postSecondaryOneYearOrLonger) {
         if (canadianWorkExperience.value >= 2) {
-            eduAndCWEPoints = twoOrMoreCredsOrHigher.includes(education.value) ? 50 : 25;
+            eduAndCWEPoints = twoOrMoreCredsOrHigher ? 50 : 25;
         } else if (canadianWorkExperience.value === 1) {
-            eduAndCWEPoints = twoOrMoreCredsOrHigher.includes(education.value) ? 25 : 13;
+            eduAndCWEPoints = twoOrMoreCredsOrHigher ? 25 : 13;
         }
     }
-    const eduPoints = Math.min(eduAndLangPoints, 50) + Math.min(eduAndCWEPoints, 50);
+    const eduPoints = Math.min(eduAndLangPoints + eduAndCWEPoints, 50);
 
     // --- Foreign Work Experience Points ---
     let fweAndLangPoints = 0;
@@ -180,7 +179,7 @@ function getSkillTransferabilityPoints(factors: CrsFactors): { eduPoints: number
              fweAndCWEPoints = foreignWorkExperience.value >= 3 ? 25 : 13;
         }
     }
-    const fwePoints = Math.min(fweAndLangPoints, 50) + Math.min(fweAndCWEPoints, 50);
+    const fwePoints = Math.min(fweAndLangPoints + fweAndCWEPoints, 50);
 
     // --- Certificate of Qualification Points ---
     let qualPoints = 0;
