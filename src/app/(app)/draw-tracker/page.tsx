@@ -5,7 +5,6 @@ import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -34,7 +33,7 @@ import { Separator } from '@/components/ui/separator';
 const DRAWS_PER_PAGE = 10;
 
 function DrawTrackerPage() {
-  const [allDraws, setAllDraws] = useState<Map<string, Draw>>(new Map());
+  const [allDraws, setAllDraws] = useState<Draw[]>([]);
   const [displayedDraws, setDisplayedDraws] = useState<Draw[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -42,52 +41,52 @@ function DrawTrackerPage() {
   const [page, setPage] = useState(1);
   const observer = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
-  const airtableOffset = useRef<string | undefined>(undefined);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [provinceFilter, setProvinceFilter] = useState('All');
   const [categoryFilter, setCategoryFilter] = useState('All');
 
-  const fetchDraws = useCallback(async (isInitialLoad = false) => {
-    if (isInitialLoad) {
-      setLoading(true);
-    } else {
-      setLoadingMore(true);
-    }
-    const { draws: fetchedDraws, offset: newOffset, error: fetchError } = await getAirtableDraws(airtableOffset.current);
+  const fetchAllDraws = useCallback(async () => {
+    setLoading(true);
+    let accumulatedDraws: Draw[] = [];
+    let offset: string | undefined = undefined;
+    let fetchError: string | undefined;
+
+    do {
+      const { draws: fetchedDraws, offset: newOffset, error } = await getAirtableDraws(offset);
+      if (error) {
+        fetchError = error;
+        break;
+      }
+      if (fetchedDraws) {
+        const drawsWithId = fetchedDraws.map(d => ({ ...d.fields, id: d.id }));
+        accumulatedDraws = [...accumulatedDraws, ...drawsWithId];
+      }
+      offset = newOffset;
+    } while (offset);
+
     if (fetchError) {
       setError(fetchError);
-    } else if (fetchedDraws) {
-      setAllDraws(prevDraws => {
-        const newDrawsMap = new Map(prevDraws);
-        fetchedDraws.forEach(d => {
-            const drawData: Draw = { ...d.fields, id: d.id };
-            newDrawsMap.set(d.id, drawData);
-        });
-        return newDrawsMap;
-      });
-      airtableOffset.current = newOffset;
+    } else {
+      setAllDraws(accumulatedDraws);
     }
     setLoading(false);
-    setLoadingMore(false);
   }, []);
 
   useEffect(() => {
-    fetchDraws(true);
-  }, [fetchDraws]);
+    fetchAllDraws();
+  }, [fetchAllDraws]);
 
-  const allDrawsArray = useMemo(() => Array.from(allDraws.values()), [allDraws]);
-
-  const provinceOptions = useMemo(() => ["All", ...new Set(allDrawsArray.map(d => d.Province).filter(Boolean).sort())], [allDrawsArray]);
+  const provinceOptions = useMemo(() => ["All", ...new Set(allDraws.map(d => d.Province).filter(Boolean).sort())], [allDraws]);
 
   const categoryOptions = useMemo(() => {
-    let relevantDraws = allDrawsArray;
+    let relevantDraws = allDraws;
     if (provinceFilter !== 'All') {
-      relevantDraws = allDrawsArray.filter(draw => draw.Province === provinceFilter);
+      relevantDraws = allDraws.filter(draw => draw.Province === provinceFilter);
     }
     const categories = new Set(relevantDraws.map(d => d.Category).filter(Boolean));
     return ["All", ...Array.from(categories).sort()];
-  }, [allDrawsArray, provinceFilter]);
+  }, [allDraws, provinceFilter]);
 
   // When province filter changes, reset category filter
   useEffect(() => {
@@ -96,7 +95,7 @@ function DrawTrackerPage() {
 
 
   const filteredAndSortedDraws = useMemo(() => {
-    let result = [...allDrawsArray];
+    let result = [...allDraws];
 
     const hasFilters = searchTerm !== '' || provinceFilter !== 'All' || categoryFilter !== 'All';
     if(hasFilters) {
@@ -118,24 +117,20 @@ function DrawTrackerPage() {
     });
 
     return result;
-  }, [allDrawsArray, searchTerm, provinceFilter, categoryFilter]);
+  }, [allDraws, searchTerm, provinceFilter, categoryFilter]);
 
-  const hasMoreLocalDraws = displayedDraws.length < filteredAndSortedDraws.length;
-  const hasMoreRemoteDraws = airtableOffset.current !== undefined;
-  const hasMoreDraws = hasMoreLocalDraws || hasMoreRemoteDraws;
+  const hasMoreDraws = displayedDraws.length < filteredAndSortedDraws.length;
 
   const loadMoreDraws = useCallback(() => {
-    const hasFilters = searchTerm !== '' || provinceFilter !== 'All' || categoryFilter !== 'All';
-    
-    // If we have local draws to display, just increase the page
-    if (hasMoreLocalDraws) {
-      setPage(prevPage => prevPage + 1);
-    } 
-    // If no more local draws, no filters active, and there are more remote draws, fetch them
-    else if (!hasFilters && hasMoreRemoteDraws) {
-      fetchDraws();
+    if (hasMoreDraws) {
+        setLoadingMore(true);
+        // Simulate a small delay to show loading indicator
+        setTimeout(() => {
+            setPage(prevPage => prevPage + 1);
+            setLoadingMore(false);
+        }, 300);
     }
-  }, [hasMoreLocalDraws, hasMoreRemoteDraws, fetchDraws, searchTerm, provinceFilter, categoryFilter]);
+  }, [hasMoreDraws]);
   
   useEffect(() => {
     setDisplayedDraws(filteredAndSortedDraws.slice(0, page * DRAWS_PER_PAGE));
@@ -182,11 +177,12 @@ function DrawTrackerPage() {
   
   const activeFilterCount = [searchTerm, provinceFilter, categoryFilter].filter(f => f && f !== 'All').length;
 
-  if (loading && allDraws.size === 0) {
+  if (loading && allDraws.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center">
         <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
-        <h1 className="text-xl md:text-2xl font-bold tracking-tight">Loading Draws...</h1>
+        <h1 className="text-xl md:text-2xl font-bold tracking-tight">Loading All Draws...</h1>
+        <p className="text-muted-foreground">This may take a moment.</p>
       </div>
     );
   }
@@ -377,6 +373,11 @@ function DrawTrackerPage() {
                     </Button>
                 </div>
             )}
+             {!loadingMore && !hasMoreDraws && displayedDraws.length > 0 && (
+                <div className="text-center text-muted-foreground mt-6">
+                    <p>You've reached the end of the list.</p>
+                </div>
+            )}
         </CardContent>
       </Card>
     </div>
@@ -384,3 +385,5 @@ function DrawTrackerPage() {
 }
 
 export default withAuth(DrawTrackerPage);
+
+    
