@@ -78,14 +78,14 @@ export async function getAirtableDraws(offset?: string, filters?: FilterOptions)
     }
 
     const filterParts: string[] = [];
-    if(filters?.province) {
+    if(filters?.province && filters.province !== 'All') {
         filterParts.push(`{Province} = "${filters.province}"`);
     }
-    if(filters?.category) {
+    if(filters?.category && filters.category !== 'All') {
         filterParts.push(`{Category} = "${filters.category}"`);
     }
     if(filters?.search) {
-        const searchLower = filters.search.toLowerCase();
+        const searchLower = filters.search.toLowerCase().replace(/"/g, '\\"');
         filterParts.push(`OR(
             SEARCH("${searchLower}", LOWER({NOC/Other})),
             SEARCH("${searchLower}", LOWER({Category})),
@@ -132,7 +132,7 @@ export async function getAirtableDraws(offset?: string, filters?: FilterOptions)
   }
 }
 
-export async function getUniqueFieldValues(field: 'Province' | 'Category', provinceFilter?: string): Promise<{ values?: string[], error?: string }> {
+export async function getUniqueFieldValues(field: 'Province' | 'Category'): Promise<{ values?: string[], error?: string }> {
   const apiKey = process.env.AIRTABLE_API_KEY;
   const baseId = process.env.AIRTABLE_BASE_ID;
   const tableName = 'Draww Tracker';
@@ -149,16 +149,15 @@ export async function getUniqueFieldValues(field: 'Province' | 'Category', provi
     do {
       const url = new URL(baseUrl);
       url.searchParams.append('fields[]', field);
-      if (provinceFilter && field === 'Category') {
-        url.searchParams.append('filterByFormula', `{Province} = "${provinceFilter}"`);
-      }
+      
       if (offset) {
         url.searchParams.append('offset', offset);
       }
 
       const response = await fetch(url.toString(), {
         headers: { Authorization: `Bearer ${apiKey}` },
-        next: { revalidate: 3600 } // Cache for 1 hour
+        // Cache the result for 1 hour. This is the server-side cache.
+        next: { revalidate: 3600 } 
       });
 
       if (!response.ok) {
@@ -169,7 +168,7 @@ export async function getUniqueFieldValues(field: 'Province' | 'Category', provi
       const data = await response.json();
       const validated = AirtableUniqueValueResponseSchema.safeParse(data);
       if(!validated.success) {
-        console.error("Airtable filter data validation error:", validated.error.flatten());
+        console.error(`Airtable filter data validation error for field ${field}:`, validated.error.flatten());
         return { error: 'Invalid data format for filter options.'}
       }
 
@@ -189,3 +188,5 @@ export async function getUniqueFieldValues(field: 'Province' | 'Category', provi
     return { error: 'An unexpected error occurred while fetching filter options.' };
   }
 }
+
+    

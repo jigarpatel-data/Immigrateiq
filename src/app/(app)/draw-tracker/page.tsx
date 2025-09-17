@@ -48,61 +48,50 @@ function DrawTrackerPage() {
 
   const [provinceOptions, setProvinceOptions] = useState<string[]>(['All']);
   const [categoryOptions, setCategoryOptions] = useState<string[]>(['All']);
-  const [loadingProvinces, setLoadingProvinces] = useState(false);
-  const [loadingCategories, setLoadingCategories] = useState(false);
+  const [loadingFilters, setLoadingFilters] = useState(true);
+  
+  // Fetch initial data and filter options
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      setLoading(true);
+      setLoadingFilters(true);
 
-  const fetchInitialDraws = useCallback(async () => {
-    setLoading(true);
-    const { draws, error } = await getAirtableDraws();
-    if (error) {
-      setError(error);
-    } else if (draws) {
-      const drawsWithId = draws.map(d => ({ ...d.fields, id: d.id }));
-      setAllDraws(drawsWithId);
-      setDisplayedDraws(drawsWithId.slice(0, DRAWS_PER_PAGE));
-    }
-    setLoading(false);
+      const [drawsResult, provincesResult, categoriesResult] = await Promise.all([
+        getAirtableDraws(),
+        getUniqueFieldValues('Province'),
+        getUniqueFieldValues('Category')
+      ]);
+
+      if (drawsResult.error) {
+        setError(drawsResult.error);
+      } else if (drawsResult.draws) {
+        const drawsWithId = drawsResult.draws.map(d => ({ ...d.fields, id: d.id }));
+        setAllDraws(drawsWithId);
+        setDisplayedDraws(drawsWithId.slice(0, DRAWS_PER_PAGE));
+      }
+
+      if (provincesResult.error) {
+         // Non-critical error, filters just won't be populated
+        console.error("Failed to load province filters:", provincesResult.error);
+      } else if (provincesResult.values) {
+        setProvinceOptions(['All', ...provincesResult.values]);
+      }
+      
+      if (categoriesResult.error) {
+        console.error("Failed to load category filters:", categoriesResult.error);
+      } else if (categoriesResult.values) {
+        setCategoryOptions(['All', ...categoriesResult.values]);
+      }
+      
+      setLoading(false);
+      setLoadingFilters(false);
+    };
+
+    fetchInitialData();
   }, []);
-
-  useEffect(() => {
-    fetchInitialDraws();
-  }, [fetchInitialDraws]);
-
-  const fetchProvinceOptions = useCallback(async () => {
-    if (provinceOptions.length > 1) return; // Already fetched
-    setLoadingProvinces(true);
-    const { values, error } = await getUniqueFieldValues('Province');
-    if (error) {
-      setError(error);
-    } else if (values) {
-      setProvinceOptions(['All', ...values]);
-    }
-    setLoadingProvinces(false);
-  }, [provinceOptions.length]);
-
-  const fetchCategoryOptions = useCallback(async () => {
-    if (categoryOptions.length > 1 && provinceFilter === 'All') return;
-    setLoadingCategories(true);
-    const { values, error } = await getUniqueFieldValues('Category', provinceFilter !== 'All' ? provinceFilter : undefined);
-    if (error) {
-      setError(error);
-    } else if (values) {
-      setCategoryOptions(['All', ...values]);
-    }
-    setLoadingCategories(false);
-  }, [provinceFilter]);
-
-
-  // When province filter changes, reset category filter and its options
-  useEffect(() => {
-    setCategoryFilter('All');
-    setCategoryOptions(['All']);
-  }, [provinceFilter]);
 
 
   const filteredAndSortedDraws = useMemo(() => {
-    // This filtering is now client-side on the currently loaded draws.
-    // A full server-side search would be needed for larger datasets.
     let result = [...allDraws];
 
     const hasFilters = searchTerm !== '' || provinceFilter !== 'All' || categoryFilter !== 'All';
@@ -118,7 +107,6 @@ function DrawTrackerPage() {
         });
     }
     
-    // The sorting logic remains the same
     result.sort((a, b) => {
       const dateA = new Date(a["Draw Date"]).getTime();
       const dateB = new Date(b["Draw Date"]).getTime();
@@ -135,13 +123,13 @@ function DrawTrackerPage() {
     setLoadingMore(true);
 
     const nextPage = page + 1;
-    const nextDraws = filteredAndSortedDraws.slice(0, nextPage * DRAWS_PER_PAGE);
+    const currentOffsetId = allDraws.length > 0 ? allDraws[allDraws.length - 1].id : undefined;
+    
+    const noFiltersApplied = !searchTerm && provinceFilter === 'All' && categoryFilter === 'All';
 
-    const newDrawsToFetchCount = nextDraws.length - allDraws.length;
-
-    if (newDrawsToFetchCount > 0 && !searchTerm && provinceFilter === 'All' && categoryFilter === 'All') {
-        // We need to fetch more data from the server
-        getAirtableDraws(allDraws[allDraws.length - 1]?.id).then(({ draws, error }) => {
+    // Only fetch from server if we're at the end of the client-side list AND no filters are applied
+    if (page * DRAWS_PER_PAGE >= allDraws.length && noFiltersApplied) {
+        getAirtableDraws(currentOffsetId).then(({ draws, error }) => {
             if (error) {
                 setError(error);
             } else if (draws) {
@@ -151,36 +139,24 @@ function DrawTrackerPage() {
             setLoadingMore(false);
         });
     } else {
-        // We have enough data client-side for the next page of filtered results
-        setDisplayedDraws(nextDraws);
-        setLoadingMore(false);
+      // We have enough data client-side for the next page
+      const nextDraws = filteredAndSortedDraws.slice(0, nextPage * DRAWS_PER_PAGE);
+      setDisplayedDraws(nextDraws);
+      setLoadingMore(false);
     }
-     setPage(nextPage);
-  }, [loadingMore, hasMoreDraws, page, filteredAndSortedDraws, allDraws, searchTerm, provinceFilter, categoryFilter]);
+    setPage(nextPage);
+  }, [loadingMore, hasMoreDraws, page, allDraws, filteredAndSortedDraws, searchTerm, provinceFilter, categoryFilter]);
   
+  // This effect updates the displayed draws whenever the filtered list changes
   useEffect(() => {
-    // This effect now sets the displayed draws based on the client-side filtered results.
     setDisplayedDraws(filteredAndSortedDraws.slice(0, page * DRAWS_PER_PAGE));
   }, [filteredAndSortedDraws, page]);
-
+  
+  // Reset page to 1 when filters change
   useEffect(() => {
-    setPage(1); // Reset page when filters change
-    getAirtableDraws(undefined, {
-      province: provinceFilter !== 'All' ? provinceFilter : undefined,
-      category: categoryFilter !== 'All' ? categoryFilter : undefined,
-      search: searchTerm || undefined,
-    }).then(({ draws, error }) => {
-      setLoading(false);
-      if (error) {
-        setError(error);
-      } else if (draws) {
-        const drawsWithId = draws.map(d => ({ ...d.fields, id: d.id }));
-        setAllDraws(drawsWithId);
-        setDisplayedDraws(drawsWithId.slice(0, DRAWS_PER_PAGE));
-      }
-    });
-
+    setPage(1);
   }, [searchTerm, provinceFilter, categoryFilter]);
+
 
   useEffect(() => {
     const options = {
@@ -261,22 +237,22 @@ function DrawTrackerPage() {
                       className="pl-10"
                   />
               </div>
-              <Select value={provinceFilter} onValueChange={setProvinceFilter} onOpenChange={(isOpen) => isOpen && fetchProvinceOptions()}>
+              <Select value={provinceFilter} onValueChange={setProvinceFilter}>
                   <SelectTrigger className="w-full sm:w-auto flex-grow sm:flex-grow-0 sm:min-w-40">
                       <SelectValue placeholder="Filter by province" />
                   </SelectTrigger>
                   <SelectContent>
-                      {loadingProvinces ? <div className="flex items-center justify-center p-2"><Loader2 className="h-4 w-4 animate-spin"/></div> : provinceOptions.map(option => (
+                      {loadingFilters ? <div className="flex items-center justify-center p-2"><Loader2 className="h-4 w-4 animate-spin"/></div> : provinceOptions.map(option => (
                           <SelectItem key={option} value={option}>{option}</SelectItem>
                       ))}
                   </SelectContent>
               </Select>
-               <Select value={categoryFilter} onValueChange={setCategoryFilter} onOpenChange={(isOpen) => isOpen && fetchCategoryOptions()}>
+               <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                   <SelectTrigger className="w-full sm:w-auto flex-grow sm:flex-grow-0 sm:min-w-40">
                       <SelectValue placeholder="Filter by category" />
                   </SelectTrigger>
                   <SelectContent>
-                      {loadingCategories ? <div className="flex items-center justify-center p-2"><Loader2 className="h-4 w-4 animate-spin"/></div> : categoryOptions.map(option => (
+                      {loadingFilters ? <div className="flex items-center justify-center p-2"><Loader2 className="h-4 w-4 animate-spin"/></div> : categoryOptions.map(option => (
                           <SelectItem key={option} value={option}>{option}</SelectItem>
                       ))}
                   </SelectContent>
@@ -427,3 +403,5 @@ function DrawTrackerPage() {
 }
 
 export default withAuth(DrawTrackerPage);
+
+    
