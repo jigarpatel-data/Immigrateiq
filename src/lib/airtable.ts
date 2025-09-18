@@ -103,7 +103,7 @@ export async function getAirtableDraws(offset?: string, filters?: FilterOptions)
       headers: {
         Authorization: `Bearer ${apiKey}`,
       },
-      next: { revalidate: 600 } // Re-fetch data from Airtable at most every 10 minutes.
+      next: { revalidate: 10 } // Re-fetch data from Airtable at most every 10 seconds.
     });
 
     if (!response.ok) {
@@ -158,8 +158,8 @@ export async function getUniqueFieldValues(field: 'Province' | 'Category'): Prom
 
       const response = await fetch(url.toString(), {
         headers: { Authorization: `Bearer ${apiKey}` },
-        // Cache the result for 1 hour. This is the server-side cache.
-        next: { revalidate: 3600 } 
+        // Cache the result for 10 seconds. This is the server-side cache.
+        next: { revalidate: 10 } 
       });
 
       if (!response.ok) {
@@ -205,7 +205,7 @@ export async function getDrawDetails(recordId: string): Promise<{ details?: stri
     try {
       const response = await fetch(url, {
         headers: { Authorization: `Bearer ${apiKey}` },
-        next: { revalidate: 3600 }, // Cache for 1 hour
+        next: { revalidate: 10 }, // Cache for 10 seconds
       });
   
       if (!response.ok) {
