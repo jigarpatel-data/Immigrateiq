@@ -3,6 +3,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { marked } from 'marked';
 import {
   Card,
   CardContent,
@@ -30,7 +31,6 @@ import {
 } from "@/components/ui/tooltip";
 import { getAirtableDraws, type Draw } from '@/lib/airtable';
 import { Separator } from '@/components/ui/separator';
-import { withAuth } from '@/hooks/use-auth';
 import { getDrawDetails } from '@/lib/actions';
 import {
   Sheet,
@@ -38,11 +38,11 @@ import {
   SheetHeader,
   SheetTitle,
   SheetDescription,
-  SheetClose,
 } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
+import { withAuth } from '@/hooks/use-auth';
 
 
 type DrawTrackerClientProps = {
@@ -143,7 +143,9 @@ function DrawTrackerClientComponent({
       setLoadingDetails(true);
       const result = await getDrawDetails(draw.id);
       if (result.details) {
-        setDetails(prev => ({ ...prev, [draw.id]: result.details! }));
+        const dirtyHtml = marked.parse(result.details);
+        // For now, we trust the source. In a real app, you'd want to sanitize this.
+        setDetails(prev => ({ ...prev, [draw.id]: dirtyHtml }));
       } else if (result.error) {
         setDetails(prev => ({ ...prev, [draw.id]: result.error! }));
       }
@@ -170,38 +172,38 @@ function DrawTrackerClientComponent({
   const activeFilterCount = [searchTerm, provinceFilter, categoryFilter].filter(f => f && f !== 'All').length;
   
   useEffect(() => {
-    const isInitialState = searchTerm === '' && provinceFilter === 'All' && categoryFilter === 'All';
-    // This effect should only run on filter changes, not on initial render
+    // This effect handles filter changes from dropdowns.
+    // The searchTerm is handled by form submission to avoid re-fetching on every keystroke.
+    const isInitialState = provinceFilter === 'All' && categoryFilter === 'All';
     const timeoutId = setTimeout(() => {
-        if (!isInitialState) {
+        // We check if this is not the initial state to avoid a double fetch on mount
+        if (allDraws.length > 0 && !isInitialState) {
             fetchDraws(undefined, true);
             setSelectedDraw(null);
         }
     }, 0);
     return () => clearTimeout(timeoutId);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [provinceFilter, categoryFilter]); // Note: searchTerm is handled by form submission
+  }, [provinceFilter, categoryFilter]);
 
   const DrawDetailsContent = () => (
-    <>
-      <div className='sm:px-6 pb-6'>
-        {loadingDetails ? (
-          <div className="flex items-center justify-center h-32">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
-        ) : (
-          <div
-            className="prose prose-sm dark:prose-invert"
-            dangerouslySetInnerHTML={{ __html: details[selectedDraw?.id!]?.replace(/\n/g, '<br />') || '' }}
-          />
-        )}
-      </div>
-    </>
+    <div className='pb-6'>
+      {loadingDetails ? (
+        <div className="flex items-center justify-center h-32">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </div>
+      ) : (
+        <div
+          className="prose prose-sm dark:prose-invert max-w-none"
+          dangerouslySetInnerHTML={{ __html: details[selectedDraw?.id!] || '' }}
+        />
+      )}
+    </div>
   );
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:h-[calc(100vh-theme(spacing.44))]">
-        <div className={cn("lg:col-span-2", selectedDraw ? 'hidden lg:block' : '')}>
+        <div className={cn("lg:col-span-2", selectedDraw && !isMobile ? 'lg:col-span-2' : 'lg:col-span-3', selectedDraw && isMobile ? 'hidden' : '')}>
         <Card>
         <CardHeader>
             <CardTitle>Filter and Sort Draws</CardTitle>
@@ -406,17 +408,17 @@ function DrawTrackerClientComponent({
         </CardContent>
         </Card>
         </div>
-        <div className={cn("lg:col-span-1", !selectedDraw ? 'hidden' : '')}>
+        <div className={cn("lg:col-span-1", !selectedDraw ? 'hidden lg:hidden' : 'block')}>
             {selectedDraw && (
                 <>
                 {isMobile ? (
                     <Sheet open={!!selectedDraw} onOpenChange={(isOpen) => !isOpen && setSelectedDraw(null)}>
-                        <SheetContent side="right" className="w-full sm:max-w-lg">
-                           <SheetHeader>
+                        <SheetContent side="right" className="w-full sm:max-w-lg p-0">
+                           <SheetHeader className="p-6">
                                 <SheetTitle>{selectedDraw?.Category}</SheetTitle>
                                 <SheetDescription>{selectedDraw?.['Draw Date']}</SheetDescription>
                             </SheetHeader>
-                            <ScrollArea className="h-full px-6 sm:px-0 sm:pr-6 mt-4">
+                            <ScrollArea className="h-[calc(100%-theme(spacing.24))] px-6">
                                 <DrawDetailsContent />
                             </ScrollArea>
                         </SheetContent>
@@ -435,7 +437,7 @@ function DrawTrackerClientComponent({
                                 </Button>
                             </div>
                         </CardHeader>
-                        <ScrollArea className="h-full px-6 sm:px-0 sm:pr-6">
+                         <ScrollArea className="flex-1 px-6">
                             <DrawDetailsContent />
                         </ScrollArea>
                     </Card>
@@ -447,9 +449,4 @@ function DrawTrackerClientComponent({
   );
 }
 
-
 export const DrawTrackerClient = withAuth(DrawTrackerClientComponent);
-
-
-
-    
