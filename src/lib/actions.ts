@@ -1,10 +1,12 @@
 
+
 "use server";
 
 import {
   immigrationChatbot,
   type ImmigrationChatbotInput,
 } from "@/ai/flows/immigration-chatbot";
+import { getDrawDetails as getAirtableDrawDetails } from './airtable';
 
 export async function handleChat(input: ImmigrationChatbotInput) {
   try {
@@ -17,6 +19,10 @@ export async function handleChat(input: ImmigrationChatbotInput) {
       response: "An error occurred while processing your request. Please try again later.",
     };
   }
+}
+
+export async function getDrawDetails(recordId: string) {
+    return getAirtableDrawDetails(recordId);
 }
 
     

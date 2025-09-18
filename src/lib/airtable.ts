@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { z } from 'zod';
@@ -12,6 +13,7 @@ const DrawFieldsSchema = z.object({
     'Total Draw Invitations': z.string().optional(),
     'NOC/Other': z.string(),
     URL: z.string().url(),
+    Details: z.string().optional(),
 });
 
 const AirtableRecordSchema = z.object({
@@ -188,5 +190,39 @@ export async function getUniqueFieldValues(field: 'Province' | 'Category'): Prom
     return { error: 'An unexpected error occurred while fetching filter options.' };
   }
 }
+
+export async function getDrawDetails(recordId: string): Promise<{ details?: string; error?: string }> {
+    const apiKey = process.env.AIRTABLE_API_KEY;
+    const baseId = process.env.AIRTABLE_BASE_ID;
+    const tableName = 'Draww Tracker';
+  
+    if (!apiKey || !baseId) {
+      return { error: 'Server configuration error.' };
+    }
+  
+    const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}/${recordId}`;
+  
+    try {
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${apiKey}` },
+        next: { revalidate: 3600 }, // Cache for 1 hour
+      });
+  
+      if (!response.ok) {
+        return { error: 'Failed to fetch draw details.' };
+      }
+  
+      const data = await response.json();
+      const validated = AirtableRecordSchema.safeParse(data);
+  
+      if (!validated.success) {
+        return { error: 'Invalid data format for draw details.' };
+      }
+  
+      return { details: validated.data.fields.Details || 'No additional details available.' };
+    } catch (error) {
+      return { error: 'An unexpected error occurred while fetching details.' };
+    }
+  }
 
     
