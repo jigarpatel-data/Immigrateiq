@@ -259,7 +259,7 @@ function DrawTrackerClientComponent({
             ) : (
                 <>
                 <ScrollArea className="h-full lg:h-[calc(100vh-theme(spacing.64))]">
-                    <div className="grid gap-4 grid-cols-1 pr-4">
+                    <div className="grid gap-4 grid-cols-1 lg:pr-4">
                         {allDraws.length > 0 ? (
                         allDraws.map((draw) => (
                             <Card 
@@ -419,7 +419,7 @@ function DrawTrackerClientComponent({
                         </SheetContent>
                     </Sheet>
                 ) : (
-                    <Card className="h-full flex flex-col">
+                     <Card className="h-full flex flex-col">
                         <CardHeader>
                             <div className="flex justify-between items-start">
                                 <div>
@@ -433,8 +433,8 @@ function DrawTrackerClientComponent({
                             </div>
                         </CardHeader>
                          <CardContent className="flex-1 relative pt-0">
-                            <ScrollArea className="h-full">
-                                <div className="pr-6">
+                            <ScrollArea className="absolute inset-0">
+                                <div className="p-6 pt-0">
                                     <DrawDetailsContent />
                                 </div>
                             </ScrollArea>
@@ -451,5 +451,6 @@ function DrawTrackerClientComponent({
 export const DrawTrackerClient = withAuth(DrawTrackerClientComponent);
 
     
+
 
 
