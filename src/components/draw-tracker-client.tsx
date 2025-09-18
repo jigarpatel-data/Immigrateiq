@@ -28,6 +28,8 @@ import {
 } from "@/components/ui/tooltip";
 import { getAirtableDraws, type Draw } from '@/lib/airtable';
 import { Separator } from '@/components/ui/separator';
+import { withAuth } from '@/hooks/use-auth';
+
 
 type DrawTrackerClientProps = {
     initialDraws: Draw[];
@@ -37,7 +39,7 @@ type DrawTrackerClientProps = {
     categoryOptions: string[];
 };
 
-export function DrawTrackerClient({ 
+function DrawTrackerClientComponent({ 
     initialDraws, 
     initialOffset, 
     initialError, 
@@ -134,12 +136,12 @@ export function DrawTrackerClient({
   
   // This useEffect will run when any of the filter values change.
   useEffect(() => {
-    // We don't want to fetch on initial render as we have initialDraws
     // A simple way to check for non-initial render is to see if any of the dependencies have changed from their initial state
     const isInitialState = searchTerm === '' && provinceFilter === 'All' && categoryFilter === 'All';
     if (!isInitialState) {
        fetchDraws(undefined, true);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provinceFilter, categoryFilter]); // Note: searchTerm is handled by form submission
 
   return (
@@ -339,3 +341,6 @@ export function DrawTrackerClient({
     </Card>
   );
 }
+
+
+export const DrawTrackerClient = withAuth(DrawTrackerClientComponent);

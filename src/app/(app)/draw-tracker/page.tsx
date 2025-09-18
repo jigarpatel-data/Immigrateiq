@@ -1,6 +1,5 @@
 
-import { getAirtableDraws, getUniqueFieldValues, type Draw } from '@/lib/airtable';
-import { withAuth } from '@/hooks/use-auth';
+import { getAirtableDraws, getUniqueFieldValues } from '@/lib/airtable';
 import { DrawTrackerClient } from '@/components/draw-tracker-client';
 
 async function DrawTrackerPage() {
@@ -38,4 +37,4 @@ async function DrawTrackerPage() {
   );
 }
 
-export default withAuth(DrawTrackerPage);
+export default DrawTrackerPage;
