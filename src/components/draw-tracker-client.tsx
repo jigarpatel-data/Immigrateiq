@@ -432,11 +432,11 @@ function DrawTrackerClientComponent({
                                 </Button>
                             </div>
                         </CardHeader>
-                         <ScrollArea className="flex-1">
-                            <div className="pb-6 px-6">
+                        <CardContent className="flex-1 overflow-auto">
+                            <ScrollArea className="h-full">
                                 <DrawDetailsContent />
-                            </div>
-                         </ScrollArea>
+                            </ScrollArea>
+                        </CardContent>
                     </Card>
                 )}
                 </>
