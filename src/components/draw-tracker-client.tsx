@@ -432,10 +432,8 @@ function DrawTrackerClientComponent({
                                 </Button>
                             </div>
                         </CardHeader>
-                        <CardContent className="flex-1 overflow-auto">
-                            <ScrollArea className="h-full">
-                                <DrawDetailsContent />
-                            </ScrollArea>
+                        <CardContent className="flex-1 overflow-y-auto">
+                            <DrawDetailsContent />
                         </CardContent>
                     </Card>
                 )}
@@ -447,3 +445,5 @@ function DrawTrackerClientComponent({
 }
 
 export const DrawTrackerClient = withAuth(DrawTrackerClientComponent);
+
+    
