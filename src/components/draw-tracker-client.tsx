@@ -195,9 +195,9 @@ function DrawTrackerClientComponent({
   );
 
   return (
-    <div className="lg:grid lg:grid-cols-3 lg:gap-6 items-start">
-        <div className={cn("lg:col-span-2 space-y-6", selectedDraw && isMobile ? 'hidden' : '')}>
-          <div className="sticky top-4 z-10">
+    <div className="lg:flex lg:gap-6 items-start">
+        <div className="lg:w-2/3 space-y-6">
+          <div className="sticky top-6 z-10">
             <Card>
             <CardHeader>
                 <CardTitle>Filter and Sort Draws</CardTitle>
@@ -401,9 +401,9 @@ function DrawTrackerClientComponent({
               )}
           </div>
         </div>
-        <div className={cn("lg:col-span-1", !selectedDraw ? 'hidden lg:block' : 'block')}>
+        <div className={cn("lg:w-1/3", !selectedDraw ? 'hidden lg:block' : 'block')}>
              {selectedDraw && (
-                <div className="sticky top-4">
+                <div className="sticky top-6">
                     {isMobile ? (
                         <Sheet open={!!selectedDraw} onOpenChange={(isOpen) => !isOpen && setSelectedDraw(null)}>
                             <SheetContent side="right" className="w-full sm:max-w-lg p-0 flex flex-col">
@@ -447,17 +447,3 @@ function DrawTrackerClientComponent({
 }
 
 export const DrawTrackerClient = withAuth(DrawTrackerClientComponent);
-
-    
-
-
-
-
-
-
-    
-
-
-
-
-    
