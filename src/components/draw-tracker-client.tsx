@@ -195,8 +195,8 @@ function DrawTrackerClientComponent({
   );
 
   return (
-    <div className="lg:flex lg:gap-6 items-start">
-        <div className="lg:w-2/3 space-y-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-6 items-start">
+        <div className="lg:col-span-2 space-y-6">
           <div className="sticky top-6 z-10">
             <Card>
             <CardHeader>
@@ -246,7 +246,7 @@ function DrawTrackerClientComponent({
             </CardHeader>
             </Card>
           </div>
-          <div>
+          <ScrollArea className="h-[calc(100vh-14rem)] pr-4">
               {loading && allDraws.length === 0 ? (
                   <div className="flex flex-col items-center justify-center text-center py-16">
                       <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
@@ -350,7 +350,7 @@ function DrawTrackerClientComponent({
                                   <div className="flex text-sm">
                                       <span className="text-muted-foreground mr-2">Invitations:</span>
                                       <div className='flex items-center gap-1.5'>
-                                          <span className="font-semibold text-foreground">{draw["Total Draw Invitations"] || 'N/A'}</span>
+                                          <span className="font-semibold text-foreground">{draw["Total Draw Invitations"] || 'N.A'}</span>
                                           <TooltipProvider>
                                           <Tooltip>
                                               <TooltipTrigger asChild>
@@ -399,9 +399,9 @@ function DrawTrackerClientComponent({
                   )}
                   </>
               )}
-          </div>
+          </ScrollArea>
         </div>
-        <div className={cn("lg:w-1/3", !selectedDraw ? 'hidden lg:block' : 'block')}>
+        <div className={cn("lg:col-span-1", !selectedDraw ? 'hidden lg:block' : 'block')}>
              {selectedDraw && (
                 <div className="sticky top-6">
                     {isMobile ? (
