@@ -143,7 +143,7 @@ function DrawTrackerClientComponent({
       setLoadingDetails(true);
       const result = await getDrawDetails(draw.id);
       if (result.details) {
-        const dirtyHtml = marked.parse(result.details);
+        const dirtyHtml = marked.parse(result.details) as string;
         // For now, we trust the source. In a real app, you'd want to sanitize this.
         setDetails(prev => ({ ...prev, [draw.id]: dirtyHtml }));
       } else if (result.error) {
@@ -428,7 +428,7 @@ function DrawTrackerClientComponent({
                         <CardHeader>
                             <div className="flex justify-between items-start">
                                 <div>
-                                    <CardTitle>{selectedDraw?.Category}</CardTitle>
+                                    <CardTitle className="text-lg font-bold">{selectedDraw?.Category}</CardTitle>
                                     <CardDescription>{selectedDraw?.['Draw Date']}</CardDescription>
                                 </div>
                                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSelectedDraw(null)}>
