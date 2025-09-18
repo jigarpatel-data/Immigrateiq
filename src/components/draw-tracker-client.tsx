@@ -174,15 +174,8 @@ function DrawTrackerClientComponent({
   useEffect(() => {
     // This effect handles filter changes from dropdowns.
     // The searchTerm is handled by form submission to avoid re-fetching on every keystroke.
-    const isInitialState = provinceFilter === 'All' && categoryFilter === 'All';
-    const timeoutId = setTimeout(() => {
-        // We check if this is not the initial state to avoid a double fetch on mount
-        if (allDraws.length > 0 && !isInitialState) {
-            fetchDraws(undefined, true);
-            setSelectedDraw(null);
-        }
-    }, 0);
-    return () => clearTimeout(timeoutId);
+    fetchDraws(undefined, true);
+    setSelectedDraw(null);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provinceFilter, categoryFilter]);
 
@@ -413,12 +406,12 @@ function DrawTrackerClientComponent({
                 <>
                 {isMobile ? (
                     <Sheet open={!!selectedDraw} onOpenChange={(isOpen) => !isOpen && setSelectedDraw(null)}>
-                        <SheetContent side="right" className="w-full sm:max-w-lg p-0">
+                        <SheetContent side="right" className="w-full sm:max-w-lg p-0 flex flex-col">
                            <SheetHeader className="p-6">
                                 <SheetTitle>{selectedDraw?.Category}</SheetTitle>
                                 <SheetDescription>{selectedDraw?.['Draw Date']}</SheetDescription>
                             </SheetHeader>
-                            <ScrollArea className="h-[calc(100%-theme(spacing.24))] px-6">
+                            <ScrollArea className="flex-1 px-6">
                                 <div className="pb-6">
                                     <DrawDetailsContent />
                                 </div>
@@ -439,8 +432,8 @@ function DrawTrackerClientComponent({
                                 </Button>
                             </div>
                         </CardHeader>
-                         <ScrollArea className="flex-1 px-6">
-                            <div className="pb-6">
+                         <ScrollArea className="flex-1">
+                            <div className="pb-6 px-6">
                                 <DrawDetailsContent />
                             </div>
                          </ScrollArea>
