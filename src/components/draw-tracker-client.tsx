@@ -184,36 +184,18 @@ function DrawTrackerClientComponent({
 
   const DrawDetailsContent = () => (
     <>
-      <SheetHeader className='sm:hidden'>
-        <SheetTitle>{selectedDraw?.Category}</SheetTitle>
-        <SheetDescription>{selectedDraw?.['Draw Date']}</SheetDescription>
-      </SheetHeader>
-       <CardHeader className='hidden sm:flex'>
-        <div className="flex justify-between items-start">
-            <div>
-                <CardTitle>{selectedDraw?.Category}</CardTitle>
-                <CardDescription>{selectedDraw?.['Draw Date']}</CardDescription>
-            </div>
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSelectedDraw(null)}>
-                <X className="h-4 w-4" />
-                <span className="sr-only">Close</span>
-            </Button>
-        </div>
-      </CardHeader>
-      <ScrollArea className="h-full px-6 sm:px-0 sm:pr-6">
-        <div className='sm:px-6 pb-6'>
-          {loadingDetails ? (
-            <div className="flex items-center justify-center h-32">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
-          ) : (
-            <div
-              className="prose prose-sm dark:prose-invert"
-              dangerouslySetInnerHTML={{ __html: details[selectedDraw?.id!]?.replace(/\n/g, '<br />') || '' }}
-            />
-          )}
-        </div>
-      </ScrollArea>
+      <div className='sm:px-6 pb-6'>
+        {loadingDetails ? (
+          <div className="flex items-center justify-center h-32">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : (
+          <div
+            className="prose prose-sm dark:prose-invert"
+            dangerouslySetInnerHTML={{ __html: details[selectedDraw?.id!]?.replace(/\n/g, '<br />') || '' }}
+          />
+        )}
+      </div>
     </>
   );
 
@@ -429,13 +411,33 @@ function DrawTrackerClientComponent({
                 <>
                 {isMobile ? (
                     <Sheet open={!!selectedDraw} onOpenChange={(isOpen) => !isOpen && setSelectedDraw(null)}>
-                    <SheetContent side="right" className="w-full sm:max-w-lg">
-                        <DrawDetailsContent />
-                    </SheetContent>
+                        <SheetContent side="right" className="w-full sm:max-w-lg">
+                           <SheetHeader>
+                                <SheetTitle>{selectedDraw?.Category}</SheetTitle>
+                                <SheetDescription>{selectedDraw?.['Draw Date']}</SheetDescription>
+                            </SheetHeader>
+                            <ScrollArea className="h-full px-6 sm:px-0 sm:pr-6 mt-4">
+                                <DrawDetailsContent />
+                            </ScrollArea>
+                        </SheetContent>
                     </Sheet>
                 ) : (
                     <Card className="h-full flex flex-col">
-                        <DrawDetailsContent />
+                        <CardHeader>
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <CardTitle>{selectedDraw?.Category}</CardTitle>
+                                    <CardDescription>{selectedDraw?.['Draw Date']}</CardDescription>
+                                </div>
+                                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSelectedDraw(null)}>
+                                    <X className="h-4 w-4" />
+                                    <span className="sr-only">Close</span>
+                                </Button>
+                            </div>
+                        </CardHeader>
+                        <ScrollArea className="h-full px-6 sm:px-0 sm:pr-6">
+                            <DrawDetailsContent />
+                        </ScrollArea>
                     </Card>
                 )}
                 </>
@@ -448,3 +450,6 @@ function DrawTrackerClientComponent({
 
 export const DrawTrackerClient = withAuth(DrawTrackerClientComponent);
 
+
+
+    
