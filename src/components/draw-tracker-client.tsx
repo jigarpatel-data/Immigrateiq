@@ -143,7 +143,7 @@ function DrawTrackerClientComponent({
       setLoadingDetails(true);
       const result = await getDrawDetails(draw.id);
       if (result.details) {
-        const dirtyHtml = marked.parse(result.details) as string;
+        const dirtyHtml = marked.parse(result.details, { breaks: true }) as string;
         // For now, we trust the source. In a real app, you'd want to sanitize this.
         setDetails(prev => ({ ...prev, [draw.id]: dirtyHtml }));
       } else if (result.error) {
@@ -187,7 +187,7 @@ function DrawTrackerClientComponent({
   }, [provinceFilter, categoryFilter]);
 
   const DrawDetailsContent = () => (
-    <div className='pb-6'>
+    <>
       {loadingDetails ? (
         <div className="flex items-center justify-center h-32">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -198,7 +198,7 @@ function DrawTrackerClientComponent({
           dangerouslySetInnerHTML={{ __html: details[selectedDraw?.id!] || '' }}
         />
       )}
-    </div>
+    </>
   );
 
   return (
@@ -419,7 +419,9 @@ function DrawTrackerClientComponent({
                                 <SheetDescription>{selectedDraw?.['Draw Date']}</SheetDescription>
                             </SheetHeader>
                             <ScrollArea className="h-[calc(100%-theme(spacing.24))] px-6">
-                                <DrawDetailsContent />
+                                <div className="pb-6">
+                                    <DrawDetailsContent />
+                                </div>
                             </ScrollArea>
                         </SheetContent>
                     </Sheet>
@@ -438,8 +440,10 @@ function DrawTrackerClientComponent({
                             </div>
                         </CardHeader>
                          <ScrollArea className="flex-1 px-6">
-                            <DrawDetailsContent />
-                        </ScrollArea>
+                            <div className="pb-6">
+                                <DrawDetailsContent />
+                            </div>
+                         </ScrollArea>
                     </Card>
                 )}
                 </>
