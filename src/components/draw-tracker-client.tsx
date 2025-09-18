@@ -195,7 +195,7 @@ function DrawTrackerClientComponent({
   );
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         <div className={cn("lg:col-span-2 space-y-6", selectedDraw && !isMobile ? 'lg:col-span-2' : 'lg:col-span-3', selectedDraw && isMobile ? 'hidden' : '')}>
         <Card className="sticky top-4 z-10">
         <CardHeader>
@@ -431,9 +431,13 @@ function DrawTrackerClientComponent({
                                 </div>
                             </CardHeader>
                              <CardContent className="flex-1 overflow-y-auto">
-                                <div className="pr-4">
-                                  <DrawDetailsContent />
-                                </div>
+                               <div className="pr-2">
+                                <ScrollArea className="h-[calc(100vh-theme(spacing.56))]">
+                                    <div className="pr-4">
+                                      <DrawDetailsContent />
+                                    </div>
+                                </ScrollArea>
+                               </div>
                             </CardContent>
                         </Card>
                     )}
@@ -454,3 +458,4 @@ export const DrawTrackerClient = withAuth(DrawTrackerClientComponent);
 
 
     
+
