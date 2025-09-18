@@ -401,7 +401,7 @@ function DrawTrackerClientComponent({
         </CardContent>
         </Card>
         </div>
-        <div className={cn("lg:col-span-1", !selectedDraw ? 'hidden lg:hidden' : 'block')}>
+        <div className={cn("lg:col-span-1", !selectedDraw ? 'hidden lg:block' : 'block')}>
             {selectedDraw && (
                 <>
                 {isMobile ? (
@@ -432,9 +432,9 @@ function DrawTrackerClientComponent({
                                 </Button>
                             </div>
                         </CardHeader>
-                         <CardContent className="flex-1 relative">
-                            <ScrollArea className="absolute inset-0">
-                                <div className="p-6 pt-0">
+                         <CardContent className="flex-1 relative pt-0">
+                            <ScrollArea className="h-full">
+                                <div className="pr-6">
                                     <DrawDetailsContent />
                                 </div>
                             </ScrollArea>
@@ -451,4 +451,5 @@ function DrawTrackerClientComponent({
 export const DrawTrackerClient = withAuth(DrawTrackerClientComponent);
 
     
+
 
