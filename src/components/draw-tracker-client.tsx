@@ -400,48 +400,44 @@ function DrawTrackerClientComponent({
         </div>
         </div>
         <div className={cn("lg:col-span-1", !selectedDraw ? 'hidden lg:block' : 'block')}>
-            {selectedDraw && (
-                <>
-                {isMobile ? (
-                    <Sheet open={!!selectedDraw} onOpenChange={(isOpen) => !isOpen && setSelectedDraw(null)}>
-                        <SheetContent side="right" className="w-full sm:max-w-lg p-0 flex flex-col">
-                           <SheetHeader className="p-6">
-                                <SheetTitle>{selectedDraw?.Category}</SheetTitle>
-                                <SheetDescription>{selectedDraw?.['Draw Date']}</SheetDescription>
-                            </SheetHeader>
-                            <ScrollArea className="flex-1 px-6">
-                                <div className="pb-6">
-                                    <DrawDetailsContent />
-                                </div>
-                            </ScrollArea>
-                        </SheetContent>
-                    </Sheet>
-                ) : (
-                     <Card className="sticky top-4 h-[calc(100vh-theme(spacing.28))] flex flex-col">
-                        <CardHeader>
-                            <div className="flex justify-between items-start">
-                                <div>
-                                    <CardTitle className="text-lg font-bold">{selectedDraw?.Category}</CardTitle>
-                                    <CardDescription>{selectedDraw?.['Draw Date']}</CardDescription>
-                                </div>
-                                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSelectedDraw(null)}>
-                                    <X className="h-4 w-4" />
-                                    <span className="sr-only">Close</span>
-                                </Button>
-                            </div>
-                        </CardHeader>
-                         <CardContent className="flex-1 relative pt-0">
-                            <div className="absolute inset-0 p-6 pt-0">
-                                <ScrollArea className="h-full w-full">
-                                    <div className="pr-4">
-                                      <DrawDetailsContent />
+             {selectedDraw && (
+                <div className="sticky top-4">
+                    {isMobile ? (
+                        <Sheet open={!!selectedDraw} onOpenChange={(isOpen) => !isOpen && setSelectedDraw(null)}>
+                            <SheetContent side="right" className="w-full sm:max-w-lg p-0 flex flex-col">
+                               <SheetHeader className="p-6">
+                                    <SheetTitle>{selectedDraw?.Category}</SheetTitle>
+                                    <SheetDescription>{selectedDraw?.['Draw Date']}</SheetDescription>
+                                </SheetHeader>
+                                <ScrollArea className="flex-1 px-6">
+                                    <div className="pb-6">
+                                        <DrawDetailsContent />
                                     </div>
                                 </ScrollArea>
-                            </div>
-                        </CardContent>
-                    </Card>
-                )}
-                </>
+                            </SheetContent>
+                        </Sheet>
+                    ) : (
+                         <Card className="h-[calc(100vh-theme(spacing.28))] flex flex-col">
+                            <CardHeader>
+                                <div className="flex justify-between items-start">
+                                    <div>
+                                        <CardTitle className="text-lg font-bold">{selectedDraw?.Category}</CardTitle>
+                                        <CardDescription>{selectedDraw?.['Draw Date']}</CardDescription>
+                                    </div>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSelectedDraw(null)}>
+                                        <X className="h-4 w-4" />
+                                        <span className="sr-only">Close</span>
+                                    </Button>
+                                </div>
+                            </CardHeader>
+                             <CardContent className="flex-1 overflow-y-auto">
+                                <div className="pr-4">
+                                  <DrawDetailsContent />
+                                </div>
+                            </CardContent>
+                        </Card>
+                    )}
+                </div>
             )}
         </div>
     </div>
