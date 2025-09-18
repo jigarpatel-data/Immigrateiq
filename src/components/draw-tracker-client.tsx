@@ -433,13 +433,9 @@ function DrawTrackerClientComponent({
                                 </div>
                             </CardHeader>
                              <CardContent>
-                                <div className="pr-2">
-                                  <ScrollArea className="h-[calc(100vh-12rem)]">
-                                      <div className="pr-4">
-                                        <DrawDetailsContent />
-                                      </div>
-                                  </ScrollArea>
-                               </div>
+                                <ScrollArea className="h-[calc(100vh-12rem)] pr-4">
+                                  <DrawDetailsContent />
+                                </ScrollArea>
                             </CardContent>
                         </Card>
                     )}
@@ -462,3 +458,6 @@ export const DrawTrackerClient = withAuth(DrawTrackerClientComponent);
     
 
 
+
+
+    
