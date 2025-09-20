@@ -94,7 +94,7 @@ function DrawTrackerClientComponent({
       const filters = {
         province: provinceFilter,
         category: categoryFilter,
-        search: search || activeSearchTerm,
+        search: search === undefined ? activeSearchTerm : search,
       };
 
       const { draws, error: fetchError, offset: newOffset } = await getAirtableDraws(currentOffset, filters);
@@ -158,8 +158,8 @@ function DrawTrackerClientComponent({
     e.preventDefault();
     setLoading(true);
     const { searchTerm } = await getEnhancedSearchTerm(rawSearchTerm);
-    setActiveSearchTerm(searchTerm || '');
-    await fetchDraws(undefined, true, searchTerm);
+    setActiveSearchTerm(searchTerm || rawSearchTerm);
+    await fetchDraws(undefined, true, searchTerm || rawSearchTerm);
     setSelectedDraw(null);
   }
 
@@ -168,16 +168,17 @@ function DrawTrackerClientComponent({
     setActiveSearchTerm('');
     setProvinceFilter('All');
     setCategoryFilter('All');
-    
-    // Manually trigger a re-fetch with empty filters
     fetchDraws(undefined, true, '');
+    setSelectedDraw(null);
   };
   
   const activeFilterCount = [activeSearchTerm, provinceFilter, categoryFilter].filter(f => f && f !== 'All').length;
   
   useEffect(() => {
-    fetchDraws(undefined, true);
-    setSelectedDraw(null);
+    if (provinceFilter !== 'All' || categoryFilter !== 'All') {
+        fetchDraws(undefined, true);
+        setSelectedDraw(null);
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provinceFilter, categoryFilter]);
 
@@ -198,7 +199,7 @@ function DrawTrackerClientComponent({
 
   return (
     <div className={cn("grid grid-cols-1 items-start gap-6 lg:grid-cols-3", !selectedDraw && "lg:grid-cols-1")}>
-        <div className="lg:col-span-2 space-y-6">
+        <div className={cn("lg:col-span-2 space-y-6", !selectedDraw && "lg:col-span-3")}>
             <div className="sticky top-6 z-10">
               <Card>
               <CardHeader>
@@ -450,3 +451,5 @@ function DrawTrackerClientComponent({
 
 export const DrawTrackerClient = withAuth(DrawTrackerClientComponent);
 
+
+    
