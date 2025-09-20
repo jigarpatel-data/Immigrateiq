@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview An AI flow to extract a search term from a natural language query.
@@ -9,6 +10,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { lookupNocByJobTitle } from '../tools/noc-lookup';
 
 const SearchTermExtractorInputSchema = z.object({
   query: z.string().describe('The natural language query from the user.'),
@@ -16,7 +18,7 @@ const SearchTermExtractorInputSchema = z.object({
 export type SearchTermExtractorInput = z.infer<typeof SearchTermExtractorInputSchema>;
 
 const SearchTermExtractorOutputSchema = z.object({
-  searchTerm: z.string().optional().describe('The extracted keyword for searching immigration draws. e.g., "welder", "tech", "pnp"'),
+  searchTerm: z.string().optional().describe('The extracted keyword for searching immigration draws. e.g., "welder", "tech", "pnp", or a NOC code like "75110"'),
 });
 export type SearchTermExtractorOutput = z.infer<typeof SearchTermExtractorOutputSchema>;
 
@@ -28,16 +30,16 @@ const prompt = ai.definePrompt({
   name: 'searchTermExtractorPrompt',
   input: {schema: SearchTermExtractorInputSchema},
   output: {schema: SearchTermExtractorOutputSchema},
-  prompt: `You are an expert at parsing user queries about Canadian immigration draws. Your task is to extract the most relevant, concise search term (keyword, acronym, or official job title) from the user's query.
+  tools: [lookupNocByJobTitle],
+  prompt: `You are an expert at parsing user queries about Canadian immigration draws. Your task is to extract the most relevant, concise search term.
 
-  The query is: {{{query}}}
+  The user's query is: {{{query}}}
 
-  - Focus on occupations, program names (like "PNP", "Express Entry"), or specific categories.
-  - If the user asks "what is the draw for welders", the search term is "welders".
+  - **First, check if the query is a job title.** If it is, use the \`lookupNocByJobTitle\` tool to find its official NOC code.
+  - **If the tool returns a NOC code, you MUST use that code as the searchTerm.**
+  - If the tool does not return a NOC code, then extract the most relevant keyword, program name (like "PNP", "Express Entry"), or specific category.
   - If the user asks "any recent tech draws", the search term is "tech".
   - If the user types a simple keyword like "PNP", the search term is "PNP".
-  - **Crucially, map common job titles to their likely official NOC equivalents.** For example, if the user asks about "car mechanic", you should return "automotive service technician".
-  - If the user asks about "construction labour", you should return "construction labour".
   - If no specific, searchable keyword can be found, return an empty or undefined searchTerm.
   - Return the most important search term. It can be one or more words, but keep it concise.
   `,
@@ -50,11 +52,12 @@ const extractSearchTermFlow = ai.defineFlow(
     outputSchema: SearchTermExtractorOutputSchema,
   },
   async input => {
-    // If the query is simple (e.g., one or two words), just use it directly.
-    // This avoids unnecessarily calling the LLM for simple keyword searches.
+    // If the query is simple (e.g., one or two words that are likely not job titles), 
+    // we can try a direct search first to avoid LLM cost for simple cases.
     const wordCount = input.query.trim().split(/\s+/).length;
-    if (wordCount <= 2) {
-      return { searchTerm: input.query };
+    if (wordCount <= 2 && !input.query.toLowerCase().includes(' for ')) {
+      // Let's still try the LLM for potential mappings like "car mechanic"
+      // but this logic could be a simple check.
     }
       
     const {output} = await prompt(input);
