@@ -28,7 +28,7 @@ const prompt = ai.definePrompt({
   name: 'searchTermExtractorPrompt',
   input: {schema: SearchTermExtractorInputSchema},
   output: {schema: SearchTermExtractorOutputSchema},
-  prompt: `You are an expert at parsing user queries about Canadian immigration draws. Your task is to extract the single most relevant keyword, acronym, or official job title from the user's query.
+  prompt: `You are an expert at parsing user queries about Canadian immigration draws. Your task is to extract the most relevant, concise search term (keyword, acronym, or official job title) from the user's query.
 
   The query is: {{{query}}}
 
@@ -37,8 +37,9 @@ const prompt = ai.definePrompt({
   - If the user asks "any recent tech draws", the search term is "tech".
   - If the user types a simple keyword like "PNP", the search term is "PNP".
   - **Crucially, map common job titles to their likely official NOC equivalents.** For example, if the user asks about "car mechanic", you should return "automotive service technician".
+  - If the user asks about "construction labour", you should return "construction labour".
   - If no specific, searchable keyword can be found, return an empty or undefined searchTerm.
-  - Return only the single most important keyword. Do not return multiple words.
+  - Return the most important search term. It can be one or more words, but keep it concise.
   `,
 });
 
