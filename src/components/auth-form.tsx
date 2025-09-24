@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -28,12 +28,13 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { CustomGoogleIcon } from "@/components/icons";
-import { Loader2, Info, Eye, EyeOff } from "lucide-react";
+import { Loader2, Info, Eye, EyeOff, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { handleSignIn, handleSignUp, handleGoogleSignIn, handlePasswordReset } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 const signUpSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -78,6 +79,17 @@ export function AuthForm() {
     resolver: zodResolver(passwordResetSchema),
     defaultValues: { email: "" },
   });
+
+  const password = signUpForm.watch("password");
+
+  const passwordRequirements = useMemo(() => {
+    const p = password || '';
+    return [
+      { id: 'length', text: 'At least 8 characters long', met: p.length >= 8 },
+      { id: 'number-symbol', text: 'A number (0-9) and a symbol', met: /[0-9]/.test(p) && /[^a-zA-Z0-9]/.test(p) },
+      { id: 'case', text: 'Lowercase (a-z) & uppercase (A-Z)', met: /[a-z]/.test(p) && /[A-Z]/.test(p) },
+    ];
+  }, [password]);
 
   const onLoginSubmit = async (values: z.infer<typeof loginSchema>) => {
     setLoading(true);
@@ -278,9 +290,12 @@ export function AuthForm() {
                           </div>
                         </FormControl>
                          <div className="text-xs text-muted-foreground space-y-1 pt-1">
-                          <div>At least 8 characters long</div>
-                          <div>A number (0-9) and a symbol</div>
-                          <div>Lowercase (a-z) & uppercase (A-Z)</div>
+                          {passwordRequirements.map((req) => (
+                            <div key={req.id} className={cn("flex items-center gap-2", req.met && "text-green-500")}>
+                               <CheckCircle className={cn("h-4 w-4", req.met ? "opacity-100" : "opacity-50")} />
+                               <span>{req.text}</span>
+                            </div>
+                          ))}
                         </div>
                         <FormMessage />
                       </FormItem>
@@ -312,8 +327,8 @@ export function AuthForm() {
           <form onSubmit={passwordResetForm.handleSubmit(onPasswordResetSubmit)}>
             <AlertDialogHeader className="items-center text-center">
                <Link href="/" className="flex flex-col items-center">
-                <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/android-chrome-192x192.png?alt=media&token=4e79ad3d-2db0-4b6c-bc68-efa3d2633eb8" alt="TheCanIndian Logo" width={80} height={80} className="z-10 relative mb-[-30px]" />
-                <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/Black%20background-final.png?alt=media&token=9086963b-efba-4599-8ff3-76ca37d7ba1c" alt="TheCanIndian Logo" width={180} height={72} />
+                <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/android-chrome-192x192.png?alt=media&token=4e79ad3d-2db0-4b6c-bc68-efa3d2633eb8" alt="TheCanIndian Logo" width={100} height={100} className="z-10 relative mb-[-30px]" />
+                <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/Black%20background-final.png?alt=media&token=9086963b-efba-4599-8ff3-76ca37d7ba1c" alt="TheCanIndian Logo" width={200} height={80} />
               </Link>
               <AlertDialogTitle>Forgot Password?</AlertDialogTitle>
               <AlertDialogDescription>
@@ -334,7 +349,7 @@ export function AuthForm() {
                   </FormItem>
                 )}
               />
-              <div className="text-xs text-muted-foreground space-y-1 pt-1 border-t pt-4">
+              <div className="text-xs text-muted-foreground space-y-1 pt-4 border-t">
                   <p className="font-bold">Your new password must contain:</p>
                   <div>- At least 8 characters long</div>
                   <div>- A number (0-9) and a symbol</div>
@@ -354,3 +369,5 @@ export function AuthForm() {
     </AlertDialog>
   );
 }
+
+    
