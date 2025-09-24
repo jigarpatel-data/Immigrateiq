@@ -312,7 +312,7 @@ export function AuthForm() {
           <form onSubmit={passwordResetForm.handleSubmit(onPasswordResetSubmit)}>
             <AlertDialogHeader className="items-center text-center">
                <Link href="/" className="flex flex-col items-center gap-2">
-                <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/android-chrome-192x192.png?alt=media&token=4e79ad3d-2db0-4b6c-bc68-efa3d2633eb8" alt="TheCanIndian Logo" width={40} height={40} />
+                <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/android-chrome-192x192.png?alt=media&token=4e79ad3d-2db0-4b6c-bc68-efa3d2633eb8" alt="TheCanIndian Logo" width={56} height={56} />
                 <span className="text-2xl font-semibold">TheCanIndian</span>
               </Link>
               <AlertDialogTitle>Forgot Password?</AlertDialogTitle>
