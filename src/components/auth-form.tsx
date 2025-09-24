@@ -196,10 +196,10 @@ export function AuthForm() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <div className="flex items-center">
+                      <div className="flex items-center justify-between">
                         <FormLabel>Password</FormLabel>
                         <AlertDialogTrigger asChild>
-                           <Button variant="link" type="button" className="ml-auto text-xs h-auto p-0 text-muted-foreground">Forgot Password?</Button>
+                           <Button variant="link" type="button" className="text-xs h-auto p-0 text-muted-foreground">Forgot Password?</Button>
                         </AlertDialogTrigger>
                       </div>
                        <FormControl>
@@ -354,8 +354,3 @@ export function AuthForm() {
     </AlertDialog>
   );
 }
-
-
-
-
-    
