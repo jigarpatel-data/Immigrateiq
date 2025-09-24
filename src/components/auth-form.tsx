@@ -311,8 +311,8 @@ export function AuthForm() {
         <Form {...passwordResetForm}>
           <form onSubmit={passwordResetForm.handleSubmit(onPasswordResetSubmit)}>
             <AlertDialogHeader className="items-center text-center">
-               <Link href="/" className="flex flex-col items-center gap-4">
-                <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/android-chrome-192x192.png?alt=media&token=4e79ad3d-2db0-4b6c-bc68-efa3d2633eb8" alt="TheCanIndian Logo" width={64} height={64} />
+               <Link href="/" className="flex flex-col items-center">
+                <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/android-chrome-192x192.png?alt=media&token=4e79ad3d-2db0-4b6c-bc68-efa3d2633eb8" alt="TheCanIndian Logo" width={80} height={80} className="z-10 relative mb-[-20px]" />
                 <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/Black%20background-final.png?alt=media&token=9086963b-efba-4599-8ff3-76ca37d7ba1c" alt="TheCanIndian Logo" width={180} height={72} />
               </Link>
               <AlertDialogTitle>Forgot Password?</AlertDialogTitle>
@@ -354,4 +354,5 @@ export function AuthForm() {
     </AlertDialog>
   );
 }
+
 
