@@ -141,10 +141,12 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
                 </Link>
                )}
           </header>
-          <main className="p-4 sm:p-6">
-            {mainContent}
-          </main>
-          <Footer />
+          <div className="flex-1 overflow-y-auto">
+            <main className="p-4 sm:p-6">
+              {mainContent}
+            </main>
+            <Footer />
+          </div>
         </SidebarInset>
       </>
     );
