@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="mt-auto border-t border-border/50 bg-background/50 text-muted-foreground print:hidden">
+    <footer className="pt-8 mt-auto border-t border-border/50 bg-background/50 text-muted-foreground print:hidden">
       <div className="container mx-auto flex flex-col items-center justify-between gap-4 px-4 sm:flex-row md:px-6">
         <p className="text-sm">
           © {new Date().getFullYear()} TheCanIndian. All rights reserved.
