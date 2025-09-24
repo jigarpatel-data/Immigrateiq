@@ -29,7 +29,6 @@ import {
   PanelLeft,
   Menu,
 } from "lucide-react";
-import { Footer } from "@/components/footer";
 import { useAuth } from "@/hooks/use-auth";
 import { handleSignOut } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -145,7 +144,6 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
             <main className="p-4 sm:p-6">
               {mainContent}
             </main>
-            <Footer />
           </div>
         </SidebarInset>
       </>
