@@ -254,6 +254,7 @@ export function DrawTrackerClient({
                   </CardHeader>
                 </Card>
               </div>
+              <ScrollArea className="h-[calc(100vh-16rem)] pr-4">
               <div className="space-y-4">
                   {loading && allDraws.length === 0 ? (
                       <div className="flex flex-col items-center justify-center text-center py-16">
@@ -408,6 +409,7 @@ export function DrawTrackerClient({
                       </>
                   )}
               </div>
+              </ScrollArea>
           </div>
           <div className={cn("lg:col-span-1", !selectedDraw ? 'hidden' : 'block')}>
               {selectedDraw && (
