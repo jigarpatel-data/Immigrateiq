@@ -11,8 +11,7 @@ export default function AuthPage() {
         <div className="w-full max-w-md space-y-6">
           <div className="flex justify-center flex-col items-center gap-2">
             <Link href="/" className="flex flex-col items-center gap-2">
-              <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/android-chrome-192x192.png?alt=media&token=4e79ad3d-2db0-4b6c-bc68-efa3d2633eb8" alt="TheCanIndian Logo" width={56} height={56} />
-              <span className="text-xl md:text-2xl font-semibold">TheCanIndian</span>
+               <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/Black%20background-final.png?alt=media&token=9086963b-efba-4599-8ff3-76ca37d7ba1c" alt="TheCanIndian Logo" width={180} height={72} />
             </Link>
              <p className="text-muted-foreground text-center">
               Welcome! Please sign in or create an account to continue.
