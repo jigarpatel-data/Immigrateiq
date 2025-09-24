@@ -67,10 +67,17 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
       <>
         <Sidebar collapsible="icon">
           <SidebarHeader>
-            <div className="flex items-center justify-end p-2 lg:justify-center">
-               <SidebarTrigger className="lg:hidden">
-                  <PanelLeft />
-               </SidebarTrigger>
+             <div className="flex items-center justify-center p-2">
+                {/* Regular view for expanded sidebar and mobile */}
+                <div className="flex items-center gap-2 group-data-[collapsible=icon]:hidden">
+                  <SidebarTrigger className="lg:hidden">
+                      <PanelLeft />
+                  </SidebarTrigger>
+                </div>
+                 {/* Collapsed view for desktop */}
+                <div className="hidden group-data-[collapsible=icon]:flex">
+                  <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/android-chrome-192x192.png?alt=media&token=4e79ad3d-2db0-4b6c-bc68-efa3d2633eb8" alt="TheCanIndian Small Logo" width={32} height={32} />
+                </div>
             </div>
           </SidebarHeader>
           <SidebarContent>
