@@ -351,7 +351,7 @@ export function DrawTrackerClient({
               </div>
               <div className="relative">
                 <ScrollArea className="h-[calc(100vh-18rem)]" viewportRef={viewportRef} onScroll={handleScroll}>
-                <div className="space-y-4 pr-4">
+                <div className="space-y-4">
                     {loading && allDraws.length === 0 ? (
                         <div className="flex flex-col items-center justify-center text-center py-16">
                             <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
@@ -551,7 +551,7 @@ export function DrawTrackerClient({
                                   </div>
                               </CardHeader>
                               <CardContent>
-                                  <ScrollArea className="h-[calc(100vh-18rem)] pr-4">
+                                  <ScrollArea className="h-[calc(100vh-18rem)]">
                                     <DrawDetailsContent />
                                   </ScrollArea>
                               </CardContent>
@@ -567,4 +567,5 @@ export function DrawTrackerClient({
 
 
 
+    
     
