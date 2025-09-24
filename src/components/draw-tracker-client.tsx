@@ -45,6 +45,8 @@ import { cn } from '@/lib/utils';
 
 
 type DrawTrackerClientProps = {
+    title: string;
+    description: string;
     initialDraws: Draw[];
     initialOffset?: string;
     initialError?: string;
@@ -53,6 +55,8 @@ type DrawTrackerClientProps = {
 };
 
 export function DrawTrackerClient({ 
+    title,
+    description,
     initialDraws, 
     initialOffset, 
     initialError, 
@@ -197,253 +201,256 @@ export function DrawTrackerClient({
   );
 
   return (
-    <div className={cn("grid grid-cols-1 items-start gap-6 lg:grid-cols-3", !selectedDraw && "lg:grid-cols-1")}>
-        <div className={cn("lg:col-span-2 space-y-6", !selectedDraw && "lg:col-span-3")}>
-            <div className="sticky top-6 z-10">
-              <Card>
-              <CardHeader>
-                  <CardTitle>Filter and Sort Draws</CardTitle>
-                  <form onSubmit={handleSearch} className="flex flex-wrap gap-4 pt-4">
-                      <div className="relative flex-grow min-w-[200px]">
-                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                          <Input 
-                              placeholder="Ask about draws or search keywords..."
-                              value={rawSearchTerm}
-                              onChange={(e) => setRawSearchTerm(e.target.value)}
-                              className="pl-10"
-                          />
+    <div className="space-y-6">
+      <div className={cn("grid grid-cols-1 items-start gap-6 lg:grid-cols-3", !selectedDraw && "lg:grid-cols-1")}>
+          <div className={cn("lg:col-span-2 space-y-6", !selectedDraw && "lg:col-span-3")}>
+              <div className="sticky top-6 z-10">
+                <Card>
+                  <CardHeader>
+                      <CardTitle className="text-2xl md:text-3xl font-bold tracking-tight">{title}</CardTitle>
+                      <CardDescription className="pt-1">{description}</CardDescription>
+                      <form onSubmit={handleSearch} className="flex flex-wrap gap-4 pt-4">
+                          <div className="relative flex-grow min-w-[200px]">
+                              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                              <Input 
+                                  placeholder="Ask about draws or search keywords..."
+                                  value={rawSearchTerm}
+                                  onChange={(e) => setRawSearchTerm(e.target.value)}
+                                  className="pl-10"
+                              />
+                          </div>
+                          <Select value={provinceFilter} onValueChange={setProvinceFilter}>
+                              <SelectTrigger className="w-full sm:w-auto flex-grow sm:flex-grow-0 sm:min-w-40">
+                                  <SelectValue placeholder="Filter by province" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                  {provinceOptions.map(option => (
+                                      <SelectItem key={option} value={option}>{option}</SelectItem>
+                                  ))}
+                              </SelectContent>
+                          </Select>
+                          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                              <SelectTrigger className="w-full sm:w-auto flex-grow sm:flex-grow-0 sm:min-w-40">
+                                  <SelectValue placeholder="Filter by category" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                  {categoryOptions.map(option => (
+                                      <SelectItem key={option} value={option}>{option}</SelectItem>
+                                  ))}
+                              </SelectContent>
+                          </Select>
+                          <Button type="submit" id="manual-search-button" className="w-full sm:w-auto" disabled={loading}>
+                          {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Search className="mr-2 h-4 w-4" />}
+                          Search
+                          </Button>
+                      
+                      {activeFilterCount > 0 && (
+                          <Button variant="ghost" type="button" onClick={resetFilters} className="w-full sm:w-auto">
+                              <X className="mr-2 h-4 w-4" />
+                              Reset
+                          </Button>
+                      )}
+                      </form>
+                  </CardHeader>
+                </Card>
+              </div>
+              <div className="space-y-4">
+                  {loading && allDraws.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center text-center py-16">
+                          <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
+                          <h1 className="text-xl md:text-2xl font-bold tracking-tight">Loading Draws...</h1>
+                          <p className="text-muted-foreground">This may take a moment.</p>
                       </div>
-                      <Select value={provinceFilter} onValueChange={setProvinceFilter}>
-                          <SelectTrigger className="w-full sm:w-auto flex-grow sm:flex-grow-0 sm:min-w-40">
-                              <SelectValue placeholder="Filter by province" />
-                          </SelectTrigger>
-                          <SelectContent>
-                              {provinceOptions.map(option => (
-                                  <SelectItem key={option} value={option}>{option}</SelectItem>
-                              ))}
-                          </SelectContent>
-                      </Select>
-                      <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                          <SelectTrigger className="w-full sm:w-auto flex-grow sm:flex-grow-0 sm:min-w-40">
-                              <SelectValue placeholder="Filter by category" />
-                          </SelectTrigger>
-                          <SelectContent>
-                              {categoryOptions.map(option => (
-                                  <SelectItem key={option} value={option}>{option}</SelectItem>
-                              ))}
-                          </SelectContent>
-                      </Select>
-                      <Button type="submit" id="manual-search-button" className="w-full sm:w-auto" disabled={loading}>
-                      {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Search className="mr-2 h-4 w-4" />}
-                      Search
-                      </Button>
-                  
-                  {activeFilterCount > 0 && (
-                      <Button variant="ghost" type="button" onClick={resetFilters} className="w-full sm:w-auto">
-                          <X className="mr-2 h-4 w-4" />
-                          Reset
-                      </Button>
+                  ) : error ? (
+                      <div className="text-center py-16 bg-destructive/10 text-destructive border border-destructive rounded-lg p-4">
+                          <X className="mx-auto h-12 w-12 mb-4" />
+                          <p className="text-lg font-semibold">Failed to load draws</p>
+                          <p>{error}</p>
+                      </div>
+                  ) : (
+                      <>
+                      <div className="grid gap-4 grid-cols-1">
+                          {allDraws.length > 0 ? (
+                          allDraws.map((draw) => (
+                              <Card 
+                                  key={draw.id} 
+                                  onClick={() => handleDrawClick(draw)}
+                                  className={cn(
+                                      "cursor-pointer transition-all",
+                                      selectedDraw?.id === draw.id && 'border-accent ring-2 ring-accent'
+                                  )}
+                              >
+                              {/* Desktop View */}
+                              <div className='hidden sm:block p-6 space-y-4'>
+                                  <div className="flex justify-between items-start gap-4">
+                                      <div>
+                                      <p className="text-sm text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</p>
+                                      <CardTitle className="text-base font-semibold pt-1">{draw.Category}</CardTitle>
+                                      </div>
+                                      <div className="flex items-center gap-2">
+                                      <Badge variant="secondary" className="flex items-center gap-1.5 whitespace-nowrap text-xs">
+                                          <Building className="h-3.5 w-3.5" />
+                                          {draw.Province}
+                                      </Badge>
+                                      <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
+                                          <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
+                                              <ExternalLink className="h-4 w-4" />
+                                              <span className="sr-only">Source</span>
+                                          </Link>
+                                      </Button>
+                                      </div>
+                                  </div>
+                                  <div className="flex items-center text-center sm:text-left gap-4 sm:gap-6 pt-2 text-sm text-muted-foreground">
+                                  <div className="flex items-center gap-1.5">
+                                      <Award className="h-4 w-4 text-accent" />
+                                      <span className="font-semibold text-foreground">{draw.Score || 'N/A'}</span>
+                                      <span className='hidden sm:inline'>Min. Score</span>
+                                  </div>
+                                  <Separator orientation="vertical" className="h-5" />
+                                  <div className="flex items-center gap-1.5">
+                                      <Users className="h-4 w-4 text-accent" />
+                                      <span className="font-semibold text-foreground">{draw["Total Draw Invitations"] || 'N/A'}</span>
+                                      <span className='hidden sm:inline'>Invitations</span>
+                                      <TooltipProvider>
+                                          <Tooltip>
+                                          <TooltipTrigger asChild>
+                                              <button onClick={(e) => e.stopPropagation()}>
+                                              <Info className="h-4 w-4 text-muted-foreground" />
+                                              <span className="sr-only">More info</span>
+                                              </button>
+                                          </TooltipTrigger>
+                                          <TooltipContent>
+                                              <p className="max-w-xs">
+                                              These many invitations were issued in this draw, not for any specific occupation. This draw may have invited other occupations as well.
+                                              </p>
+                                          </TooltipContent>
+                                          </Tooltip>
+                                      </TooltipProvider>
+                                  </div>
+                                  <Separator orientation="vertical" className="h-5" />
+                                  <p className='truncate' title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</p>
+                                  </div>
+                              </div>
+                              {/* Mobile View */}
+                              <div className="sm:hidden p-3 space-y-3">
+                                  <div className="flex justify-between items-center">
+                                      <span className="text-xs text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</span>
+                                      <div className="flex items-center gap-2">
+                                          <Badge variant="secondary" className="flex items-center gap-1.5 text-xs">
+                                          <Building className="h-3.5 w-3.5" />
+                                          {draw.Province}
+                                          </Badge>
+                                          <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
+                                              <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
+                                                  <ExternalLink className="h-4 w-4" />
+                                                  <span className="sr-only">Source</span>
+                                              </Link>
+                                          </Button>
+                                      </div>
+                                  </div>
+                                  <p className="text-base font-semibold">{draw.Category}</p>
+                                  <Separator/>
+                                  <div className="space-y-2 text-sm">
+                                      <div className="flex text-sm">
+                                          <span className="text-muted-foreground mr-2">Min. Score:</span>
+                                          <span className="font-semibold text-foreground">{draw.Score || 'N/A'}</span>
+                                      </div>
+                                      <div className="flex text-sm">
+                                          <span className="text-muted-foreground mr-2">Invitations:</span>
+                                          <div className='flex items-center gap-1.5'>
+                                              <span className="font-semibold text-foreground">{draw["Total Draw Invitations"] || 'N.A'}</span>
+                                              <TooltipProvider>
+                                              <Tooltip>
+                                                  <TooltipTrigger asChild>
+                                                  <button onClick={(e) => e.stopPropagation()}>
+                                                      <Info className="h-4 w-4 text-muted-foreground" />
+                                                      <span className="sr-only">More info</span>
+                                                  </button>
+                                                  </TooltipTrigger>
+                                                  <TooltipContent>
+                                                  <p className="max-w-xs">
+                                                      These many invitations were issued in this draw, not for any specific occupation. This draw may have invited other occupations as well.
+                                                  </p>
+                                                  </TooltipContent>
+                                              </Tooltip>
+                                              </TooltipProvider>
+                                          </div>
+                                      </div>
+                                      <div className="flex items-center">
+                                          <span className='text-xs text-muted-foreground truncate' title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</span>
+                                      </div>
+                                  </div>
+                              </div>
+                              </Card>
+                          ))
+                          ) : (
+                          <div className="text-center py-16 text-muted-foreground col-span-full">
+                              <Filter className="mx-auto h-12 w-12 mb-4" />
+                              <p className="text-lg font-semibold">No draws found</p>
+                              <p>Try adjusting your search or filters.</p>
+                          </div>
+                          )}
+                      </div>
+                      {hasMore && <div ref={loadMoreRef} className="h-1 col-span-full" />}
+                      {loadingMore && (
+                          <div className="flex justify-center mt-6">
+                              <Button variant="secondary" disabled>
+                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                  Loading More...
+                              </Button>
+                          </div>
+                      )}
+                      {!loading && !loadingMore && !hasMore && allDraws.length > 0 && (
+                          <div className="text-center text-muted-foreground mt-6">
+                              <p>You've reached the end of the list.</p>
+                          </div>
+                      )}
+                      </>
                   )}
-                  </form>
-              </CardHeader>
-              </Card>
-            </div>
-            <div className="space-y-4">
-                {loading && allDraws.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center text-center py-16">
-                        <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
-                        <h1 className="text-xl md:text-2xl font-bold tracking-tight">Loading Draws...</h1>
-                        <p className="text-muted-foreground">This may take a moment.</p>
-                    </div>
-                ) : error ? (
-                    <div className="text-center py-16 bg-destructive/10 text-destructive border border-destructive rounded-lg p-4">
-                        <X className="mx-auto h-12 w-12 mb-4" />
-                        <p className="text-lg font-semibold">Failed to load draws</p>
-                        <p>{error}</p>
-                    </div>
-                ) : (
-                    <>
-                    <div className="grid gap-4 grid-cols-1">
-                        {allDraws.length > 0 ? (
-                        allDraws.map((draw) => (
-                            <Card 
-                                key={draw.id} 
-                                onClick={() => handleDrawClick(draw)}
-                                className={cn(
-                                    "cursor-pointer transition-all",
-                                    selectedDraw?.id === draw.id && 'border-accent ring-2 ring-accent'
-                                )}
-                            >
-                            {/* Desktop View */}
-                            <div className='hidden sm:block p-6 space-y-4'>
-                                <div className="flex justify-between items-start gap-4">
-                                    <div>
-                                    <p className="text-sm text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</p>
-                                    <CardTitle className="text-base font-semibold pt-1">{draw.Category}</CardTitle>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                    <Badge variant="secondary" className="flex items-center gap-1.5 whitespace-nowrap text-xs">
-                                        <Building className="h-3.5 w-3.5" />
-                                        {draw.Province}
-                                    </Badge>
-                                    <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
-                                        <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
-                                            <ExternalLink className="h-4 w-4" />
-                                            <span className="sr-only">Source</span>
-                                        </Link>
-                                    </Button>
-                                    </div>
-                                </div>
-                                <div className="flex items-center text-center sm:text-left gap-4 sm:gap-6 pt-2 text-sm text-muted-foreground">
-                                <div className="flex items-center gap-1.5">
-                                    <Award className="h-4 w-4 text-accent" />
-                                    <span className="font-semibold text-foreground">{draw.Score || 'N/A'}</span>
-                                    <span className='hidden sm:inline'>Min. Score</span>
-                                </div>
-                                <Separator orientation="vertical" className="h-5" />
-                                <div className="flex items-center gap-1.5">
-                                    <Users className="h-4 w-4 text-accent" />
-                                    <span className="font-semibold text-foreground">{draw["Total Draw Invitations"] || 'N/A'}</span>
-                                    <span className='hidden sm:inline'>Invitations</span>
-                                    <TooltipProvider>
-                                        <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <button onClick={(e) => e.stopPropagation()}>
-                                            <Info className="h-4 w-4 text-muted-foreground" />
-                                            <span className="sr-only">More info</span>
-                                            </button>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p className="max-w-xs">
-                                            These many invitations were issued in this draw, not for any specific occupation. This draw may have invited other occupations as well.
-                                            </p>
-                                        </TooltipContent>
-                                        </Tooltip>
-                                    </TooltipProvider>
-                                </div>
-                                <Separator orientation="vertical" className="h-5" />
-                                <p className='truncate' title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</p>
-                                </div>
-                            </div>
-                            {/* Mobile View */}
-                            <div className="sm:hidden p-3 space-y-3">
-                                <div className="flex justify-between items-center">
-                                    <span className="text-xs text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</span>
-                                    <div className="flex items-center gap-2">
-                                        <Badge variant="secondary" className="flex items-center gap-1.5 text-xs">
-                                        <Building className="h-3.5 w-3.5" />
-                                        {draw.Province}
-                                        </Badge>
-                                        <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
-                                            <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
-                                                <ExternalLink className="h-4 w-4" />
-                                                <span className="sr-only">Source</span>
-                                            </Link>
-                                        </Button>
-                                    </div>
-                                </div>
-                                <p className="text-base font-semibold">{draw.Category}</p>
-                                <Separator/>
-                                <div className="space-y-2 text-sm">
-                                    <div className="flex text-sm">
-                                        <span className="text-muted-foreground mr-2">Min. Score:</span>
-                                        <span className="font-semibold text-foreground">{draw.Score || 'N/A'}</span>
-                                    </div>
-                                    <div className="flex text-sm">
-                                        <span className="text-muted-foreground mr-2">Invitations:</span>
-                                        <div className='flex items-center gap-1.5'>
-                                            <span className="font-semibold text-foreground">{draw["Total Draw Invitations"] || 'N.A'}</span>
-                                            <TooltipProvider>
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                <button onClick={(e) => e.stopPropagation()}>
-                                                    <Info className="h-4 w-4 text-muted-foreground" />
-                                                    <span className="sr-only">More info</span>
-                                                </button>
-                                                </TooltipTrigger>
-                                                <TooltipContent>
-                                                <p className="max-w-xs">
-                                                    These many invitations were issued in this draw, not for any specific occupation. This draw may have invited other occupations as well.
-                                                </p>
-                                                </TooltipContent>
-                                            </Tooltip>
-                                            </TooltipProvider>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center">
-                                        <span className='text-xs text-muted-foreground truncate' title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            </Card>
-                        ))
-                        ) : (
-                        <div className="text-center py-16 text-muted-foreground col-span-full">
-                            <Filter className="mx-auto h-12 w-12 mb-4" />
-                            <p className="text-lg font-semibold">No draws found</p>
-                            <p>Try adjusting your search or filters.</p>
-                        </div>
-                        )}
-                    </div>
-                    {hasMore && <div ref={loadMoreRef} className="h-1 col-span-full" />}
-                    {loadingMore && (
-                        <div className="flex justify-center mt-6">
-                            <Button variant="secondary" disabled>
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                Loading More...
-                            </Button>
-                        </div>
-                    )}
-                    {!loading && !loadingMore && !hasMore && allDraws.length > 0 && (
-                        <div className="text-center text-muted-foreground mt-6">
-                            <p>You've reached the end of the list.</p>
-                        </div>
-                    )}
-                    </>
-                )}
-            </div>
-        </div>
-        <div className={cn("lg:col-span-1", !selectedDraw ? 'hidden' : 'block')}>
-             {selectedDraw && (
-                <div className="sticky top-6">
-                    {isMobile ? (
-                        <Sheet open={!!selectedDraw} onOpenChange={(isOpen) => !isOpen && setSelectedDraw(null)}>
-                            <SheetContent side="right" className="w-full sm:max-w-lg p-0 flex flex-col">
-                               <SheetHeader className="p-6">
-                                    <SheetTitle>{selectedDraw?.Category}</SheetTitle>
-                                    <SheetDescription>{selectedDraw?.['Draw Date']}</SheetDescription>
-                                </SheetHeader>
-                                <ScrollArea className="flex-1 px-6">
-                                    <div className="pb-6">
-                                        <DrawDetailsContent />
-                                    </div>
-                                </ScrollArea>
-                            </SheetContent>
-                        </Sheet>
-                    ) : (
-                         <Card>
-                            <CardHeader>
-                                <div className="flex justify-between items-start">
-                                    <div>
-                                        <CardTitle className="text-lg font-bold">{selectedDraw?.Category}</CardTitle>
-                                        <CardDescription>{selectedDraw?.['Draw Date']}</CardDescription>
-                                    </div>
-                                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSelectedDraw(null)}>
-                                        <X className="h-4 w-4" />
-                                        <span className="sr-only">Close</span>
-                                    </Button>
-                                </div>
-                            </CardHeader>
-                             <CardContent>
-                                <ScrollArea className="h-[calc(100vh-16rem)] pr-4">
-                                  <DrawDetailsContent />
-                                </ScrollArea>
-                            </CardContent>
-                        </Card>
-                    )}
-                </div>
-            )}
-        </div>
+              </div>
+          </div>
+          <div className={cn("lg:col-span-1", !selectedDraw ? 'hidden' : 'block')}>
+              {selectedDraw && (
+                  <div className="sticky top-6">
+                      {isMobile ? (
+                          <Sheet open={!!selectedDraw} onOpenChange={(isOpen) => !isOpen && setSelectedDraw(null)}>
+                              <SheetContent side="right" className="w-full sm:max-w-lg p-0 flex flex-col">
+                                <SheetHeader className="p-6">
+                                      <SheetTitle>{selectedDraw?.Category}</SheetTitle>
+                                      <SheetDescription>{selectedDraw?.['Draw Date']}</SheetDescription>
+                                  </SheetHeader>
+                                  <ScrollArea className="flex-1 px-6">
+                                      <div className="pb-6">
+                                          <DrawDetailsContent />
+                                      </div>
+                                  </ScrollArea>
+                              </SheetContent>
+                          </Sheet>
+                      ) : (
+                          <Card>
+                              <CardHeader>
+                                  <div className="flex justify-between items-start">
+                                      <div>
+                                          <CardTitle className="text-lg font-bold">{selectedDraw?.Category}</CardTitle>
+                                          <CardDescription>{selectedDraw?.['Draw Date']}</CardDescription>
+                                      </div>
+                                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSelectedDraw(null)}>
+                                          <X className="h-4 w-4" />
+                                          <span className="sr-only">Close</span>
+                                      </Button>
+                                  </div>
+                              </CardHeader>
+                              <CardContent>
+                                  <ScrollArea className="h-[calc(100vh-16rem)] pr-4">
+                                    <DrawDetailsContent />
+                                  </ScrollArea>
+                              </CardContent>
+                          </Card>
+                      )}
+                  </div>
+              )}
+          </div>
+      </div>
     </div>
   );
 }

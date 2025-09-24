@@ -1,4 +1,3 @@
-
 import { getAirtableDraws, getUniqueFieldValues } from '@/lib/airtable';
 import { DrawTrackerClient } from '@/components/draw-tracker-client';
 import { withAuth } from '@/hooks/use-auth';
@@ -20,22 +19,16 @@ async function DrawTrackerPage() {
   const filterOptionsError = provincesResult.error || categoriesResult.error;
 
   return (
-    <div className="space-y-6 p-4 sm:p-6">
-       <header>
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Draw Tracker</h1>
-        <p className="text-muted-foreground">
-          Explore the latest Provincial and Federal immigration draws.
-        </p>
-      </header>
       <DrawTrackerClient
+        title="Draw Tracker"
+        description="Explore the latest Provincial and Federal immigration draws."
         initialDraws={initialDraws}
         initialOffset={initialOffset}
         initialError={initialError || filterOptionsError}
         provinceOptions={provinceOptions}
         categoryOptions={categoryOptions}
       />
-    </div>
   );
 }
 
-export default DrawTrackerPage;
+export default withAuth(DrawTrackerPage);
