@@ -42,7 +42,6 @@ import {
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
-import { withAuth } from '@/hooks/use-auth';
 
 
 type DrawTrackerClientProps = {
@@ -53,7 +52,7 @@ type DrawTrackerClientProps = {
     categoryOptions: string[];
 };
 
-function DrawTrackerClientComponent({ 
+export function DrawTrackerClient({ 
     initialDraws, 
     initialOffset, 
     initialError, 
@@ -449,7 +448,7 @@ function DrawTrackerClientComponent({
   );
 }
 
-export const DrawTrackerClient = withAuth(DrawTrackerClientComponent);
+
 
 
     

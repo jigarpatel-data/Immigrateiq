@@ -1,8 +1,8 @@
-
 import { getAirtableDraws, getUniqueFieldValues } from '@/lib/airtable';
 import { DrawTrackerClient } from '@/components/draw-tracker-client';
+import { withAuth } from '@/hooks/use-auth';
 
-async function DrawTrackerPage() {
+async function DrawTrackerPageComponent() {
   // Fetch initial data on the server
   const [initialDrawsResult, provincesResult, categoriesResult] = await Promise.all([
     getAirtableDraws(),
@@ -36,5 +36,7 @@ async function DrawTrackerPage() {
     </div>
   );
 }
+
+const DrawTrackerPage = withAuth(DrawTrackerPageComponent);
 
 export default DrawTrackerPage;
