@@ -38,6 +38,8 @@ import {
   SheetHeader,
   SheetTitle,
   SheetDescription,
+  SheetFooter,
+  SheetClose,
 } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -77,6 +79,8 @@ export function DrawTrackerClient({
   const [activeSearchTerm, setActiveSearchTerm] = useState('');
   const [provinceFilter, setProvinceFilter] = useState('All');
   const [categoryFilter, setCategoryFilter] = useState('All');
+  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
+
   
   const [selectedDraw, setSelectedDraw] = useState<Draw | null>(null);
   const [details, setDetails] = useState<Record<string, string>>({});
@@ -85,7 +89,7 @@ export function DrawTrackerClient({
   const isMobile = useIsMobile();
 
 
-  const fetchDraws = useCallback(async (currentOffset?: string, isNewFilter = false, search?: string) => {
+  const fetchDraws = useCallback(async (currentOffset?: string, isNewFilter = false, search?: string, newFilters?: { province: string, category: string }) => {
       if (isNewFilter) {
         setLoading(true);
         setAllDraws([]);
@@ -95,8 +99,8 @@ export function DrawTrackerClient({
       setError(null);
 
       const filters = {
-        province: provinceFilter,
-        category: categoryFilter,
+        province: newFilters ? newFilters.province : provinceFilter,
+        category: newFilters ? newFilters.category : categoryFilter,
         search: search === undefined ? activeSearchTerm : search,
       };
 
@@ -166,24 +170,40 @@ export function DrawTrackerClient({
     setSelectedDraw(null);
   }
 
-  const resetFilters = () => {
+  const handleFilterChange = (type: 'province' | 'category', value: string) => {
+    if (type === 'province') {
+        setProvinceFilter(value);
+    } else {
+        setCategoryFilter(value);
+    }
+
+    if (!isMobile) {
+        fetchDraws(undefined, true, activeSearchTerm, {
+            province: type === 'province' ? value : provinceFilter,
+            category: type === 'category' ? value : categoryFilter
+        });
+        setSelectedDraw(null);
+    }
+  };
+
+  const applyMobileFilters = () => {
+    setIsFilterSheetOpen(false);
+    fetchDraws(undefined, true, activeSearchTerm);
+    setSelectedDraw(null);
+  }
+
+  const resetFilters = (applyInstantly = true) => {
     setRawSearchTerm('');
     setActiveSearchTerm('');
     setProvinceFilter('All');
     setCategoryFilter('All');
-    fetchDraws(undefined, true, '');
-    setSelectedDraw(null);
+    if (applyInstantly) {
+      fetchDraws(undefined, true, '');
+      setSelectedDraw(null);
+    }
   };
   
   const activeFilterCount = [activeSearchTerm, provinceFilter, categoryFilter].filter(f => f && f !== 'All').length;
-  
-  useEffect(() => {
-    if (provinceFilter !== 'All' || categoryFilter !== 'All') {
-        fetchDraws(undefined, true);
-        setSelectedDraw(null);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [provinceFilter, categoryFilter]);
 
   const DrawDetailsContent = () => (
     <>
@@ -209,7 +229,9 @@ export function DrawTrackerClient({
                   <CardHeader>
                       <CardTitle className="text-2xl md:text-3xl font-bold tracking-tight">{title}</CardTitle>
                       <CardDescription className="pt-1">{description}</CardDescription>
-                      <form onSubmit={handleSearch} className="flex flex-wrap gap-4 pt-4">
+                      
+                      {/* Desktop Filters */}
+                      <form onSubmit={handleSearch} className="hidden sm:flex flex-wrap gap-4 pt-4">
                           <div className="relative flex-grow min-w-[200px]">
                               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                               <Input 
@@ -219,7 +241,7 @@ export function DrawTrackerClient({
                                   className="pl-10"
                               />
                           </div>
-                          <Select value={provinceFilter} onValueChange={setProvinceFilter}>
+                          <Select value={provinceFilter} onValueChange={(value) => handleFilterChange('province', value)}>
                               <SelectTrigger className="w-full sm:w-auto flex-grow sm:flex-grow-0 sm:min-w-40">
                                   <SelectValue placeholder="Filter by province" />
                               </SelectTrigger>
@@ -229,7 +251,7 @@ export function DrawTrackerClient({
                                   ))}
                               </SelectContent>
                           </Select>
-                          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                          <Select value={categoryFilter} onValueChange={(value) => handleFilterChange('category', value)}>
                               <SelectTrigger className="w-full sm:w-auto flex-grow sm:flex-grow-0 sm:min-w-40">
                                   <SelectValue placeholder="Filter by category" />
                               </SelectTrigger>
@@ -244,17 +266,80 @@ export function DrawTrackerClient({
                           Search
                           </Button>
                       
-                      {activeFilterCount > 0 && (
-                          <Button variant="ghost" type="button" onClick={resetFilters} className="w-full sm:w-auto">
-                              <X className="mr-2 h-4 w-4" />
-                              Reset
-                          </Button>
-                      )}
+                          {activeFilterCount > 0 && (
+                              <Button variant="ghost" type="button" onClick={() => resetFilters()}>
+                                  <X className="mr-2 h-4 w-4" />
+                                  Reset
+                              </Button>
+                          )}
                       </form>
+
+                      {/* Mobile Filters */}
+                      <div className="sm:hidden pt-4">
+                        <form onSubmit={handleSearch} className="flex gap-2">
+                           <div className="relative flex-grow">
+                              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                              <Input 
+                                  placeholder="Search draws..."
+                                  value={rawSearchTerm}
+                                  onChange={(e) => setRawSearchTerm(e.target.value)}
+                                  className="pl-10"
+                              />
+                          </div>
+                          <Sheet open={isFilterSheetOpen} onOpenChange={setIsFilterSheetOpen}>
+                            <SheetTrigger asChild>
+                              <Button variant="outline" size="icon" className="relative">
+                                <Filter className="h-4 w-4" />
+                                {activeFilterCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs">{activeFilterCount}</span>
+                                )}
+                              </Button>
+                            </SheetTrigger>
+                            <SheetContent side="bottom" className="flex flex-col">
+                                <SheetHeader>
+                                    <SheetTitle>Filter Draws</SheetTitle>
+                                    <SheetDescription>
+                                    Refine your search by province or category.
+                                    </SheetDescription>
+                                </SheetHeader>
+                                <div className="space-y-4 py-4">
+                                     <div className="space-y-2">
+                                        <label className="text-sm font-medium">Province</label>
+                                        <Select value={provinceFilter} onValueChange={(value) => handleFilterChange('province', value)}>
+                                            <SelectTrigger><SelectValue placeholder="Filter by province" /></SelectTrigger>
+                                            <SelectContent>
+                                                {provinceOptions.map(option => (
+                                                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                     </div>
+                                     <div className="space-y-2">
+                                         <label className="text-sm font-medium">Category</label>
+                                        <Select value={categoryFilter} onValueChange={(value) => handleFilterChange('category', value)}>
+                                            <SelectTrigger><SelectValue placeholder="Filter by category" /></SelectTrigger>
+                                            <SelectContent>
+                                                {categoryOptions.map(option => (
+                                                    <SelectItem key={option} value={option}>{option}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+                                </div>
+                                <SheetFooter className="mt-auto flex-row gap-2">
+                                    <Button variant="outline" className="flex-1" onClick={() => resetFilters(false)}>Reset</Button>
+                                    <SheetClose asChild>
+                                        <Button type="button" className="flex-1" onClick={applyMobileFilters}>Apply</Button>
+                                    </SheetClose>
+                                </SheetFooter>
+                            </SheetContent>
+                          </Sheet>
+                        </form>
+                      </div>
                   </CardHeader>
                 </Card>
               </div>
-              <ScrollArea className="h-[calc(100vh-16rem)] pr-4">
+              <ScrollArea className="h-[calc(100vh-18rem)] pr-4">
               <div className="space-y-4">
                   {loading && allDraws.length === 0 ? (
                       <div className="flex flex-col items-center justify-center text-center py-16">
@@ -443,7 +528,7 @@ export function DrawTrackerClient({
                                   </div>
                               </CardHeader>
                               <CardContent>
-                                  <ScrollArea className="h-[calc(100vh-16rem)] pr-4">
+                                  <ScrollArea className="h-[calc(100vh-18rem)] pr-4">
                                     <DrawDetailsContent />
                                   </ScrollArea>
                               </CardContent>
@@ -456,11 +541,3 @@ export function DrawTrackerClient({
     </div>
   );
 }
-
-
-
-
-    
-
-    
-
