@@ -67,7 +67,10 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
       <>
         <Sidebar collapsible="icon">
           <SidebarHeader>
-             <div className="flex items-center justify-end p-2">
+             <div className="flex items-center justify-between p-2">
+                <Link href="/dashboard" className="flex items-center gap-2 group-data-[collapsible=icon]:hidden">
+                  <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/Black%20background-final.png?alt=media&token=9086963b-efba-4599-8ff3-76ca37d7ba1c" alt="TheCanIndian Logo" width={120} height={48} />
+                </Link>
                 <SidebarTrigger>
                   <PanelLeft />
                 </SidebarTrigger>
