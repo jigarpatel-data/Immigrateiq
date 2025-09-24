@@ -90,6 +90,27 @@ export function DrawTrackerClient({
   const viewportRef = useRef<HTMLDivElement>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
+  const handleDrawClick = useCallback(async (draw: Draw) => {
+    setSelectedDraw(draw);
+    if (!details[draw.id]) {
+      setLoadingDetails(true);
+      const result = await getDrawDetails(draw.id);
+      if (result.details) {
+        const dirtyHtml = marked.parse(result.details, { breaks: true }) as string;
+        setDetails(prev => ({ ...prev, [draw.id]: dirtyHtml }));
+      } else if (result.error) {
+        setDetails(prev => ({ ...prev, [draw.id]: result.error! }));
+      }
+      setLoadingDetails(false);
+    }
+  }, [details]);
+
+  useEffect(() => {
+    if (initialDraws.length > 0 && !selectedDraw && !isMobile) {
+      handleDrawClick(initialDraws[0]);
+    }
+  }, [initialDraws, selectedDraw, isMobile, handleDrawClick]);
+
 
   const fetchDraws = useCallback(async (currentOffset?: string, isNewFilter = false, search?: string, newFilters?: { province: string, category: string }) => {
       if (isNewFilter) {
@@ -147,22 +168,6 @@ export function DrawTrackerClient({
     };
   }, [hasMore, loadingMore, loading, offset, fetchDraws]);
   
-  const handleDrawClick = async (draw: Draw) => {
-    setSelectedDraw(draw);
-    if (!details[draw.id]) {
-      setLoadingDetails(true);
-      const result = await getDrawDetails(draw.id);
-      if (result.details) {
-        const dirtyHtml = marked.parse(result.details, { breaks: true }) as string;
-        // For now, we trust the source. In a real app, you'd want to sanitize this.
-        setDetails(prev => ({ ...prev, [draw.id]: dirtyHtml }));
-      } else if (result.error) {
-        setDetails(prev => ({ ...prev, [draw.id]: result.error! }));
-      }
-      setLoadingDetails(false);
-    }
-  };
-
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -568,4 +573,6 @@ export function DrawTrackerClient({
 
 
     
+    
+
     
