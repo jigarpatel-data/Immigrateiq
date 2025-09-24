@@ -59,6 +59,7 @@ const passwordResetSchema = z.object({
 
 export function AuthForm() {
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState("login");
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showSignUpPassword, setShowSignUpPassword] = useState(false);
@@ -115,25 +116,15 @@ export function AuthForm() {
         description: error,
         variant: "destructive",
       });
-      setLoading(false);
     } else {
       toast({
-        title: "Success!",
-        description: "Welcome! Your account has been created.",
+        title: "Verification Email Sent",
+        description: "Please check your inbox to verify your email address and log in.",
       });
-       // After successful sign-up, sign them in automatically
-      const { error: signInError } = await handleSignIn(values.email, values.password);
-      if (signInError) {
-         toast({
-          title: "Login Failed",
-          description: signInError,
-          variant: "destructive",
-        });
-      } else {
-        router.push("/dashboard");
-      }
-      setLoading(false);
+      signUpForm.reset();
+      setActiveTab("login"); // Switch to login tab
     }
+    setLoading(false);
   };
 
   const onPasswordResetSubmit = async (values: z.infer<typeof passwordResetSchema>) => {
@@ -181,7 +172,7 @@ export function AuthForm() {
 
   return (
     <AlertDialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
-      <Tabs defaultValue="login" className="w-full">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="login">Login</TabsTrigger>
           <TabsTrigger value="signup">Sign Up</TabsTrigger>
@@ -369,5 +360,7 @@ export function AuthForm() {
     </AlertDialog>
   );
 }
+
+    
 
     

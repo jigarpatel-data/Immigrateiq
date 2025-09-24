@@ -30,8 +30,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
 
   useEffect(() => {
-    const unsubscribe = initAuthListener((user) => {
-      setUser(user);
+    const unsubscribe = initAuthListener((authUser) => {
+      // The listener now only gives us verified users or null
+      setUser(authUser);
       setLoading(false);
     });
     return () => unsubscribe();
@@ -88,3 +89,5 @@ export function withAuth<P extends object>(Component: React.ComponentType<P>) {
     return <Component {...props} />;
   };
 }
+
+    
