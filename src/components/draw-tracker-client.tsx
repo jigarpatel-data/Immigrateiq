@@ -511,7 +511,7 @@ export function DrawTrackerClient({
                         onClick={scrollToTop}
                         variant="outline"
                         size="icon"
-                        className="absolute bottom-4 right-8 h-10 w-10 rounded-full"
+                        className="absolute bottom-4 right-8 h-10 w-10 rounded-full ring-1 ring-border"
                     >
                         <ArrowUp className="h-5 w-5" />
                         <span className="sr-only">Scroll to top</span>
