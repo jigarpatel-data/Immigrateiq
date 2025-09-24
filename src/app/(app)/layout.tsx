@@ -33,7 +33,7 @@ import { Footer } from "@/components/footer";
 import { useAuth } from "@/hooks/use-auth";
 import { handleSignOut } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
-import { PandaIcon } from "@/components/icons";
+import Image from "next/image";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -69,7 +69,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
           <SidebarHeader>
             <div className="flex items-center justify-between p-2 group-data-[collapsible=icon]:justify-center">
               <Link href="/dashboard" className="flex items-center gap-2">
-                <PandaIcon className="w-8 h-8 text-accent" />
+                <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/android-chrome-192x192.png?alt=media&token=4e79ad3d-2db0-4b6c-bc68-efa3d2633eb8" alt="TheCanIndian Logo" width={32} height={32} />
                 <span className="text-lg font-semibold group-data-[collapsible=icon]:hidden">TheCanIndian</span>
               </Link>
                <SidebarTrigger className="lg:hidden">
@@ -130,7 +130,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
                     <Menu />
                   </SidebarTrigger>
                   <Link href="/dashboard" className="flex items-center gap-2">
-                      <PandaIcon className="w-6 h-6 text-accent" />
+                      <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/android-chrome-192x192.png?alt=media&token=4e79ad3d-2db0-4b6c-bc68-efa3d2633eb8" alt="TheCanIndian Logo" width={24} height={24} />
                       <h1 className="text-lg font-semibold">TheCanIndian</h1>
                   </Link>
               </div>

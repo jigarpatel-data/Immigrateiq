@@ -1,7 +1,7 @@
 
 import { AuthForm } from "@/components/auth-form";
 import { CheckCircle } from "lucide-react";
-import { PandaIcon } from "@/components/icons";
+import Image from "next/image";
 import Link from 'next/link';
 
 export default function AuthPage() {
@@ -11,7 +11,7 @@ export default function AuthPage() {
         <div className="w-full max-w-md space-y-6">
           <div className="flex justify-center flex-col items-center gap-2">
             <Link href="/" className="flex items-center gap-2">
-              <PandaIcon className="w-8 h-8 text-accent" />
+              <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/android-chrome-192x192.png?alt=media&token=4e79ad3d-2db0-4b6c-bc68-efa3d2633eb8" alt="TheCanIndian Logo" width={32} height={32} />
               <span className="text-xl md:text-2xl font-semibold">TheCanIndian</span>
             </Link>
              <p className="text-muted-foreground text-center">

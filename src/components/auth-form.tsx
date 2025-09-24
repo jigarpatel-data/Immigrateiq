@@ -27,12 +27,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { CustomGoogleIcon, PandaIcon } from "@/components/icons";
+import { CustomGoogleIcon } from "@/components/icons";
 import { Loader2, Info, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { handleSignIn, handleSignUp, handleGoogleSignIn, handlePasswordReset } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 const signUpSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -311,7 +312,7 @@ export function AuthForm() {
           <form onSubmit={passwordResetForm.handleSubmit(onPasswordResetSubmit)}>
             <AlertDialogHeader className="items-center text-center">
                <Link href="/" className="flex items-center gap-2">
-                <PandaIcon className="w-8 h-8 text-accent" />
+                <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/android-chrome-192x192.png?alt=media&token=4e79ad3d-2db0-4b6c-bc68-efa3d2633eb8" alt="TheCanIndian Logo" width={32} height={32} />
                 <span className="text-2xl font-semibold">TheCanIndian</span>
               </Link>
               <AlertDialogTitle>Forgot Password?</AlertDialogTitle>
