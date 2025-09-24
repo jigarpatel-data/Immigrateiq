@@ -6,12 +6,12 @@ import Link from 'next/link';
 
 export default function AuthPage() {
   return (
-    <div className="flex items-center justify-center w-full min-h-screen">
-      <div className="flex-1 flex flex-col justify-center items-center p-8 bg-background">
+    <div className="flex items-center justify-center w-full min-h-screen bg-background">
+      <div className="flex-1 flex flex-col justify-center items-center p-8">
         <div className="w-full max-w-md space-y-6">
           <div className="flex justify-center flex-col items-center gap-2">
             <Link href="/" className="flex flex-col items-center">
-               <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/android-chrome-192x192.png?alt=media&token=4e79ad3d-2db0-4b6c-bc68-efa3d2633eb8" alt="TheCanIndian Logo" width={80} height={80} className="z-10 relative mb-[-20px]" />
+               <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/android-chrome-192x192.png?alt=media&token=4e79ad3d-2db0-4b6c-bc68-efa3d2633eb8" alt="TheCanIndian Logo" width={100} height={100} className="z-10 relative mb-[-30px]" />
                <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/Black%20background-final.png?alt=media&token=9086963b-efba-4599-8ff3-76ca37d7ba1c" alt="TheCanIndian Logo" width={180} height={72} />
             </Link>
              <p className="text-muted-foreground text-center pt-4">
@@ -21,30 +21,6 @@ export default function AuthPage() {
           <AuthForm />
         </div>
       </div>
-      <div className="hidden lg:flex flex-1 relative bg-muted items-center justify-center p-8">
-        <div className="max-w-xl text-left text-foreground">
-          <div className="inline-block overflow-hidden">
-            <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground whitespace-nowrap border-r-4 border-r-accent animate-[typing_3s_steps(40,end),blink-caret_.75s_step-end_8]">
-              Start Your Canadian Dream Today
-            </h1>
-          </div>
-            <ul className="mt-6 space-y-4 text-base md:text-lg">
-              <li className="flex items-start gap-3 opacity-0 animate-fade-in-up animation-delay-3000">
-                <CheckCircle className="h-6 w-6 mt-1 text-accent shrink-0" />
-                <span>Track immigration programs and draws from coast to coast</span>
-              </li>
-              <li className="flex items-start gap-3 opacity-0 animate-fade-in-up animation-delay-3500">
-                <CheckCircle className="h-6 w-6 mt-1 text-accent shrink-0" />
-                <span>Check & Calculate your eligibility score</span>
-              </li>
-              <li className="flex items-start gap-3 opacity-0 animate-fade-in-up animation-delay-4000">
-                <CheckCircle className="h-6 w-6 mt-1 text-accent shrink-0" />
-                <span>Get personalized AI-powered guidance for every step of your journey</span>
-              </li>
-            </ul>
-        </div>
-      </div>
     </div>
   );
 }
-
