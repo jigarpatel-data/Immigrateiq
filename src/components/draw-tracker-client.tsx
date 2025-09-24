@@ -246,7 +246,7 @@ export function DrawTrackerClient({
                       <CardDescription className="pt-1">{description}</CardDescription>
                       
                       {/* Desktop Filters */}
-                      <form onSubmit={handleSearch} className="hidden sm:flex flex-wrap gap-4 pt-4">
+                      <form onSubmit={handleSearch} className="hidden lg:flex flex-wrap gap-4 pt-4">
                           <div className="relative flex-grow min-w-[200px]">
                               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                               <Input 
@@ -289,8 +289,8 @@ export function DrawTrackerClient({
                           )}
                       </form>
 
-                      {/* Mobile Filters */}
-                      <div className="sm:hidden pt-4">
+                      {/* Mobile/Tablet Filters */}
+                      <div className="lg:hidden pt-4">
                         <form onSubmit={handleSearch} className="flex gap-2">
                            <div className="relative flex-grow">
                               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -578,3 +578,6 @@ export function DrawTrackerClient({
     
 
 
+
+
+    
