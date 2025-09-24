@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from 'react';
@@ -40,6 +39,7 @@ import {
   SheetDescription,
   SheetFooter,
   SheetClose,
+  SheetTrigger,
 } from "@/components/ui/sheet";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -541,3 +541,4 @@ export function DrawTrackerClient({
     </div>
   );
 }
+
