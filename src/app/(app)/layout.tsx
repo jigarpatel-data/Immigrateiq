@@ -129,7 +129,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
                     <Menu />
                   </SidebarTrigger>
                   <Link href="/dashboard" className="flex items-center gap-2">
-                      <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/android-chrome-192x192.png?alt=media&token=4e79ad3d-2db0-4b6c-bc68-efa3d2633eb8" alt="TheCanIndian Logo" width={32} height={32} />
+                      <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/Black%20background-final.png?alt=media&token=9086963b-efba-4599-8ff3-76ca37d7ba1c" alt="TheCanIndian Logo" width={120} height={48} />
                   </Link>
               </div>
                {user && (
