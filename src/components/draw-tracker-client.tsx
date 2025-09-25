@@ -444,7 +444,7 @@ export function DrawTrackerClient({
                                                     <TableCell className="text-right font-semibold whitespace-nowrap">{draw.Score || 'N/A'}</TableCell>
                                                     <TableCell className="text-right whitespace-nowrap">{draw["Total Draw Invitations"] || 'N/A'}</TableCell>
                                                     <TableCell className="text-right whitespace-nowrap">{draw["NOC/Other"] || 'N/A'}</TableCell>
-                                                    <TableCell>
+                                                    <TableCell className="whitespace-nowrap">
                                                          <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
                                                             <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
                                                                 <ExternalLink className="h-4 w-4" />
@@ -514,8 +514,8 @@ export function DrawTrackerClient({
                               <CardHeader>
                                   <div className="flex justify-between items-start">
                                       <div>
-                                          <CardTitle className="text-lg font-bold">{selectedDraw?.Category}</CardTitle>
-                                          <CardDescription>{selectedDraw?.['Draw Date']}</CardDescription>
+                                          <CardTitle className="text-lg font-bold">{selectedDraw?.Category}</SheetTitle>
+                                          <CardDescription>{selectedDraw?.['Draw Date']}</SheetDescription>
                                       </div>
                                       <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSelectedDraw(null)}>
                                           <X className="h-4 w-4" />
