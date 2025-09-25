@@ -423,10 +423,10 @@ export function DrawTrackerClient({
                                         <TableHeader className="sticky top-0 bg-card">
                                             <TableRow>
                                                 <TableHead className="w-[120px]">Date</TableHead>
-                                                <TableHead className="w-[250px]">Category</TableHead>
+                                                <TableHead>Category</TableHead>
                                                 <TableHead className="w-[150px]">Province</TableHead>
                                                 <TableHead className="text-right w-[100px]">Score</TableHead>
-                                                <TableHead className="text-right w-[100px]">Invitations</TableHead>
+                                                <TableHead className="text-right w-[120px]">Invitations</TableHead>
                                                 <TableHead className="text-right w-[200px]">NOC/Occupations</TableHead>
                                                 <TableHead>Source</TableHead>
                                             </TableRow>
