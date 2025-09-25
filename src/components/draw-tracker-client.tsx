@@ -342,23 +342,6 @@ export function DrawTrackerClient({
               </div>
               <div className="relative">
                 <ScrollArea className="h-[calc(100vh-22rem)]" viewportRef={viewportRef} onScroll={handleScroll}>
-                  {(viewMode === 'table' && !isMobile) && (
-                    <Card>
-                      <Table>
-                          <TableHeader>
-                              <TableRow>
-                                  <TableHead className="sticky top-0 bg-card">Date</TableHead>
-                                  <TableHead className="sticky top-0 bg-card">Category</TableHead>
-                                  <TableHead className="sticky top-0 bg-card">Province</TableHead>
-                                  <TableHead className="text-right sticky top-0 bg-card">Score</TableHead>
-                                  <TableHead className="text-right sticky top-0 bg-card">Invitations</TableHead>
-                                  <TableHead className="sticky top-0 bg-card">NOC/Occupations</TableHead>
-                                  <TableHead className="sticky top-0 bg-card">Source</TableHead>
-                              </TableRow>
-                          </TableHeader>
-                      </Table>
-                    </Card>
-                  )}
                   <div className="space-y-4 pt-4">
                       {loading && allDraws.length === 0 ? (
                           <div className="flex flex-col items-center justify-center text-center py-16">
@@ -439,32 +422,45 @@ export function DrawTrackerClient({
                               </div>
                           ) : (
                               <Card>
+                                <div className="relative w-full overflow-auto">
                                   <Table>
-                                      <TableBody>
-                                          {allDraws.map((draw) => (
-                                              <TableRow 
-                                                  key={draw.id} 
-                                                  onClick={() => handleDrawClick(draw)}
-                                                  className={cn("cursor-pointer", selectedDraw?.id === draw.id && 'bg-muted/50')}
-                                              >
-                                                  <TableCell>{draw["Draw Date"]}</TableCell>
-                                                  <TableCell>{draw.Category}</TableCell>
-                                                  <TableCell>{draw.Province}</TableCell>
-                                                  <TableCell className="text-right font-semibold">{draw.Score || 'N/A'}</TableCell>
-                                                  <TableCell className="text-right">{draw["Total Draw Invitations"] || 'N/A'}</TableCell>
-                                                  <TableCell>{draw["NOC/Other"] || 'N/A'}</TableCell>
-                                                  <TableCell>
-                                                      <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
-                                                          <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
-                                                              <ExternalLink className="h-4 w-4" />
-                                                              <span className="sr-only">Source</span>
-                                                          </Link>
-                                                      </Button>
-                                                  </TableCell>
-                                              </TableRow>
-                                          ))}
-                                      </TableBody>
+                                    <TableHeader className="sticky top-0 bg-card z-10">
+                                      <TableRow>
+                                        <TableHead>Date</TableHead>
+                                        <TableHead>Category</TableHead>
+                                        <TableHead>Province</TableHead>
+                                        <TableHead className="text-right">Score</TableHead>
+                                        <TableHead className="text-right">Invitations</TableHead>
+                                        <TableHead>NOC/Occupations</TableHead>
+                                        <TableHead>Source</TableHead>
+                                      </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                      {allDraws.map((draw) => (
+                                        <TableRow 
+                                          key={draw.id} 
+                                          onClick={() => handleDrawClick(draw)}
+                                          className={cn("cursor-pointer", selectedDraw?.id === draw.id && 'bg-muted/50')}
+                                        >
+                                          <TableCell>{draw["Draw Date"]}</TableCell>
+                                          <TableCell>{draw.Category}</TableCell>
+                                          <TableCell>{draw.Province}</TableCell>
+                                          <TableCell className="text-right font-semibold">{draw.Score || 'N/A'}</TableCell>
+                                          <TableCell className="text-right">{draw["Total Draw Invitations"] || 'N/A'}</TableCell>
+                                          <TableCell>{draw["NOC/Other"] || 'N/A'}</TableCell>
+                                          <TableCell>
+                                            <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
+                                              <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
+                                                <ExternalLink className="h-4 w-4" />
+                                                <span className="sr-only">Source</span>
+                                              </Link>
+                                            </Button>
+                                          </TableCell>
+                                        </TableRow>
+                                      ))}
+                                    </TableBody>
                                   </Table>
+                                </div>
                               </Card>
                           )}
 
@@ -547,6 +543,7 @@ export function DrawTrackerClient({
 }
     
     
+
 
 
 
