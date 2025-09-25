@@ -178,19 +178,23 @@ export function DrawTrackerClient({
   }
 
   const handleFilterChange = (type: 'province' | 'category', value: string) => {
-    if (type === 'province') {
-        setProvinceFilter(value);
-    } else {
-        setCategoryFilter(value);
-    }
+      const newFilters = {
+        province: provinceFilter,
+        category: categoryFilter,
+      };
 
-    if (!isMobile) {
-        fetchDraws(undefined, true, activeSearchTerm, {
-            province: type === 'province' ? value : provinceFilter,
-            category: type === 'category' ? value : categoryFilter
-        });
-        setSelectedDraw(null);
-    }
+      if (type === 'province') {
+          setProvinceFilter(value);
+          newFilters.province = value;
+      } else {
+          setCategoryFilter(value);
+          newFilters.category = value;
+      }
+
+      if (!isMobile) {
+          fetchDraws(undefined, true, activeSearchTerm, newFilters);
+          setSelectedDraw(null);
+      }
   };
 
   const applyMobileFilters = () => {
@@ -579,5 +583,7 @@ export function DrawTrackerClient({
 
 
 
+
+    
 
     
