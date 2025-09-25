@@ -190,26 +190,19 @@ export function DrawTrackerClient({
           setCategoryFilter(value);
           newFilters.category = value;
       }
-
+      
+      setIsFilterSheetOpen(false);
       fetchDraws(undefined, true, activeSearchTerm, newFilters);
       setSelectedDraw(null);
   };
 
-  const applyMobileFilters = () => {
-    setIsFilterSheetOpen(false);
-    fetchDraws(undefined, true, activeSearchTerm);
-    setSelectedDraw(null);
-  }
-
-  const resetFilters = (applyInstantly = true) => {
+  const resetFilters = () => {
     setRawSearchTerm('');
     setActiveSearchTerm('');
     setProvinceFilter('All');
     setCategoryFilter('All');
-    if (applyInstantly) {
-      fetchDraws(undefined, true, '');
-      setSelectedDraw(null);
-    }
+    fetchDraws(undefined, true, '', {province: 'All', category: 'All'});
+    setSelectedDraw(null);
   };
   
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -247,7 +240,6 @@ export function DrawTrackerClient({
                       <CardTitle className="text-2xl md:text-3xl font-bold tracking-tight">{title}</CardTitle>
                       <CardDescription className="pt-1">{description}</CardDescription>
                       
-                      {/* Unified Filters */}
                       <div className="pt-4">
                         <form onSubmit={handleSearch} className="flex gap-2">
                            <div className="relative flex-grow">
@@ -299,14 +291,14 @@ export function DrawTrackerClient({
                                         </Select>
                                     </div>
                                 </div>
-                                <SheetFooter className="mt-auto flex-row gap-2">
-                                    <Button variant="outline" className="flex-1" onClick={() => resetFilters(false)}>Reset</Button>
-                                    <SheetClose asChild>
-                                        <Button type="button" className="flex-1" onClick={applyMobileFilters}>Apply</Button>
-                                    </SheetClose>
-                                </SheetFooter>
                             </SheetContent>
                           </Sheet>
+                           {activeFilterCount > 0 && (
+                            <Button variant="ghost" size="icon" onClick={resetFilters}>
+                              <X className="h-4 w-4" />
+                              <span className="sr-only">Reset filters</span>
+                            </Button>
+                          )}
                         </form>
                       </div>
                   </CardHeader>
@@ -514,7 +506,7 @@ export function DrawTrackerClient({
                                   </div>
                               </CardHeader>
                               <CardContent className="flex-1 overflow-hidden p-0">
-                                  <ScrollArea className="h-full px-6">
+                                  <ScrollArea className="h-[calc(100vh-20rem)] px-6">
                                     <DrawDetailsContent />
                                   </ScrollArea>
                               </CardContent>
@@ -529,3 +521,4 @@ export function DrawTrackerClient({
 }
 
     
+
