@@ -420,7 +420,7 @@ export function DrawTrackerClient({
                              <Card>
                                 <div className="relative w-full">
                                     <Table>
-                                        <TableHeader>
+                                        <TableHeader className="sticky top-0 bg-card">
                                             <TableRow>
                                                 <TableHead>Date</TableHead>
                                                 <TableHead>Category</TableHead>
