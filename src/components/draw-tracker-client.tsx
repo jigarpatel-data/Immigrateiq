@@ -248,8 +248,11 @@ export function DrawTrackerClient({
               <div className="sticky top-6 z-10">
                 <Card>
                   <CardHeader>
-                    <div className="flex justify-between items-center">
-                        <CardTitle className="text-2xl md:text-3xl font-bold tracking-tight">{title}</CardTitle>
+                    <div className="flex justify-between items-start">
+                        <div>
+                          <CardTitle className="text-2xl md:text-3xl font-bold tracking-tight">{title}</CardTitle>
+                          <CardDescription className="pt-1">{description}</CardDescription>
+                        </div>
                          <div className="flex items-center space-x-2">
                           <Switch
                             id="table-view-switch"
@@ -259,7 +262,6 @@ export function DrawTrackerClient({
                           <Label htmlFor="table-view-switch">Table View</Label>
                         </div>
                     </div>
-                      <CardDescription className="pt-1">{description}</CardDescription>
                       
                       <div className="pt-4">
                         <form onSubmit={handleSearch} className="flex gap-2">
@@ -389,11 +391,11 @@ export function DrawTrackerClient({
                                         <Separator />
                                         <div className="grid gap-4 sm:grid-cols-1">
                                           <div className="space-y-2 text-sm">
-                                              <div className="flex justify-between">
+                                              <div className="flex justify-start items-center gap-2">
                                                   <span className="text-muted-foreground">Min. Score:</span>
                                                   <span className="font-semibold">{draw.Score || 'N/A'}</span>
                                               </div>
-                                              <div className="flex justify-between">
+                                              <div className="flex justify-start items-center gap-2">
                                                   <span className="text-muted-foreground">Invitations:</span>
                                                   <div className="flex items-center gap-1.5">
                                                       <span className="font-semibold">{draw["Total Draw Invitations"] || 'N/A'}</span>
@@ -405,9 +407,9 @@ export function DrawTrackerClient({
                                                       </TooltipProvider>
                                                   </div>
                                               </div>
-                                              <div className="flex justify-between items-start">
-                                                  <span className="text-muted-foreground shrink-0 pr-2">NOC/Occupations:</span>
-                                                  <span className="font-semibold text-right truncate" title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</span>
+                                              <div className="flex justify-start items-start gap-2">
+                                                  <span className="text-muted-foreground shrink-0">NOC/Occupations:</span>
+                                                  <span className="font-semibold text-left" title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</span>
                                               </div>
                                           </div>
                                         </div>
@@ -426,7 +428,7 @@ export function DrawTrackerClient({
                                             <TableHead>Province</TableHead>
                                             <TableHead className="text-right">Score</TableHead>
                                             <TableHead className="text-right">Invitations</TableHead>
-                                            <TableHead className="text-right">Source</TableHead>
+                                            <TableHead>Source</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
@@ -441,7 +443,7 @@ export function DrawTrackerClient({
                                                 <TableCell>{draw.Province}</TableCell>
                                                 <TableCell className="text-right font-semibold">{draw.Score || 'N/A'}</TableCell>
                                                 <TableCell className="text-right">{draw["Total Draw Invitations"] || 'N/A'}</TableCell>
-                                                <TableCell className="text-right">
+                                                <TableCell>
                                                      <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
                                                         <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
                                                             <ExternalLink className="h-4 w-4" />
@@ -533,12 +535,5 @@ export function DrawTrackerClient({
     </div>
   );
 }
-
-    
-
-
-
-
-    
 
     
