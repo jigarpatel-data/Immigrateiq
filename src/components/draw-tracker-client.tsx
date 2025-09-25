@@ -227,7 +227,7 @@ export function DrawTrackerClient({
   const DrawDetailsContent = () => (
     <>
       {loadingDetails ? (
-        <div className="flex items-center justify-center h-32">
+        <div className="flex items-center justify-center h-full">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       ) : (
@@ -546,7 +546,7 @@ export function DrawTrackerClient({
                               </SheetContent>
                           </Sheet>
                       ) : (
-                          <Card>
+                          <Card className="flex flex-col h-[calc(100vh-8rem)]">
                               <CardHeader>
                                   <div className="flex justify-between items-start">
                                       <div>
@@ -559,8 +559,8 @@ export function DrawTrackerClient({
                                       </Button>
                                   </div>
                               </CardHeader>
-                              <CardContent>
-                                  <ScrollArea className="h-[calc(100vh-20rem)]">
+                              <CardContent className="flex-1 overflow-hidden p-0">
+                                  <ScrollArea className="h-full px-6">
                                     <DrawDetailsContent />
                                   </ScrollArea>
                               </CardContent>
@@ -573,21 +573,5 @@ export function DrawTrackerClient({
     </div>
   );
 }
-
-
-
-    
-    
-
-    
-
-
-
-
-    
-
-    
-
-    
 
     
