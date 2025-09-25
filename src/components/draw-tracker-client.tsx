@@ -418,9 +418,9 @@ export function DrawTrackerClient({
                         )}
                         {viewMode === 'table' && !isMobile && (
                              <Card>
-                                <div className="relative w-full overflow-auto">
+                                <div className="relative w-full">
                                     <Table>
-                                        <TableHeader className="sticky top-0 bg-card">
+                                        <TableHeader>
                                             <TableRow>
                                                 <TableHead>Date</TableHead>
                                                 <TableHead>Category</TableHead>
@@ -438,13 +438,13 @@ export function DrawTrackerClient({
                                                     onClick={() => handleDrawClick(draw)}
                                                     className={cn("cursor-pointer", selectedDraw?.id === draw.id && 'bg-muted/50')}
                                                 >
-                                                    <TableCell className="font-medium whitespace-nowrap">{draw["Draw Date"]}</TableCell>
-                                                    <TableCell className="whitespace-nowrap">{draw.Category}</TableCell>
-                                                    <TableCell className="whitespace-nowrap">{draw.Province}</TableCell>
-                                                    <TableCell className="text-right font-semibold whitespace-nowrap">{draw.Score || 'N/A'}</TableCell>
-                                                    <TableCell className="text-right whitespace-nowrap">{draw["Total Draw Invitations"] || 'N/A'}</TableCell>
-                                                    <TableCell className="text-right whitespace-nowrap">{draw["NOC/Other"] || 'N/A'}</TableCell>
-                                                    <TableCell className="whitespace-nowrap">
+                                                    <TableCell className="font-medium">{draw["Draw Date"]}</TableCell>
+                                                    <TableCell>{draw.Category}</TableCell>
+                                                    <TableCell>{draw.Province}</TableCell>
+                                                    <TableCell className="text-right font-semibold">{draw.Score || 'N/A'}</TableCell>
+                                                    <TableCell className="text-right">{draw["Total Draw Invitations"] || 'N/A'}</TableCell>
+                                                    <TableCell className="text-right">{draw["NOC/Other"] || 'N/A'}</TableCell>
+                                                    <TableCell>
                                                          <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
                                                             <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
                                                                 <ExternalLink className="h-4 w-4" />
@@ -514,8 +514,8 @@ export function DrawTrackerClient({
                               <CardHeader>
                                   <div className="flex justify-between items-start">
                                       <div>
-                                          <CardTitle className="text-lg font-bold">{selectedDraw?.Category}</SheetTitle>
-                                          <CardDescription>{selectedDraw?.['Draw Date']}</SheetDescription>
+                                          <CardTitle className="text-lg font-bold">{selectedDraw?.Category}</CardTitle>
+                                          <CardDescription>{selectedDraw?.['Draw Date']}</CardDescription>
                                       </div>
                                       <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSelectedDraw(null)}>
                                           <X className="h-4 w-4" />
