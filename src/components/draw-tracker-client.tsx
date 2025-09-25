@@ -28,7 +28,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from '@/components/ui/button';
-import { Award, Building, Calendar, ExternalLink, Filter, Info, Loader2, Search, Users, X, ArrowUp, List, Table as TableIcon } from 'lucide-react';
+import { Award, Building, Calendar, ExternalLink, Filter, Info, Loader2, Search, Users, X, ArrowUp, List, Table as TableIcon, ChevronsRight, ChevronsLeft } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import {
@@ -97,6 +97,7 @@ export function DrawTrackerClient({
   const [details, setDetails] = useState<Record<string, string>>({});
   const [loadingDetails, setLoadingDetails] = useState(false);
   const [viewMode, setViewMode] = useState<'card' | 'table'>('card');
+  const [isPanelOpen, setIsPanelOpen] = useState(true);
   
   const isMobile = useIsMobile();
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -104,6 +105,9 @@ export function DrawTrackerClient({
 
   const handleDrawClick = useCallback(async (draw: Draw) => {
     setSelectedDraw(draw);
+    if (!isPanelOpen && !isMobile) {
+      setIsPanelOpen(true);
+    }
     if (!details[draw.id]) {
       setLoadingDetails(true);
       const result = await getDrawDetails(draw.id);
@@ -115,7 +119,7 @@ export function DrawTrackerClient({
       }
       setLoadingDetails(false);
     }
-  }, [details]);
+  }, [details, isPanelOpen, isMobile]);
 
   useEffect(() => {
     if (initialDraws.length > 0 && !selectedDraw && !isMobile) {
@@ -244,8 +248,8 @@ export function DrawTrackerClient({
 
   return (
     <div className="space-y-6">
-      <div className={cn("grid grid-cols-1 items-start gap-6 lg:grid-cols-3", !selectedDraw && "lg:grid-cols-1")}>
-          <div className={cn("lg:col-span-2 space-y-6", !selectedDraw && "lg:col-span-3")}>
+      <div className={cn("grid grid-cols-1 items-start gap-6 lg:grid-cols-3", !isPanelOpen && "lg:grid-cols-1")}>
+          <div className={cn("lg:col-span-2 space-y-6", !isPanelOpen && "lg:col-span-3")}>
               <div className="sticky top-6 z-10">
                 <Card>
                   <CardHeader>
@@ -419,9 +423,9 @@ export function DrawTrackerClient({
                         )}
                         {viewMode === 'table' && !isMobile && (
                              <Card>
-                                <div className="relative w-full">
+                                <div className="relative w-full overflow-auto">
                                     <Table>
-                                        <TableHeader className="sticky top-0 bg-card">
+                                        <TableHeader>
                                             <TableRow>
                                                 <TableHead>Date</TableHead>
                                                 <TableHead>Category</TableHead>
@@ -511,20 +515,20 @@ export function DrawTrackerClient({
                               </SheetContent>
                           </Sheet>
                       ) : (
-                          <Card className="flex flex-col h-[calc(100vh-8rem)]">
+                          <Card className={cn("flex flex-col h-[calc(100vh-8rem)] transition-all", isPanelOpen ? "w-full" : "w-0")}>
                               <CardHeader>
                                   <div className="flex justify-between items-start">
-                                      <div>
+                                      <div className={cn(isPanelOpen ? "opacity-100" : "opacity-0")}>
                                           <CardTitle className="text-lg font-bold">{selectedDraw?.Category}</CardTitle>
                                           <CardDescription>{selectedDraw?.['Draw Date']}</CardDescription>
                                       </div>
-                                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSelectedDraw(null)}>
-                                          <X className="h-4 w-4" />
-                                          <span className="sr-only">Close</span>
+                                      <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setIsPanelOpen(!isPanelOpen)}>
+                                          {isPanelOpen ? <ChevronsRight className="h-4 w-4" /> : <ChevronsLeft className="h-4 w-4" />}
+                                          <span className="sr-only">Toggle Panel</span>
                                       </Button>
                                   </div>
                               </CardHeader>
-                              <CardContent className="flex-1 overflow-hidden p-0">
+                              <CardContent className={cn("flex-1 overflow-hidden p-0", isPanelOpen ? "opacity-100" : "opacity-0")}>
                                   <ScrollArea className="h-full px-6">
                                     <DrawDetailsContent />
                                   </ScrollArea>
@@ -540,4 +544,5 @@ export function DrawTrackerClient({
 }
     
     
+
 
