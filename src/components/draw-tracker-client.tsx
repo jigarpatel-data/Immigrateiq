@@ -253,7 +253,7 @@ export function DrawTrackerClient({
                           <CardTitle className="text-2xl md:text-3xl font-bold tracking-tight">{title}</CardTitle>
                           <CardDescription className="pt-1">{description}</CardDescription>
                         </div>
-                         <div className="flex items-center space-x-2">
+                         <div className="hidden lg:flex items-center space-x-2">
                           <Switch
                             id="table-view-switch"
                             checked={viewMode === 'table'}
@@ -358,7 +358,7 @@ export function DrawTrackerClient({
                             </div>
                     ) : (
                         <>
-                        {viewMode === 'card' && (
+                        {(viewMode === 'card' || isMobile) && (
                             <div className="grid gap-4 grid-cols-1">
                                 {allDraws.map((draw) => (
                                     <Card 
@@ -389,72 +389,74 @@ export function DrawTrackerClient({
                                             </div>
                                         </div>
                                         <Separator />
-                                        <div className="grid gap-4 sm:grid-cols-1">
-                                          <div className="space-y-2 text-sm">
-                                              <div className="flex justify-start items-center gap-2">
-                                                  <span className="text-muted-foreground">Min. Score:</span>
-                                                  <span className="font-semibold">{draw.Score || 'N/A'}</span>
-                                              </div>
-                                              <div className="flex justify-start items-center gap-2">
-                                                  <span className="text-muted-foreground">Invitations:</span>
-                                                  <div className="flex items-center gap-1.5">
-                                                      <span className="font-semibold">{draw["Total Draw Invitations"] || 'N/A'}</span>
-                                                      <TooltipProvider>
-                                                          <Tooltip>
-                                                              <TooltipTrigger asChild><button onClick={(e) => e.stopPropagation()}><Info className="h-4 w-4 text-muted-foreground" /></button></TooltipTrigger>
-                                                              <TooltipContent><p className="max-w-xs">Invitations for this specific draw, not just this occupation.</p></TooltipContent>
-                                                          </Tooltip>
-                                                      </TooltipProvider>
-                                                  </div>
-                                              </div>
-                                              <div className="flex justify-start items-start gap-2">
-                                                  <span className="text-muted-foreground shrink-0">NOC/Occupations:</span>
-                                                  <span className="font-semibold text-left" title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</span>
-                                              </div>
-                                          </div>
+                                        <div className="space-y-2 text-sm">
+                                            <div className="flex justify-start items-center gap-2">
+                                                <span className="text-muted-foreground">Min. Score:</span>
+                                                <span className="font-semibold">{draw.Score || 'N/A'}</span>
+                                            </div>
+                                            <div className="flex justify-start items-center gap-2">
+                                                <span className="text-muted-foreground">Invitations:</span>
+                                                <div className="flex items-center gap-1.5">
+                                                    <span className="font-semibold">{draw["Total Draw Invitations"] || 'N/A'}</span>
+                                                    <TooltipProvider>
+                                                        <Tooltip>
+                                                            <TooltipTrigger asChild><button onClick={(e) => e.stopPropagation()}><Info className="h-4 w-4 text-muted-foreground" /></button></TooltipTrigger>
+                                                            <TooltipContent><p className="max-w-xs">Invitations for this specific draw, not just this occupation.</p></TooltipContent>
+                                                        </Tooltip>
+                                                    </TooltipProvider>
+                                                </div>
+                                            </div>
+                                            <div className="flex justify-start items-start gap-2">
+                                                <span className="text-muted-foreground shrink-0">NOC/Occupations:</span>
+                                                <span className="font-semibold text-left" title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</span>
+                                            </div>
                                         </div>
                                     </div>
                                     </Card>
                                 ))}
                             </div>
                         )}
-                        {viewMode === 'table' && (
+                        {viewMode === 'table' && !isMobile && (
                              <Card>
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>Date</TableHead>
-                                            <TableHead>Category</TableHead>
-                                            <TableHead>Province</TableHead>
-                                            <TableHead className="text-right">Score</TableHead>
-                                            <TableHead className="text-right">Invitations</TableHead>
-                                            <TableHead>Source</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {allDraws.map((draw) => (
-                                            <TableRow 
-                                                key={draw.id} 
-                                                onClick={() => handleDrawClick(draw)}
-                                                className={cn("cursor-pointer", selectedDraw?.id === draw.id && 'bg-muted/50')}
-                                            >
-                                                <TableCell className="font-medium">{draw["Draw Date"]}</TableCell>
-                                                <TableCell>{draw.Category}</TableCell>
-                                                <TableCell>{draw.Province}</TableCell>
-                                                <TableCell className="text-right font-semibold">{draw.Score || 'N/A'}</TableCell>
-                                                <TableCell className="text-right">{draw["Total Draw Invitations"] || 'N/A'}</TableCell>
-                                                <TableCell>
-                                                     <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
-                                                        <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
-                                                            <ExternalLink className="h-4 w-4" />
-                                                            <span className="sr-only">Source</span>
-                                                        </Link>
-                                                    </Button>
-                                                </TableCell>
+                                <div className="relative w-full overflow-auto">
+                                    <Table>
+                                        <TableHeader className="sticky top-0 bg-card">
+                                            <TableRow>
+                                                <TableHead className="w-[120px]">Date</TableHead>
+                                                <TableHead className="w-[250px]">Category</TableHead>
+                                                <TableHead className="w-[150px]">Province</TableHead>
+                                                <TableHead className="text-right w-[100px]">Score</TableHead>
+                                                <TableHead className="text-right w-[100px]">Invitations</TableHead>
+                                                <TableHead className="text-right w-[200px]">NOC/Occupations</TableHead>
+                                                <TableHead>Source</TableHead>
                                             </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {allDraws.map((draw) => (
+                                                <TableRow 
+                                                    key={draw.id} 
+                                                    onClick={() => handleDrawClick(draw)}
+                                                    className={cn("cursor-pointer", selectedDraw?.id === draw.id && 'bg-muted/50')}
+                                                >
+                                                    <TableCell className="font-medium whitespace-nowrap">{draw["Draw Date"]}</TableCell>
+                                                    <TableCell className="whitespace-nowrap">{draw.Category}</TableCell>
+                                                    <TableCell className="whitespace-nowrap">{draw.Province}</TableCell>
+                                                    <TableCell className="text-right font-semibold whitespace-nowrap">{draw.Score || 'N/A'}</TableCell>
+                                                    <TableCell className="text-right whitespace-nowrap">{draw["Total Draw Invitations"] || 'N/A'}</TableCell>
+                                                    <TableCell className="text-right whitespace-nowrap">{draw["NOC/Other"] || 'N/A'}</TableCell>
+                                                    <TableCell>
+                                                         <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
+                                                            <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
+                                                                <ExternalLink className="h-4 w-4" />
+                                                                <span className="sr-only">Source</span>
+                                                            </Link>
+                                                        </Button>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </div>
                             </Card>
                         )}
 
@@ -535,5 +537,5 @@ export function DrawTrackerClient({
     </div>
   );
 }
-
+    
     
