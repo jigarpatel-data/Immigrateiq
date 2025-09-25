@@ -191,10 +191,8 @@ export function DrawTrackerClient({
           newFilters.category = value;
       }
 
-      if (!isMobile) {
-          fetchDraws(undefined, true, activeSearchTerm, newFilters);
-          setSelectedDraw(null);
-      }
+      fetchDraws(undefined, true, activeSearchTerm, newFilters);
+      setSelectedDraw(null);
   };
 
   const applyMobileFilters = () => {
@@ -249,52 +247,8 @@ export function DrawTrackerClient({
                       <CardTitle className="text-2xl md:text-3xl font-bold tracking-tight">{title}</CardTitle>
                       <CardDescription className="pt-1">{description}</CardDescription>
                       
-                      {/* Desktop Filters */}
-                      <form onSubmit={handleSearch} className="hidden lg:flex flex-wrap gap-4 pt-4">
-                          <div className="relative flex-grow min-w-[200px]">
-                              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                              <Input 
-                                  placeholder="Ask about draws or search keywords..."
-                                  value={rawSearchTerm}
-                                  onChange={(e) => setRawSearchTerm(e.target.value)}
-                                  className="pl-10"
-                              />
-                          </div>
-                          <Select value={provinceFilter} onValueChange={(value) => handleFilterChange('province', value)}>
-                              <SelectTrigger className="w-full sm:w-auto flex-grow sm:flex-grow-0 sm:min-w-40">
-                                  <SelectValue placeholder="Filter by province" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                  {provinceOptions.map(option => (
-                                      <SelectItem key={option} value={option}>{option}</SelectItem>
-                                  ))}
-                              </SelectContent>
-                          </Select>
-                          <Select value={categoryFilter} onValueChange={(value) => handleFilterChange('category', value)}>
-                              <SelectTrigger className="w-full sm:w-auto flex-grow sm:flex-grow-0 sm:min-w-40">
-                                  <SelectValue placeholder="Filter by category" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                  {categoryOptions.map(option => (
-                                      <SelectItem key={option} value={option}>{option}</SelectItem>
-                                  ))}
-                              </SelectContent>
-                          </Select>
-                          <Button type="submit" id="manual-search-button" className="w-full sm:w-auto" disabled={loading}>
-                          {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Search className="mr-2 h-4 w-4" />}
-                          Search
-                          </Button>
-                      
-                          {activeFilterCount > 0 && (
-                              <Button variant="ghost" type="button" onClick={() => resetFilters()}>
-                                  <X className="mr-2 h-4 w-4" />
-                                  Reset
-                              </Button>
-                          )}
-                      </form>
-
-                      {/* Mobile/Tablet Filters */}
-                      <div className="lg:hidden pt-4">
+                      {/* Unified Filters */}
+                      <div className="pt-4">
                         <form onSubmit={handleSearch} className="flex gap-2">
                            <div className="relative flex-grow">
                               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
