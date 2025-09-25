@@ -423,7 +423,7 @@ export function DrawTrackerClient({
                         )}
                         {viewMode === 'table' && !isMobile && (
                              <Card>
-                                <div className="relative w-full overflow-auto">
+                                <div className="w-full overflow-x-auto">
                                     <Table>
                                         <TableHeader>
                                             <TableRow>
@@ -544,6 +544,7 @@ export function DrawTrackerClient({
 }
     
     
+
 
 
 
