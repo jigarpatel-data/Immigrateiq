@@ -52,6 +52,8 @@ import {
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 
 
 type DrawTrackerClientProps = {
@@ -248,15 +250,13 @@ export function DrawTrackerClient({
                   <CardHeader>
                     <div className="flex justify-between items-center">
                         <CardTitle className="text-2xl md:text-3xl font-bold tracking-tight">{title}</CardTitle>
-                        <div className="flex items-center gap-1 rounded-md bg-muted p-1">
-                            <Button variant={viewMode === 'card' ? 'secondary' : 'ghost'} size="sm" onClick={() => setViewMode('card')}>
-                                <List className="h-4 w-4"/>
-                                <span className="ml-2 hidden sm:inline">Card</span>
-                            </Button>
-                             <Button variant={viewMode === 'table' ? 'secondary' : 'ghost'} size="sm" onClick={() => setViewMode('table')}>
-                                <TableIcon className="h-4 w-4" />
-                                <span className="ml-2 hidden sm:inline">Table</span>
-                            </Button>
+                         <div className="flex items-center space-x-2">
+                          <Switch
+                            id="table-view-switch"
+                            checked={viewMode === 'table'}
+                            onCheckedChange={(checked) => setViewMode(checked ? 'table' : 'card')}
+                          />
+                          <Label htmlFor="table-view-switch">Table View</Label>
                         </div>
                     </div>
                       <CardDescription className="pt-1">{description}</CardDescription>
@@ -313,8 +313,11 @@ export function DrawTrackerClient({
                                     </div>
                                 </div>
                                 <SheetFooter>
+                                    {activeFilterCount > 0 && (
+                                     <Button variant="ghost" onClick={resetFilters}>Reset</Button>
+                                    )}
                                     <SheetClose asChild>
-                                        <Button variant="outline">Close</Button>
+                                        <Button>Apply</Button>
                                     </SheetClose>
                                 </SheetFooter>
                             </SheetContent>
@@ -384,27 +387,29 @@ export function DrawTrackerClient({
                                             </div>
                                         </div>
                                         <Separator />
-                                        <div className="space-y-2 text-sm">
-                                            <div className="flex justify-between">
-                                                <span className="text-muted-foreground">Min. Score:</span>
-                                                <span className="font-semibold">{draw.Score || 'N/A'}</span>
-                                            </div>
-                                             <div className="flex justify-between">
-                                                <span className="text-muted-foreground">Invitations:</span>
-                                                <div className="flex items-center gap-1.5">
-                                                    <span className="font-semibold">{draw["Total Draw Invitations"] || 'N/A'}</span>
-                                                    <TooltipProvider>
-                                                        <Tooltip>
-                                                            <TooltipTrigger asChild><button onClick={(e) => e.stopPropagation()}><Info className="h-4 w-4 text-muted-foreground" /></button></TooltipTrigger>
-                                                            <TooltipContent><p className="max-w-xs">Invitations for this specific draw, not just this occupation.</p></TooltipContent>
-                                                        </Tooltip>
-                                                    </TooltipProvider>
-                                                </div>
-                                            </div>
-                                            <div className="flex justify-between items-start">
-                                                <span className="text-muted-foreground shrink-0 pr-2">NOC/Occupations:</span>
-                                                <span className="font-semibold text-right truncate" title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</span>
-                                            </div>
+                                        <div className="grid gap-4 sm:grid-cols-1">
+                                          <div className="space-y-2 text-sm">
+                                              <div className="flex justify-between">
+                                                  <span className="text-muted-foreground">Min. Score:</span>
+                                                  <span className="font-semibold">{draw.Score || 'N/A'}</span>
+                                              </div>
+                                              <div className="flex justify-between">
+                                                  <span className="text-muted-foreground">Invitations:</span>
+                                                  <div className="flex items-center gap-1.5">
+                                                      <span className="font-semibold">{draw["Total Draw Invitations"] || 'N/A'}</span>
+                                                      <TooltipProvider>
+                                                          <Tooltip>
+                                                              <TooltipTrigger asChild><button onClick={(e) => e.stopPropagation()}><Info className="h-4 w-4 text-muted-foreground" /></button></TooltipTrigger>
+                                                              <TooltipContent><p className="max-w-xs">Invitations for this specific draw, not just this occupation.</p></TooltipContent>
+                                                          </Tooltip>
+                                                      </TooltipProvider>
+                                                  </div>
+                                              </div>
+                                              <div className="flex justify-between items-start">
+                                                  <span className="text-muted-foreground shrink-0 pr-2">NOC/Occupations:</span>
+                                                  <span className="font-semibold text-right truncate" title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</span>
+                                              </div>
+                                          </div>
                                         </div>
                                     </div>
                                     </Card>
