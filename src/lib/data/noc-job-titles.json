@@ -22,5 +22,49 @@
       "roofer helper",
       "stabber - pipeline construction"
     ]
+  },
+  {
+    "nocCode": "73111",
+    "nocTitle": "Glaziers",
+    "exampleJobTitles": [
+      "glazier",
+      "building glazier",
+      "plate glass installer",
+      "stained glass glazier",
+      "glazier and metal mechanic"
+    ]
+  },
+  {
+    "nocCode": "72106",
+    "nocTitle": "Welders and related machine operators",
+    "exampleJobTitles": [
+      "welder",
+      "brazer",
+      "welding machine operator",
+      "arc welder",
+      "gas welder",
+      "pipe welder"
+    ]
+  },
+  {
+    "nocCode": "72200",
+    "nocTitle": "Electricians (except industrial and power system)",
+    "exampleJobTitles": [
+      "electrician",
+      "construction electrician",
+      "domestic and rural electrician",
+      "journeyman electrician"
+    ]
+  },
+  {
+    "nocCode": "21231",
+    "nocTitle": "Software engineers and designers",
+    "exampleJobTitles": [
+      "software engineer",
+      "software designer",
+      "application developer",
+      "systems engineer",
+      "tech lead"
+    ]
   }
 ]
