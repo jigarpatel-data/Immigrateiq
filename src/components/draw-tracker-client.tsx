@@ -427,13 +427,13 @@ export function DrawTrackerClient({
                                     <Table>
                                         <TableHeader>
                                             <TableRow>
-                                                <TableHead>Date</TableHead>
-                                                <TableHead>Category</TableHead>
-                                                <TableHead>Province</TableHead>
-                                                <TableHead className="text-right">Score</TableHead>
-                                                <TableHead className="text-right">Invitations</TableHead>
-                                                <TableHead className="text-right">NOC/Occupations</TableHead>
-                                                <TableHead>Source</TableHead>
+                                                <TableHead className="sticky top-0 bg-card">Date</TableHead>
+                                                <TableHead className="sticky top-0 bg-card">Category</TableHead>
+                                                <TableHead className="sticky top-0 bg-card">Province</TableHead>
+                                                <TableHead className="text-right sticky top-0 bg-card">Score</TableHead>
+                                                <TableHead className="text-right sticky top-0 bg-card">Invitations</TableHead>
+                                                <TableHead className="text-right sticky top-0 bg-card">NOC/Occupations</TableHead>
+                                                <TableHead className="sticky top-0 bg-card">Source</TableHead>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
@@ -497,7 +497,7 @@ export function DrawTrackerClient({
                 )}
               </div>
           </div>
-          <div className={cn("lg:col-span-1", !selectedDraw ? 'hidden' : 'block')}>
+          <div className={cn("lg:col-span-1", !isPanelOpen ? 'hidden' : 'block')}>
               {selectedDraw && (
                   <div className="sticky top-6">
                       {isMobile ? (
@@ -544,5 +544,6 @@ export function DrawTrackerClient({
 }
     
     
+
 
 
