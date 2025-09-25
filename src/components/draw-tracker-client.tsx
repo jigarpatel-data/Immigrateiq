@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from 'react';
@@ -438,7 +439,7 @@ export function DrawTrackerClient({
                                                     onClick={() => handleDrawClick(draw)}
                                                     className={cn("cursor-pointer", selectedDraw?.id === draw.id && 'bg-muted/50')}
                                                 >
-                                                    <TableCell className="font-medium">{draw["Draw Date"]}</TableCell>
+                                                    <TableCell className="font-medium whitespace-nowrap">{draw["Draw Date"]}</TableCell>
                                                     <TableCell>{draw.Category}</TableCell>
                                                     <TableCell>{draw.Province}</TableCell>
                                                     <TableCell className="text-right font-semibold">{draw.Score || 'N/A'}</TableCell>
@@ -539,3 +540,4 @@ export function DrawTrackerClient({
 }
     
     
+
