@@ -200,7 +200,14 @@ export function DrawTrackerClient({
   };
   
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    setShowScrollTop(e.currentTarget.scrollTop > 300);
+    const target = e.currentTarget;
+    setShowScrollTop(target.scrollTop > 300);
+
+    // Auto-load more content
+    const threshold = 100; // pixels from bottom
+    if (target.scrollHeight - target.scrollTop - target.clientHeight < threshold) {
+      handleLoadMore();
+    }
   };
   
   const scrollToTop = () => {
@@ -400,7 +407,7 @@ export function DrawTrackerClient({
                               </div>
                           ) : (
                             <Card>
-                              <div className="relative w-full overflow-auto">
+                              <div className="relative w-full">
                                 <Table>
                                     <TableHeader className="sticky top-0 bg-card z-10">
                                       <TableRow>
@@ -422,11 +429,11 @@ export function DrawTrackerClient({
                                           onClick={() => handleDrawClick(draw)}
                                           className={cn("cursor-pointer", selectedDraw?.id === draw.id && 'bg-muted/50')}
                                         >
-                                          <TableCell>{draw["Draw Date"]}</TableCell>
+                                          <TableCell className="whitespace-nowrap">{draw["Draw Date"]}</TableCell>
                                           <TableCell>{draw.Category}</TableCell>
                                           <TableCell>{draw.Province}</TableCell>
-                                          <TableCell className="text-right font-semibold">{draw.Score || 'N/A'}</TableCell>
-                                          <TableCell className="text-right">{draw["Total Draw Invitations"] || 'N/A'}</TableCell>
+                                          <TableCell className="text-right font-semibold whitespace-nowrap">{draw.Score || 'N/A'}</TableCell>
+                                          <TableCell className="text-right whitespace-nowrap">{draw["Total Draw Invitations"] || 'N/A'}</TableCell>
                                           <TableCell>{draw["NOC/Other"] || 'N/A'}</TableCell>
                                           <TableCell>
                                             <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
@@ -452,11 +459,6 @@ export function DrawTrackerClient({
                                       Loading More...
                                   </Button>
                               </div>
-                          )}
-                          {hasMore && !loadingMore && (
-                            <div className="flex justify-center mt-4">
-                              <Button onClick={handleLoadMore}>Load More</Button>
-                            </div>
                           )}
                           {!loading && !loadingMore && !hasMore && allDraws.length > 0 && (
                               <div className="text-center text-muted-foreground mt-6">
@@ -527,6 +529,7 @@ export function DrawTrackerClient({
 }
     
     
+
 
 
 
