@@ -82,9 +82,6 @@ export function DrawTrackerClient({
   const [error, setError] = useState<string | null>(initialError || null);
   const [offset, setOffset] = useState<string | undefined>(initialOffset);
   const [hasMore, setHasMore] = useState(!!initialOffset);
-  
-  const observer = useRef<IntersectionObserver | null>(null);
-  const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const [rawSearchTerm, setRawSearchTerm] = useState('');
   const [activeSearchTerm, setActiveSearchTerm] = useState('');
@@ -158,31 +155,12 @@ export function DrawTrackerClient({
       setLoading(false);
       setLoadingMore(false);
   }, [provinceFilter, categoryFilter, activeSearchTerm]);
-
-  // Effect for infinite scroll
-  useEffect(() => {
-    const handleObserver = (entries: IntersectionObserverEntry[]) => {
-      const target = entries[0];
-      if (target.isIntersecting && hasMore && !loadingMore && !loading) {
-        fetchDraws(offset);
-      }
-    };
-    
-    observer.current = new IntersectionObserver(handleObserver, {
-      rootMargin: '200px',
-    });
-    
-    const currentLoadMoreRef = loadMoreRef.current;
-    if (currentLoadMoreRef) {
-      observer.current.observe(currentLoadMoreRef);
+  
+  const handleLoadMore = () => {
+    if (hasMore && !loadingMore && !loading) {
+      fetchDraws(offset);
     }
-
-    return () => {
-      if(observer.current && currentLoadMoreRef) {
-        observer.current.unobserve(currentLoadMoreRef);
-      }
-    };
-  }, [hasMore, loadingMore, loading, offset, fetchDraws]);
+  };
   
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -421,9 +399,9 @@ export function DrawTrackerClient({
                                   ))}
                               </div>
                           ) : (
-                              <Card>
-                                <div className="relative w-full overflow-auto">
-                                  <Table>
+                            <Card>
+                              <div className="relative w-full overflow-auto">
+                                <Table>
                                     <TableHeader className="sticky top-0 bg-card z-10">
                                       <TableRow>
                                         <TableHead>Date</TableHead>
@@ -435,6 +413,8 @@ export function DrawTrackerClient({
                                         <TableHead>Source</TableHead>
                                       </TableRow>
                                     </TableHeader>
+                                  </Table>
+                                  <Table>
                                     <TableBody>
                                       {allDraws.map((draw) => (
                                         <TableRow 
@@ -461,11 +441,10 @@ export function DrawTrackerClient({
                                     </TableBody>
                                   </Table>
                                 </div>
-                              </Card>
+                            </Card>
                           )}
 
 
-                          {hasMore && <div ref={loadMoreRef} className="h-1 col-span-full" />}
                           {loadingMore && (
                               <div className="flex justify-center mt-6">
                                   <Button variant="secondary" disabled>
@@ -473,6 +452,11 @@ export function DrawTrackerClient({
                                       Loading More...
                                   </Button>
                               </div>
+                          )}
+                          {hasMore && !loadingMore && (
+                            <div className="flex justify-center mt-4">
+                              <Button onClick={handleLoadMore}>Load More</Button>
+                            </div>
                           )}
                           {!loading && !loadingMore && !hasMore && allDraws.length > 0 && (
                               <div className="text-center text-muted-foreground mt-6">
@@ -543,6 +527,7 @@ export function DrawTrackerClient({
 }
     
     
+
 
 
 
