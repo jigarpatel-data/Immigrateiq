@@ -101,11 +101,7 @@ export function DrawTrackerClient({
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
-    if (!isMobile) {
-      setIsPanelOpen(true);
-    } else {
-      setIsPanelOpen(false);
-    }
+    setIsPanelOpen(!isMobile);
   }, [isMobile]);
 
   const fetchDraws = useCallback(async (currentOffset?: string, isNewFilter = false, search?: string, newFilters?: { province: string, category: string }) => {
@@ -147,8 +143,9 @@ export function DrawTrackerClient({
     if (!isPanelOpen && !isMobile) {
       setIsPanelOpen(true);
     }
+    
     if (isMobile) {
-      // It will be handled by the sheet opening
+      // Sheet will open via state change
     } else if (!isPanelOpen) {
       setIsPanelOpen(true);
     }
@@ -165,10 +162,10 @@ export function DrawTrackerClient({
       setLoadingDetails(false);
     }
   }, [details, isPanelOpen, isMobile]);
-
+  
   useEffect(() => {
     if (initialDraws.length > 0 && !selectedDraw && !isMobile) {
-      handleDrawClick(initialDraws[0]);
+        handleDrawClick(initialDraws[0]);
     }
   }, [initialDraws, selectedDraw, isMobile, handleDrawClick]);
   
@@ -352,157 +349,156 @@ export function DrawTrackerClient({
                   </CardHeader>
                 </Card>
               </div>
-              <div className="relative">
-                <ScrollArea className="h-[calc(100vh-22rem)]" viewportRef={viewportRef} onScroll={handleScroll}>
-                    {loading && allDraws.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center text-center py-16">
-                            <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
-                            <h1 className="text-xl md:text-2xl font-bold tracking-tight">Loading Draws...</h1>
-                            <p className="text-muted-foreground">This may take a moment.</p>
-                        </div>
-                    ) : error ? (
-                        <div className="text-center py-16 bg-destructive/10 text-destructive border border-destructive rounded-lg p-4">
-                            <X className="mx-auto h-12 w-12 mb-4" />
-                            <p className="text-lg font-semibold">Failed to load draws</p>
-                            <p>{error}</p>
-                        </div>
-                    ) : allDraws.length === 0 ? (
-                            <div className="text-center py-16 text-muted-foreground col-span-full">
-                                <Filter className="mx-auto h-12 w-12 mb-4" />
-                                <p className="text-lg font-semibold">No draws found</p>
-                                <p>Try adjusting your search or filters.</p>
+                <div className="relative">
+                    <ScrollArea className="h-[calc(100vh-22rem)]" viewportRef={viewportRef} onScroll={handleScroll}>
+                        {loading && allDraws.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center text-center py-16">
+                                <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
+                                <h1 className="text-xl md:text-2xl font-bold tracking-tight">Loading Draws...</h1>
+                                <p className="text-muted-foreground">This may take a moment.</p>
                             </div>
-                    ) : (
-                        <>
-                        {(viewMode === 'card' || isMobile) ? (
-                            <div className="space-y-4 pt-4">
-                                {allDraws.map((draw) => (
-                                    <Card 
-                                        key={draw.id} 
-                                        onClick={() => handleDrawClick(draw)}
-                                        className={cn(
-                                            "cursor-pointer transition-all",
-                                            selectedDraw?.id === draw.id && 'border-accent ring-2 ring-accent'
-                                        )}
-                                    >
-                                    <div className="p-4 space-y-3">
-                                        <div className="flex justify-between items-start gap-4">
-                                            <div className="flex-1">
-                                                <p className="font-semibold text-base">{draw.Category}</p>
-                                                <span className="text-xs text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</span>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <Badge variant="secondary" className="flex items-center gap-1.5 text-xs">
-                                                <Building className="h-3.5 w-3.5" />
-                                                {draw.Province}
-                                                </Badge>
-                                                <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
-                                                    <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
-                                                        <ExternalLink className="h-4 w-4" />
-                                                        <span className="sr-only">Source</span>
-                                                    </Link>
-                                                </Button>
-                                            </div>
-                                        </div>
-                                        <Separator />
-                                        <div className="space-y-2 text-sm">
-                                            <div className="flex justify-start items-center gap-2">
-                                                <span className="text-muted-foreground">Min. Score:</span>
-                                                <span className="font-semibold">{draw.Score || 'N/A'}</span>
-                                            </div>
-                                            <div className="flex justify-start items-center gap-2">
-                                                <span className="text-muted-foreground">Invitations:</span>
-                                                <div className="flex items-center gap-1.5">
-                                                    <span className="font-semibold">{draw["Total Draw Invitations"] || 'N/A'}</span>
-                                                    <TooltipProvider>
-                                                        <Tooltip>
-                                                            <TooltipTrigger asChild><button onClick={(e) => e.stopPropagation()}><Info className="h-4 w-4 text-muted-foreground" /></button></TooltipTrigger>
-                                                            <TooltipContent><p className="max-w-xs">Invitations for this specific draw, not just this occupation.</p></TooltipContent>
-                                                        </Tooltip>
-                                                    </TooltipProvider>
+                        ) : error ? (
+                            <div className="text-center py-16 bg-destructive/10 text-destructive border border-destructive rounded-lg p-4">
+                                <X className="mx-auto h-12 w-12 mb-4" />
+                                <p className="text-lg font-semibold">Failed to load draws</p>
+                                <p>{error}</p>
+                            </div>
+                        ) : allDraws.length === 0 ? (
+                                <div className="text-center py-16 text-muted-foreground col-span-full">
+                                    <Filter className="mx-auto h-12 w-12 mb-4" />
+                                    <p className="text-lg font-semibold">No draws found</p>
+                                    <p>Try adjusting your search or filters.</p>
+                                </div>
+                        ) : (
+                            <>
+                            {(viewMode === 'card' || isMobile) ? (
+                                <div className="space-y-4 pt-4">
+                                    {allDraws.map((draw) => (
+                                        <Card 
+                                            key={draw.id} 
+                                            onClick={() => handleDrawClick(draw)}
+                                            className={cn(
+                                                "cursor-pointer transition-all",
+                                                selectedDraw?.id === draw.id && 'border-accent ring-2 ring-accent'
+                                            )}
+                                        >
+                                        <div className="p-4 space-y-3">
+                                            <div className="flex justify-between items-start gap-4">
+                                                <div className="flex-1">
+                                                    <p className="font-semibold text-base">{draw.Category}</p>
+                                                    <span className="text-xs text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</span>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <Badge variant="secondary" className="flex items-center gap-1.5 text-xs">
+                                                    <Building className="h-3.5 w-3.5" />
+                                                    {draw.Province}
+                                                    </Badge>
+                                                    <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
+                                                        <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
+                                                            <ExternalLink className="h-4 w-4" />
+                                                            <span className="sr-only">Source</span>
+                                                        </Link>
+                                                    </Button>
                                                 </div>
                                             </div>
-                                            <div className="flex justify-start items-start gap-2">
-                                                <span className="text-muted-foreground shrink-0">NOC/Occupations:</span>
-                                                <span className="font-semibold text-left" title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</span>
+                                            <Separator />
+                                            <div className="space-y-2 text-sm">
+                                                <div className="flex justify-start items-center gap-2">
+                                                    <span className="text-muted-foreground">Min. Score:</span>
+                                                    <span className="font-semibold">{draw.Score || 'N/A'}</span>
+                                                </div>
+                                                <div className="flex justify-start items-center gap-2">
+                                                    <span className="text-muted-foreground">Invitations:</span>
+                                                    <div className="flex items-center gap-1.5">
+                                                        <span className="font-semibold">{draw["Total Draw Invitations"] || 'N/A'}</span>
+                                                        <TooltipProvider>
+                                                            <Tooltip>
+                                                                <TooltipTrigger asChild><button onClick={(e) => e.stopPropagation()}><Info className="h-4 w-4 text-muted-foreground" /></button></TooltipTrigger>
+                                                                <TooltipContent><p className="max-w-xs">Invitations for this specific draw, not just this occupation.</p></TooltipContent>
+                                                            </Tooltip>
+                                                        </TooltipProvider>
+                                                    </div>
+                                                </div>
+                                                <div className="flex justify-start items-start gap-2">
+                                                    <span className="text-muted-foreground shrink-0">NOC/Occupations:</span>
+                                                    <span className="font-semibold text-left" title={draw["NOC/Other"] || 'Not specified'}>{draw["NOC/Other"] || 'Not specified'}</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    </Card>
-                                ))}
-                            </div>
-                        ) : (
-                          <div className="space-y-4 pt-4">
-                            <Card>
-                              <div className="relative">
-                                <Table>
-                                  <TableHeader className="sticky top-0 bg-card z-10">
-                                    <TableRow>
-                                      <TableHead>Date</TableHead>
-                                      <TableHead>Category</TableHead>
-                                      <TableHead>Province</TableHead>
-                                      <TableHead className="text-right">Score</TableHead>
-                                      <TableHead className="text-right">Invitations</TableHead>
-                                      <TableHead>NOC/Occupations</TableHead>
-                                      <TableHead>Source</TableHead>
-                                    </TableRow>
-                                  </TableHeader>
-                                  <TableBody>
-                                    {allDraws.map((draw) => (
-                                      <TableRow 
-                                        key={draw.id} 
-                                        onClick={() => handleDrawClick(draw)}
-                                        className={cn("cursor-pointer", selectedDraw?.id === draw.id && 'bg-muted/50')}
-                                      >
-                                        <TableCell>{draw["Draw Date"]}</TableCell>
-                                        <TableCell>{draw.Category}</TableCell>
-                                        <TableCell>{draw.Province}</TableCell>
-                                        <TableCell className="text-right font-semibold">{draw.Score || 'N/A'}</TableCell>
-                                        <TableCell className="text-right">{draw["Total Draw Invitations"] || 'N/A'}</TableCell>
-                                        <TableCell>{draw["NOC/Other"] || 'N/A'}</TableCell>
-                                        <TableCell>
-                                          <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
-                                            <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
-                                              <ExternalLink className="h-4 w-4" />
-                                              <span className="sr-only">Source</span>
-                                            </Link>
-                                          </Button>
-                                        </TableCell>
-                                      </TableRow>
+                                        </Card>
                                     ))}
-                                  </TableBody>
-                                </Table>
-                              </div>
-                            </Card>
-                          </div>
-                        )}
+                                </div>
+                            ) : (
+                                <div className="pt-4">
+                                <Card>
+                                    <div className="relative overflow-x-auto">
+                                    <Table>
+                                        <TableHeader className="sticky top-0 bg-card z-10">
+                                            <TableRow>
+                                                <TableHead className="whitespace-nowrap">Date</TableHead>
+                                                <TableHead>Category</TableHead>
+                                                <TableHead>Province</TableHead>
+                                                <TableHead className="text-right whitespace-nowrap">Score</TableHead>
+                                                <TableHead className="text-right whitespace-nowrap">Invitations</TableHead>
+                                                <TableHead>NOC/Occupations</TableHead>
+                                                <TableHead>Source</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                        {allDraws.map((draw) => (
+                                            <TableRow 
+                                                key={draw.id} 
+                                                onClick={() => handleDrawClick(draw)}
+                                                className={cn("cursor-pointer", selectedDraw?.id === draw.id && 'bg-muted/50')}
+                                            >
+                                                <TableCell className="whitespace-nowrap">{draw["Draw Date"]}</TableCell>
+                                                <TableCell>{draw.Category}</TableCell>
+                                                <TableCell>{draw.Province}</TableCell>
+                                                <TableCell className="text-right font-semibold whitespace-nowrap">{draw.Score || 'N/A'}</TableCell>
+                                                <TableCell className="text-right whitespace-nowrap">{draw["Total Draw Invitations"] || 'N/A'}</TableCell>
+                                                <TableCell>{draw["NOC/Other"] || 'N/A'}</TableCell>
+                                                <TableCell>
+                                                    <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
+                                                        <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
+                                                            <ExternalLink className="h-4 w-4" />
+                                                            <span className="sr-only">Source</span>
+                                                        </Link>
+                                                    </Button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                        </TableBody>
+                                    </Table>
+                                    </div>
+                                </Card>
+                                </div>
+                            )}
 
-
-                        {loadingMore && (
-                            <div className="flex justify-center mt-6">
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            </div>
+                            {loadingMore && (
+                                <div className="flex justify-center mt-6">
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                </div>
+                            )}
+                            {!loading && !loadingMore && !hasMore && allDraws.length > 0 && (
+                                <div className="text-center text-muted-foreground mt-6">
+                                    <p>You've reached the end of the list.</p>
+                                </div>
+                            )}
+                            </>
                         )}
-                        {!loading && !loadingMore && !hasMore && allDraws.length > 0 && (
-                            <div className="text-center text-muted-foreground mt-6">
-                                <p>You've reached the end of the list.</p>
-                            </div>
-                        )}
-                        </>
+                    </ScrollArea>
+                     {showScrollTop && (
+                        <Button 
+                            onClick={scrollToTop}
+                            variant="outline"
+                            size="icon"
+                            className="absolute bottom-2 right-4 h-10 w-10 rounded-full ring-1 ring-white"
+                        >
+                            <ArrowUp className="h-5 w-5" />
+                            <span className="sr-only">Scroll to top</span>
+                        </Button>
                     )}
-                </ScrollArea>
-                {showScrollTop && (
-                    <Button 
-                        onClick={scrollToTop}
-                        variant="outline"
-                        size="icon"
-                        className="absolute bottom-2 right-4 h-10 w-10 rounded-full ring-1 ring-white"
-                    >
-                        <ArrowUp className="h-5 w-5" />
-                        <span className="sr-only">Scroll to top</span>
-                    </Button>
-                )}
-              </div>
+                </div>
           </div>
           <div className={cn("lg:col-span-1", !isPanelOpen ? 'hidden' : 'block')}>
               {selectedDraw && (
@@ -561,3 +557,6 @@ export function DrawTrackerClient({
 
 
 
+
+
+    
