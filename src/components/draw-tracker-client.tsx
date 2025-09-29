@@ -101,6 +101,7 @@ export function DrawTrackerClient({
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
+    // We only want the panel to be open by default on desktop, not on mobile.
     setIsPanelOpen(!isMobile);
   }, [isMobile]);
 
@@ -128,15 +129,12 @@ export function DrawTrackerClient({
         setAllDraws(prev => isNewFilter ? newDrawsWithId : [...prev, ...newDrawsWithId]);
         setOffset(newOffset);
         setHasMore(!!newOffset);
-        if (isNewFilter && newDrawsWithId.length > 0 && !isMobile) {
-          handleDrawClick(newDrawsWithId[0]);
-        }
       } else {
         setHasMore(false);
       }
       setLoading(false);
       setLoadingMore(false);
-  }, [provinceFilter, categoryFilter, activeSearchTerm, isMobile]);
+  }, [provinceFilter, categoryFilter, activeSearchTerm]);
 
   const handleDrawClick = useCallback(async (draw: Draw) => {
     setSelectedDraw(draw);
@@ -145,7 +143,7 @@ export function DrawTrackerClient({
     }
     
     if (isMobile) {
-      // Sheet will open via state change
+      // The Sheet component will handle being displayed
     } else if (!isPanelOpen) {
       setIsPanelOpen(true);
     }
@@ -162,12 +160,6 @@ export function DrawTrackerClient({
       setLoadingDetails(false);
     }
   }, [details, isPanelOpen, isMobile]);
-  
-  useEffect(() => {
-    if (initialDraws.length > 0 && !selectedDraw && !isMobile) {
-        handleDrawClick(initialDraws[0]);
-    }
-  }, [initialDraws, selectedDraw, isMobile, handleDrawClick]);
   
   const handleLoadMore = () => {
     if (hasMore && !loadingMore && !loading) {
@@ -186,9 +178,7 @@ export function DrawTrackerClient({
     const finalSearchTerm = searchTerm || rawSearchTerm;
     setActiveSearchTerm(finalSearchTerm);
     await fetchDraws(undefined, true, finalSearchTerm, { province: provinceFilter, category: categoryFilter });
-    if (!isMobile) {
-      setSelectedDraw(null);
-    }
+    setSelectedDraw(null);
   }
 
   const handleFilterChange = (type: 'province' | 'category', value: string) => {
@@ -207,9 +197,7 @@ export function DrawTrackerClient({
       
       setIsFilterSheetOpen(false);
       fetchDraws(undefined, true, activeSearchTerm, newFilters);
-      if (!isMobile) {
-       setSelectedDraw(null);
-      }
+      setSelectedDraw(null);
   };
 
   const resetFilters = () => {
@@ -218,9 +206,7 @@ export function DrawTrackerClient({
     setProvinceFilter('All');
     setCategoryFilter('All');
     fetchDraws(undefined, true, '', {province: 'All', category: 'All'});
-    if (!isMobile) {
-      setSelectedDraw(null);
-    }
+    setSelectedDraw(null);
   };
   
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -461,7 +447,7 @@ export function DrawTrackerClient({
                                                     <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
                                                         <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
                                                             <ExternalLink className="h-4 w-4" />
-                                                            <span className="sr-only">Source</span>
+                                                            <span className="sr  -only">Source</span>
                                                         </Link>
                                                     </Button>
                                                 </TableCell>
@@ -500,7 +486,7 @@ export function DrawTrackerClient({
                     )}
                 </div>
           </div>
-          <div className={cn("lg:col-span-1", !isPanelOpen ? 'hidden' : 'block')}>
+          <div className={cn("lg:col-span-1", !selectedDraw ? 'hidden' : 'block')}>
               {selectedDraw && (
                   <div className="sticky top-6">
                       {isMobile ? (
