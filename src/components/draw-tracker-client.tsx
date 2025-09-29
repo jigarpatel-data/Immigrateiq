@@ -94,36 +94,17 @@ export function DrawTrackerClient({
   const [details, setDetails] = useState<Record<string, string>>({});
   const [loadingDetails, setLoadingDetails] = useState(false);
   const [viewMode, setViewMode] = useState<'card' | 'table'>('card');
-  const [isPanelOpen, setIsPanelOpen] = useState(true);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
   
   const isMobile = useIsMobile();
   const viewportRef = useRef<HTMLDivElement>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  const handleDrawClick = useCallback(async (draw: Draw) => {
-    setSelectedDraw(draw);
-    if (!isPanelOpen && !isMobile) {
+  useEffect(() => {
+    if (!isMobile) {
       setIsPanelOpen(true);
     }
-    if (!details[draw.id]) {
-      setLoadingDetails(true);
-      const result = await getDrawDetails(draw.id);
-      if (result.details) {
-        const dirtyHtml = marked.parse(result.details, { breaks: true }) as string;
-        setDetails(prev => ({ ...prev, [draw.id]: dirtyHtml }));
-      } else if (result.error) {
-        setDetails(prev => ({ ...prev, [draw.id]: result.error! }));
-      }
-      setLoadingDetails(false);
-    }
-  }, [details, isPanelOpen, isMobile]);
-
-  useEffect(() => {
-    if (initialDraws.length > 0 && !selectedDraw && !isMobile) {
-      handleDrawClick(initialDraws[0]);
-    }
-  }, [initialDraws, selectedDraw, isMobile, handleDrawClick]);
-
+  }, [isMobile]);
 
   const fetchDraws = useCallback(async (currentOffset?: string, isNewFilter = false, search?: string, newFilters?: { province: string, category: string }) => {
       if (isNewFilter) {
@@ -149,16 +130,53 @@ export function DrawTrackerClient({
         setAllDraws(prev => isNewFilter ? newDrawsWithId : [...prev, ...newDrawsWithId]);
         setOffset(newOffset);
         setHasMore(!!newOffset);
+        if (isNewFilter && newDrawsWithId.length > 0 && !isMobile) {
+          handleDrawClick(newDrawsWithId[0]);
+        }
       } else {
         setHasMore(false);
       }
       setLoading(false);
       setLoadingMore(false);
-  }, [provinceFilter, categoryFilter, activeSearchTerm]);
+  }, [provinceFilter, categoryFilter, activeSearchTerm, isMobile]);
+
+  const handleDrawClick = useCallback(async (draw: Draw) => {
+    setSelectedDraw(draw);
+    if (!isPanelOpen && !isMobile) {
+      setIsPanelOpen(true);
+    }
+    if (isMobile) {
+      // It will be handled by the sheet opening
+    } else if (!isPanelOpen) {
+      setIsPanelOpen(true);
+    }
+
+    if (!details[draw.id]) {
+      setLoadingDetails(true);
+      const result = await getDrawDetails(draw.id);
+      if (result.details) {
+        const dirtyHtml = marked.parse(result.details, { breaks: true }) as string;
+        setDetails(prev => ({ ...prev, [draw.id]: dirtyHtml }));
+      } else if (result.error) {
+        setDetails(prev => ({ ...prev, [draw.id]: result.error! }));
+      }
+      setLoadingDetails(false);
+    }
+  }, [details, isPanelOpen, isMobile]);
+
+  useEffect(() => {
+    if (initialDraws.length > 0 && !selectedDraw && !isMobile) {
+      handleDrawClick(initialDraws[0]);
+    }
+  }, [initialDraws, selectedDraw, isMobile, handleDrawClick]);
   
   const handleLoadMore = () => {
     if (hasMore && !loadingMore && !loading) {
-      fetchDraws(offset);
+        const currentFilters = {
+            province: provinceFilter,
+            category: categoryFilter,
+        };
+        fetchDraws(offset, false, activeSearchTerm, currentFilters);
     }
   };
   
@@ -166,9 +184,12 @@ export function DrawTrackerClient({
     e.preventDefault();
     setLoading(true);
     const { searchTerm } = await getEnhancedSearchTerm(rawSearchTerm);
-    setActiveSearchTerm(searchTerm || rawSearchTerm);
-    await fetchDraws(undefined, true, searchTerm || rawSearchTerm);
-    setSelectedDraw(null);
+    const finalSearchTerm = searchTerm || rawSearchTerm;
+    setActiveSearchTerm(finalSearchTerm);
+    await fetchDraws(undefined, true, finalSearchTerm, { province: provinceFilter, category: categoryFilter });
+    if (!isMobile) {
+      setSelectedDraw(null);
+    }
   }
 
   const handleFilterChange = (type: 'province' | 'category', value: string) => {
@@ -187,7 +208,9 @@ export function DrawTrackerClient({
       
       setIsFilterSheetOpen(false);
       fetchDraws(undefined, true, activeSearchTerm, newFilters);
-      setSelectedDraw(null);
+      if (!isMobile) {
+       setSelectedDraw(null);
+      }
   };
 
   const resetFilters = () => {
@@ -196,7 +219,9 @@ export function DrawTrackerClient({
     setProvinceFilter('All');
     setCategoryFilter('All');
     fetchDraws(undefined, true, '', {province: 'All', category: 'All'});
-    setSelectedDraw(null);
+    if (!isMobile) {
+      setSelectedDraw(null);
+    }
   };
   
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -407,57 +432,52 @@ export function DrawTrackerClient({
                               </div>
                           ) : (
                             <Card>
-                              <div className="relative w-full">
+                              <div className="relative">
                                 <Table>
-                                    <TableHeader className="sticky top-0 bg-card z-10">
-                                      <TableRow>
-                                        <TableHead>Date</TableHead>
-                                        <TableHead>Category</TableHead>
-                                        <TableHead>Province</TableHead>
-                                        <TableHead className="text-right">Score</TableHead>
-                                        <TableHead className="text-right">Invitations</TableHead>
-                                        <TableHead>NOC/Occupations</TableHead>
-                                        <TableHead>Source</TableHead>
+                                  <TableHeader className="sticky top-0 bg-card z-10">
+                                    <TableRow>
+                                      <TableHead>Date</TableHead>
+                                      <TableHead>Category</TableHead>
+                                      <TableHead>Province</TableHead>
+                                      <TableHead className="text-right">Score</TableHead>
+                                      <TableHead className="text-right">Invitations</TableHead>
+                                      <TableHead>NOC/Occupations</TableHead>
+                                      <TableHead>Source</TableHead>
+                                    </TableRow>
+                                  </TableHeader>
+                                  <TableBody>
+                                    {allDraws.map((draw) => (
+                                      <TableRow 
+                                        key={draw.id} 
+                                        onClick={() => handleDrawClick(draw)}
+                                        className={cn("cursor-pointer", selectedDraw?.id === draw.id && 'bg-muted/50')}
+                                      >
+                                        <TableCell>{draw["Draw Date"]}</TableCell>
+                                        <TableCell>{draw.Category}</TableCell>
+                                        <TableCell>{draw.Province}</TableCell>
+                                        <TableCell className="text-right font-semibold">{draw.Score || 'N/A'}</TableCell>
+                                        <TableCell className="text-right">{draw["Total Draw Invitations"] || 'N/A'}</TableCell>
+                                        <TableCell>{draw["NOC/Other"] || 'N/A'}</TableCell>
+                                        <TableCell>
+                                          <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
+                                            <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
+                                              <ExternalLink className="h-4 w-4" />
+                                              <span className="sr-only">Source</span>
+                                            </Link>
+                                          </Button>
+                                        </TableCell>
                                       </TableRow>
-                                    </TableHeader>
-                                  </Table>
-                                  <Table>
-                                    <TableBody>
-                                      {allDraws.map((draw) => (
-                                        <TableRow 
-                                          key={draw.id} 
-                                          onClick={() => handleDrawClick(draw)}
-                                          className={cn("cursor-pointer", selectedDraw?.id === draw.id && 'bg-muted/50')}
-                                        >
-                                          <TableCell className="whitespace-nowrap">{draw["Draw Date"]}</TableCell>
-                                          <TableCell>{draw.Category}</TableCell>
-                                          <TableCell>{draw.Province}</TableCell>
-                                          <TableCell className="text-right font-semibold whitespace-nowrap">{draw.Score || 'N/A'}</TableCell>
-                                          <TableCell className="text-right whitespace-nowrap">{draw["Total Draw Invitations"] || 'N/A'}</TableCell>
-                                          <TableCell>{draw["NOC/Other"] || 'N/A'}</TableCell>
-                                          <TableCell>
-                                            <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
-                                              <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
-                                                <ExternalLink className="h-4 w-4" />
-                                                <span className="sr-only">Source</span>
-                                              </Link>
-                                            </Button>
-                                          </TableCell>
-                                        </TableRow>
-                                      ))}
-                                    </TableBody>
-                                  </Table>
-                                </div>
+                                    ))}
+                                  </TableBody>
+                                </Table>
+                              </div>
                             </Card>
                           )}
 
 
                           {loadingMore && (
                               <div className="flex justify-center mt-6">
-                                  <Button variant="secondary" disabled>
-                                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                      Loading More...
-                                  </Button>
+                                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                               </div>
                           )}
                           {!loading && !loadingMore && !hasMore && allDraws.length > 0 && (
@@ -486,7 +506,7 @@ export function DrawTrackerClient({
               {selectedDraw && (
                   <div className="sticky top-6">
                       {isMobile ? (
-                          <Sheet open={!!selectedDraw} onOpenChange={(isOpen) => !isOpen && setSelectedDraw(null)}>
+                          <Sheet open={!!selectedDraw && isMobile} onOpenChange={(isOpen) => !isOpen && setSelectedDraw(null)}>
                               <SheetContent side="right" className="w-full sm:max-w-lg p-0 flex flex-col">
                                 <SheetHeader className="p-6">
                                       <SheetTitle>{selectedDraw?.Category}</SheetTitle>
@@ -529,6 +549,7 @@ export function DrawTrackerClient({
 }
     
     
+
 
 
 
