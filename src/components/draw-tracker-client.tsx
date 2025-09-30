@@ -102,13 +102,14 @@ export function DrawTrackerClient({
 
   useEffect(() => {
     // We only want the panel to be open by default on desktop, not on mobile.
-    setIsPanelOpen(!isMobile);
+    setIsPanelOpen(false);
   }, [isMobile]);
 
   const fetchDraws = useCallback(async (currentOffset?: string, isNewFilter = false, search?: string, newFilters?: { province: string, category: string }) => {
       if (isNewFilter) {
         setLoading(true);
         setAllDraws([]);
+        setSelectedDraw(null);
       } else {
         setLoadingMore(true);
       }
@@ -161,15 +162,15 @@ export function DrawTrackerClient({
     }
   }, [details, isPanelOpen, isMobile]);
   
-  const handleLoadMore = () => {
+  const handleLoadMore = useCallback(() => {
     if (hasMore && !loadingMore && !loading) {
-        const currentFilters = {
-            province: provinceFilter,
-            category: categoryFilter,
-        };
-        fetchDraws(offset, false, activeSearchTerm, currentFilters);
+      const currentFilters = {
+          province: provinceFilter,
+          category: categoryFilter,
+      };
+      fetchDraws(offset, false, activeSearchTerm, currentFilters);
     }
-  };
+  }, [hasMore, loadingMore, loading, provinceFilter, categoryFilter, activeSearchTerm, offset, fetchDraws]);
   
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -447,7 +448,7 @@ export function DrawTrackerClient({
                                                     <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
                                                         <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
                                                             <ExternalLink className="h-4 w-4" />
-                                                            <span className="sr  -only">Source</span>
+                                                            <span className="sr-only">Source</span>
                                                         </Link>
                                                     </Button>
                                                 </TableCell>
@@ -486,7 +487,7 @@ export function DrawTrackerClient({
                     )}
                 </div>
           </div>
-          <div className={cn("lg:col-span-1", !selectedDraw ? 'hidden' : 'block')}>
+          <div className={cn("lg:col-span-1 hidden", isPanelOpen && "lg:block")}>
               {selectedDraw && (
                   <div className="sticky top-6">
                       {isMobile ? (
@@ -543,6 +544,9 @@ export function DrawTrackerClient({
 
 
 
+
+
+    
 
 
     
