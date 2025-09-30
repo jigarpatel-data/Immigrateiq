@@ -1,190 +1,214 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Bot, Loader2, User, RefreshCw } from "lucide-react";
+import { crsCalculatorChatbot, type CrsCalculatorChatbotOutput } from "@/ai/flows/crs-calculator-chatbot";
+import { cn } from "@/lib/utils";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
+  CardDescription,
+  CardFooter,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { RefreshCw } from "lucide-react";
-import { ScrollArea } from "./ui/scroll-area";
-import { Avatar, AvatarFallback } from "./ui/avatar";
-import { Bot } from "lucide-react";
-import { questions, type Question } from "@/lib/data/crs-questions";
 
+type ChatMessage = {
+  role: "user" | "assistant";
+  content: string;
+};
 
-type Answer = {
-  questionId: string;
-  field: string;
-  value: any;
-  points: number;
-  text: string;
+const initialMessage: ChatMessage = {
+    role: "assistant",
+    content: "Welcome to the conversational CRS Calculator! I'll ask you a few questions to estimate your score. Let's start when you're ready! Just say 'hi' or 'start'.",
 };
 
 export function CrsCalculator() {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<Answer[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([initialMessage]);
+  const [isLoading, setIsLoading] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
-  const [isStarted, setIsStarted] = useState(false);
+  const [finalScore, setFinalScore] = useState<number | null>(null);
+  const [scoreBreakdown, setScoreBreakdown] = useState<CrsCalculatorChatbotOutput['scoreBreakdown'] | null>(null);
+  const [inputValue, setInputValue] = useState("");
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
-  const handleAnswer = (option: Question["options"][0], question: Question) => {
-    const newAnswer: Answer = {
-      questionId: question.id,
-      field: question.field,
-      value: option.value,
-      points: option.points,
-      text: option.text,
-    };
-    setAnswers([...answers, newAnswer]);
-
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else {
-      setIsFinished(true);
+  const scrollToBottom = () => {
+    if (scrollAreaRef.current) {
+      scrollAreaRef.current.scrollTo({
+        top: scrollAreaRef.current.scrollHeight,
+        behavior: "smooth",
+      });
     }
   };
 
-  const start = () => {
-    setIsStarted(true);
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isLoading]);
+
+  const handleResponse = (response: CrsCalculatorChatbotOutput) => {
+    if (response) {
+      const assistantMessage: ChatMessage = {
+        role: "assistant",
+        content: response.response,
+      };
+      setMessages((prev) => [...prev, assistantMessage]);
+      
+      if (response.isFinished) {
+        setIsFinished(true);
+        setFinalScore(response.finalScore ?? 0);
+        setScoreBreakdown(response.scoreBreakdown ?? []);
+      }
+    } else {
+        const errorMessage: ChatMessage = {
+            role: "assistant",
+            content: "Sorry, something went wrong. Please try again.",
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+    }
   }
+  
+  const handleSubmit = useCallback(async (messageText: string) => {
+    if (!messageText.trim()) return;
+
+    const userMessage: ChatMessage = { role: "user", content: messageText };
+    setIsLoading(true);
+    setMessages((prev) => [...prev, userMessage]);
+    setInputValue("");
+
+    const chatHistory = [...messages, userMessage].map(msg => ({
+      role: msg.role === 'assistant' ? 'assistant' : 'user',
+      content: msg.content
+    }));
+
+    const result = await crsCalculatorChatbot({ chatHistory });
+    handleResponse(result);
+    setIsLoading(false);
+  }, [messages]);
 
   const restart = () => {
-    setCurrentQuestionIndex(0);
-    setAnswers([]);
+    setMessages([initialMessage]);
     setIsFinished(false);
-    setIsStarted(false);
+    setFinalScore(null);
+    setScoreBreakdown(null);
+    setIsLoading(false);
   };
-
-  const currentQuestion = questions[currentQuestionIndex];
-  const totalScore = answers.reduce((acc, ans) => acc + ans.points, 0);
-
-  const getPointsForCategory = (field: string) => {
-    const answer = answers.find(a => a.field === field);
-    return answer ? answer.points : 0;
-  }
-
-  const scoreBreakdown = [
-    { category: "Age", points: getPointsForCategory('age') },
-    { category: "Education", points: getPointsForCategory('education') },
-    { category: "Experience", points: getPointsForCategory('experience') },
-    { category: "Language", points: getPointsForCategory('language') },
-  ];
-
+  
   return (
     <Card className="h-[calc(100vh-13rem)] flex flex-col">
-       <CardHeader>
-          <CardTitle>CRS Score Calculator</CardTitle>
-          <CardDescription>Answer a few questions to get an estimate of your Comprehensive Ranking System (CRS) score.</CardDescription>
-        </CardHeader>
-        <CardContent className="flex-1 flex flex-col justify-between">
-            <ScrollArea className="pr-4 -mr-4">
-                <div className="space-y-4">
-                    {/* Display previous questions and answers */}
-                    {answers.map((answer) => {
-                        const question = questions.find(q => q.id === answer.questionId);
-                        return (
-                            <div key={answer.questionId} className="space-y-2">
-                                <div className="flex items-start gap-3">
-                                    <Avatar className="h-8 w-8 border">
-                                        <AvatarFallback><Bot className="h-5 w-5 text-primary" /></AvatarFallback>
-                                    </Avatar>
-                                    <div className="rounded-lg bg-muted px-4 py-2 text-sm">
-                                        <p>{question?.text}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-start gap-3 justify-end">
-                                     <div className="rounded-lg bg-primary text-primary-foreground px-4 py-2 text-sm">
-                                        <p>{answer.text}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        )
-                    })}
-
-                    {/* Display current question or results */}
-                    {isStarted && !isFinished && (
-                        <div className="flex items-start gap-3 animate-in fade-in-0 duration-500">
-                             <Avatar className="h-8 w-8 border">
-                                <AvatarFallback><Bot className="h-5 w-5 text-primary" /></AvatarFallback>
-                            </Avatar>
-                            <div className="rounded-lg bg-muted px-4 py-2 text-sm">
-                                <p>{currentQuestion.text}</p>
-                            </div>
-                        </div>
-                    )}
-                    
-                    {!isStarted && !isFinished && (
-                       <div className="flex items-start gap-3 animate-in fade-in-0 duration-500">
-                             <Avatar className="h-8 w-8 border">
-                                <AvatarFallback><Bot className="h-5 w-5 text-primary" /></AvatarFallback>
-                            </Avatar>
-                            <div className="rounded-lg bg-muted px-4 py-2 text-sm space-y-2">
-                                <p>Welcome to the CRS Calculator!</p>
-                                <p>This tool will help you estimate your Comprehensive Ranking System score for Canadian immigration. Please answer the following questions as accurately as possible.</p>
-                                <p>This is for estimation purposes only and is not immigration advice.</p>
-                            </div>
-                        </div>
-                    )}
-
-                    {isFinished && (
-                        <Card className="bg-muted/50">
-                             <CardHeader className="text-center">
-                                <CardTitle>Your Estimated Score</CardTitle>
-                             </CardHeader>
-                            <CardContent className="space-y-4">
-                                <div className="text-center">
-                                    <p className="text-6xl font-bold text-primary">{totalScore}</p>
-                                </div>
-                                <div className="space-y-2 pt-4 border-t">
-                                    <h4 className="font-medium text-center">Score Breakdown</h4>
-                                    {scoreBreakdown.map((item, index) => (
-                                        <div key={index} className="flex justify-between text-sm">
-                                            <span className="text-muted-foreground">{item.category}:</span>
-                                            <span className="font-semibold">{item.points}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </CardContent>
-                            <CardFooter className="flex-col gap-2 text-center">
-                                <Button onClick={restart} variant="secondary">
-                                    <RefreshCw className="mr-2 h-4 w-4" />
-                                    Start Over
-                                </Button>
-                                <p className="text-xs text-muted-foreground">Disclaimer: This is an estimate only and not official advice. The final score may vary.</p>
-                            </CardFooter>
-                        </Card>
-                    )}
-                </div>
-            </ScrollArea>
-        </CardContent>
-
-        {!isFinished && (
-            <CardFooter className="border-t pt-6">
-                 {!isStarted ? (
-                    <Button onClick={start} className="w-full">Start Calculator</Button>
-                ) : (
-                    <ScrollArea className="w-full whitespace-nowrap">
-                        <div className="flex gap-2 pb-4">
-                            {currentQuestion.options.map((option) => (
-                            <Button
-                                key={option.value}
-                                variant="outline"
-                                className="flex-shrink-0"
-                                onClick={() => handleAnswer(option, currentQuestion)}
-                            >
-                                {option.text}
-                            </Button>
-                            ))}
-                        </div>
-                    </ScrollArea>
+      <CardHeader>
+        <CardTitle>CRS Score Calculator</CardTitle>
+        <CardDescription>
+          Answer the chatbot's questions to get an estimate of your CRS score.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="flex-1 flex flex-col justify-between overflow-hidden">
+        <ScrollArea className="flex-1 pr-4 -mr-4" viewportRef={scrollAreaRef}>
+          <div className="space-y-4">
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                className={cn(
+                  "flex items-start gap-3",
+                  message.role === "user" ? "justify-end" : ""
                 )}
-            </CardFooter>
-        )}
+              >
+                {message.role === "assistant" && (
+                  <Avatar className="h-8 w-8 border">
+                    <AvatarFallback>
+                      <Bot className="h-5 w-5 text-primary" />
+                    </AvatarFallback>
+                  </Avatar>
+                )}
+                <div
+                  className={cn(
+                    "max-w-md rounded-lg px-4 py-2 text-sm",
+                    message.role === "user"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted"
+                  )}
+                >
+                  <p>{message.content}</p>
+                </div>
+                {message.role === "user" && (
+                  <Avatar className="h-8 w-8 border">
+                    <AvatarFallback>
+                      <User className="h-5 w-5" />
+                    </AvatarFallback>
+                  </Avatar>
+                )}
+              </div>
+            ))}
+            {isLoading && (
+              <div className="flex items-start gap-3">
+                <Avatar className="h-8 w-8 border">
+                  <AvatarFallback>
+                    <Bot className="h-5 w-5 text-primary" />
+                  </AvatarFallback>
+                </Avatar>
+                <div className="rounded-lg bg-muted px-4 py-2 text-sm">
+                   <Loader2 className="h-5 w-5 animate-spin" />
+                </div>
+              </div>
+            )}
+             {isFinished && finalScore !== null && (
+                <Card className="bg-muted/50">
+                    <CardHeader className="text-center">
+                        <CardTitle>Your Estimated Score</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="text-center">
+                            <p className="text-6xl font-bold text-primary">{finalScore}</p>
+                        </div>
+                        {scoreBreakdown && scoreBreakdown.length > 0 && (
+                            <div className="space-y-2 pt-4 border-t">
+                                <h4 className="font-medium text-center">Score Breakdown</h4>
+                                {scoreBreakdown.map((item, index) => (
+                                    <div key={index} className="flex justify-between text-sm">
+                                        <span className="text-muted-foreground">{item.category}:</span>
+                                        <span className="font-semibold">{item.points}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </CardContent>
+                    <CardFooter className="flex-col gap-2 text-center">
+                        <Button onClick={restart} variant="secondary">
+                            <RefreshCw className="mr-2 h-4 w-4" />
+                            Start Over
+                        </Button>
+                        <p className="text-xs text-muted-foreground">Disclaimer: This is an estimate only and not official advice.</p>
+                    </CardFooter>
+                </Card>
+            )}
+          </div>
+        </ScrollArea>
+      </CardContent>
+      {!isFinished && (
+        <CardFooter className="border-t pt-4">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSubmit(inputValue);
+            }}
+            className="flex w-full items-center gap-2"
+          >
+            <input
+              className="flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="Type your answer..."
+              disabled={isLoading}
+            />
+            <Button type="submit" disabled={isLoading}>
+              Send
+            </Button>
+          </form>
+        </CardFooter>
+      )}
     </Card>
   );
 }

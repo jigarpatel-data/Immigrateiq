@@ -8,6 +8,8 @@ import {
 } from "@/ai/flows/immigration-chatbot";
 import { extractSearchTerm } from "@/ai/flows/search-term-extractor";
 import { getDrawDetails as getAirtableDrawDetails } from './airtable';
+export { crsCalculatorChatbot, type CrsCalculatorChatbotInput } from "@/ai/flows/crs-calculator-chatbot";
+
 
 export async function handleChat(input: ImmigrationChatbotInput) {
   try {
@@ -40,5 +42,3 @@ export async function getEnhancedSearchTerm(query: string): Promise<{ searchTerm
     return { searchTerm: query };
   }
 }
-
-    
