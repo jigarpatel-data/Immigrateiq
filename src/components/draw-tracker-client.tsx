@@ -101,7 +101,6 @@ export function DrawTrackerClient({
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
-    // We only want the panel to be open by default on desktop, not on mobile.
     setIsPanelOpen(false);
   }, [isMobile]);
 
@@ -136,7 +135,7 @@ export function DrawTrackerClient({
       setLoading(false);
       setLoadingMore(false);
   }, [provinceFilter, categoryFilter, activeSearchTerm]);
-
+  
   const handleDrawClick = useCallback(async (draw: Draw) => {
     setSelectedDraw(draw);
     if (!isPanelOpen && !isMobile) {
@@ -164,13 +163,9 @@ export function DrawTrackerClient({
   
   const handleLoadMore = useCallback(() => {
     if (hasMore && !loadingMore && !loading) {
-      const currentFilters = {
-          province: provinceFilter,
-          category: categoryFilter,
-      };
-      fetchDraws(offset, false, activeSearchTerm, currentFilters);
+      fetchDraws(offset, false, activeSearchTerm, { province: provinceFilter, category: categoryFilter });
     }
-  }, [hasMore, loadingMore, loading, provinceFilter, categoryFilter, activeSearchTerm, offset, fetchDraws]);
+  }, [hasMore, loadingMore, loading, fetchDraws, offset, activeSearchTerm, provinceFilter, categoryFilter]);
   
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
