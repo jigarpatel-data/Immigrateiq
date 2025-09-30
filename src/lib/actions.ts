@@ -6,10 +6,13 @@ import {
   immigrationChatbot,
   type ImmigrationChatbotInput,
 } from "@/ai/flows/immigration-chatbot";
+import {
+  crsCalculatorChatbot as crsCalculatorChatbotFlow,
+  type CrsCalculatorChatbotInput,
+  type CrsCalculatorChatbotOutput,
+} from "@/ai/flows/crs-calculator-chatbot";
 import { extractSearchTerm } from "@/ai/flows/search-term-extractor";
 import { getDrawDetails as getAirtableDrawDetails } from './airtable';
-export { crsCalculatorChatbot, type CrsCalculatorChatbotInput } from "@/ai/flows/crs-calculator-chatbot";
-
 
 export async function handleChat(input: ImmigrationChatbotInput) {
   try {
@@ -23,6 +26,11 @@ export async function handleChat(input: ImmigrationChatbotInput) {
     };
   }
 }
+
+export async function crsCalculatorChatbot(input: CrsCalculatorChatbotInput): Promise<CrsCalculatorChatbotOutput> {
+  return await crsCalculatorChatbotFlow(input);
+}
+
 
 export async function getDrawDetails(recordId: string) {
     return getAirtableDrawDetails(recordId);

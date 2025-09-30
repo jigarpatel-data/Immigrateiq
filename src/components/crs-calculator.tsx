@@ -6,7 +6,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Bot, Loader2, User, RefreshCw } from "lucide-react";
-import { crsCalculatorChatbot, type CrsCalculatorChatbotOutput } from "@/ai/flows/crs-calculator-chatbot";
+import { crsCalculatorChatbot } from "@/lib/actions";
+import type { CrsCalculatorChatbotOutput } from "@/ai/flows/crs-calculator-chatbot";
 import { cn } from "@/lib/utils";
 import {
   Card,
