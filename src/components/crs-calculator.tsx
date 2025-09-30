@@ -30,6 +30,7 @@ export function CrsCalculator() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<Answer[]>([]);
   const [isFinished, setIsFinished] = useState(false);
+  const [isStarted, setIsStarted] = useState(false);
 
   const handleAnswer = (option: Question["options"][0], question: Question) => {
     const newAnswer: Answer = {
@@ -48,10 +49,15 @@ export function CrsCalculator() {
     }
   };
 
+  const start = () => {
+    setIsStarted(true);
+  }
+
   const restart = () => {
     setCurrentQuestionIndex(0);
     setAnswers([]);
     setIsFinished(false);
+    setIsStarted(false);
   };
 
   const currentQuestion = questions[currentQuestionIndex];
@@ -101,13 +107,26 @@ export function CrsCalculator() {
                     })}
 
                     {/* Display current question or results */}
-                    {!isFinished && (
+                    {isStarted && !isFinished && (
                         <div className="flex items-start gap-3 animate-in fade-in-0 duration-500">
                              <Avatar className="h-8 w-8 border">
                                 <AvatarFallback><Bot className="h-5 w-5 text-primary" /></AvatarFallback>
                             </Avatar>
                             <div className="rounded-lg bg-muted px-4 py-2 text-sm">
                                 <p>{currentQuestion.text}</p>
+                            </div>
+                        </div>
+                    )}
+                    
+                    {!isStarted && !isFinished && (
+                       <div className="flex items-start gap-3 animate-in fade-in-0 duration-500">
+                             <Avatar className="h-8 w-8 border">
+                                <AvatarFallback><Bot className="h-5 w-5 text-primary" /></AvatarFallback>
+                            </Avatar>
+                            <div className="rounded-lg bg-muted px-4 py-2 text-sm space-y-2">
+                                <p>Welcome to the CRS Calculator!</p>
+                                <p>This tool will help you estimate your Comprehensive Ranking System score for Canadian immigration. Please answer the following questions as accurately as possible.</p>
+                                <p>This is for estimation purposes only and is not immigration advice.</p>
                             </div>
                         </div>
                     )}
@@ -146,20 +165,24 @@ export function CrsCalculator() {
 
         {!isFinished && (
             <CardFooter className="border-t pt-6">
-                <ScrollArea className="w-full whitespace-nowrap">
-                    <div className="flex gap-2 pb-4">
-                        {currentQuestion.options.map((option) => (
-                        <Button
-                            key={option.value}
-                            variant="outline"
-                            className="flex-shrink-0"
-                            onClick={() => handleAnswer(option, currentQuestion)}
-                        >
-                            {option.text}
-                        </Button>
-                        ))}
-                    </div>
-                </ScrollArea>
+                 {!isStarted ? (
+                    <Button onClick={start} className="w-full">Start Calculator</Button>
+                ) : (
+                    <ScrollArea className="w-full whitespace-nowrap">
+                        <div className="flex gap-2 pb-4">
+                            {currentQuestion.options.map((option) => (
+                            <Button
+                                key={option.value}
+                                variant="outline"
+                                className="flex-shrink-0"
+                                onClick={() => handleAnswer(option, currentQuestion)}
+                            >
+                                {option.text}
+                            </Button>
+                            ))}
+                        </div>
+                    </ScrollArea>
+                )}
             </CardFooter>
         )}
     </Card>
