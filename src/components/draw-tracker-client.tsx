@@ -347,8 +347,7 @@ export function DrawTrackerClient({
                         ) : error ? (
                             <div className="text-center py-16 bg-destructive/10 text-destructive border border-destructive rounded-lg p-4">
                                 <X className="mx-auto h-12 w-12 mb-4" />
-                                <p className="text-lg font-semibold">Failed to load draws</p>
-                                <p>{error}</p>
+                                <p className="text-lg font-semibold">Failed to load data</p>
                             </div>
                         ) : allDraws.length === 0 ? (
                                 <div className="text-center py-16 text-muted-foreground col-span-full">
@@ -491,7 +490,7 @@ export function DrawTrackerClient({
               {selectedDraw && (
                   <div className="sticky top-6">
                       {isMobile ? (
-                          <Sheet open={!!selectedDraw && isMobile} onOpenChange={(isOpen) => !isOpen && setSelectedDraw(null)}>
+                          <Sheet open={!!selectedDraw && isMobile} onOpenChange={(isOpen) => { if (!isOpen) setSelectedDraw(null); }}>
                               <SheetContent side="right" className="w-full sm:max-w-lg p-0 flex flex-col">
                                 <SheetHeader className="p-6">
                                       <SheetTitle>{selectedDraw?.Category}</SheetTitle>
@@ -548,5 +547,7 @@ export function DrawTrackerClient({
 
     
 
+
+    
 
     
