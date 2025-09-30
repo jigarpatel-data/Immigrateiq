@@ -104,26 +104,29 @@ export function DrawTrackerClient({
     setIsPanelOpen(false);
   }, [isMobile]);
 
-  const fetchDraws = useCallback(async (currentOffset?: string, isNewFilter = false, search?: string, newFilters?: { province: string, category: string }) => {
+  const fetchDraws = useCallback(async (currentOffset?: string, isNewFilter = false) => {
+      const isLoadMore = !!currentOffset && !isNewFilter;
+
       if (isNewFilter) {
         setLoading(true);
         setAllDraws([]);
-        setSelectedDraw(null);
-      } else {
+        setOffset(undefined);
+      } else if (isLoadMore) {
         setLoadingMore(true);
       }
       setError(null);
-
+      
       const filters = {
-        province: newFilters ? newFilters.province : provinceFilter,
-        category: newFilters ? newFilters.category : categoryFilter,
-        search: search === undefined ? activeSearchTerm : search,
+        province: provinceFilter,
+        category: categoryFilter,
+        search: activeSearchTerm,
       };
 
       const { draws, error: fetchError, offset: newOffset } = await getAirtableDraws(currentOffset, filters);
       
       if (fetchError) {
-        setError(fetchError);
+        setError('Failed to load data.');
+        setHasMore(false);
       } else if (draws) {
         const newDrawsWithId = draws.map(d => ({ ...d.fields, id: d.id }));
         setAllDraws(prev => isNewFilter ? newDrawsWithId : [...prev, ...newDrawsWithId]);
@@ -155,54 +158,48 @@ export function DrawTrackerClient({
         const dirtyHtml = marked.parse(result.details, { breaks: true }) as string;
         setDetails(prev => ({ ...prev, [draw.id]: dirtyHtml }));
       } else if (result.error) {
-        setDetails(prev => ({ ...prev, [draw.id]: result.error! }));
+        setDetails(prev => ({ ...prev, [draw.id]: 'Failed to load details.' }));
       }
       setLoadingDetails(false);
     }
   }, [details, isPanelOpen, isMobile]);
-  
+
   const handleLoadMore = useCallback(() => {
     if (hasMore && !loadingMore && !loading) {
-      fetchDraws(offset, false, activeSearchTerm, { province: provinceFilter, category: categoryFilter });
+        fetchDraws(offset);
     }
-  }, [hasMore, loadingMore, loading, fetchDraws, offset, activeSearchTerm, provinceFilter, categoryFilter]);
-  
+  }, [hasMore, loadingMore, loading, offset, fetchDraws]);
+
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     const { searchTerm } = await getEnhancedSearchTerm(rawSearchTerm);
     const finalSearchTerm = searchTerm || rawSearchTerm;
-    setActiveSearchTerm(finalSearchTerm);
-    await fetchDraws(undefined, true, finalSearchTerm, { province: provinceFilter, category: categoryFilter });
-    setSelectedDraw(null);
+    setActiveSearchTerm(finalSearchTerm); // This will trigger useEffect
   }
 
   const handleFilterChange = (type: 'province' | 'category', value: string) => {
-      const newFilters = {
-        province: provinceFilter,
-        category: categoryFilter,
-      };
-
       if (type === 'province') {
           setProvinceFilter(value);
-          newFilters.province = value;
       } else {
           setCategoryFilter(value);
-          newFilters.category = value;
       }
-      
       setIsFilterSheetOpen(false);
-      fetchDraws(undefined, true, activeSearchTerm, newFilters);
-      setSelectedDraw(null);
+      // This will trigger the useEffect below
   };
+  
+  // This useEffect will run when any filter or search term changes
+  useEffect(() => {
+    fetchDraws(undefined, true);
+  }, [activeSearchTerm, provinceFilter, categoryFilter, fetchDraws]);
+
 
   const resetFilters = () => {
     setRawSearchTerm('');
     setActiveSearchTerm('');
     setProvinceFilter('All');
     setCategoryFilter('All');
-    fetchDraws(undefined, true, '', {province: 'All', category: 'All'});
-    setSelectedDraw(null);
+    // The useEffect will automatically re-fetch the data.
   };
   
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -231,7 +228,7 @@ export function DrawTrackerClient({
       ) : (
         <div
           className="prose prose-sm dark:prose-invert max-w-none"
-          dangerouslySetInnerHTML={{ __html: details[selectedDraw?.id!] || '' }}
+          dangerouslySetInnerHTML={{ __html: details[selectedDraw?.id!] || 'No additional details available.' }}
         />
       )}
     </>
@@ -528,21 +525,22 @@ export function DrawTrackerClient({
 }
     
     
-
-
-
-
-
-
-
-
-
-
-
-
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 
 
     
 
     
+
