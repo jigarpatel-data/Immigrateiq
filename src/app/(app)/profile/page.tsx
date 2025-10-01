@@ -35,12 +35,6 @@ const profileSchema = z.object({
   email: z.string().email("Invalid email address.").optional(),
 });
 
-const preferencesSchema = z.object({
-  drawNotifications: z.boolean().default(false),
-  programUpdates: z.boolean().default(true),
-  pushNotifications: z.boolean().default(false),
-});
-
 function ProfilePage() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -63,15 +57,6 @@ function ProfilePage() {
     }
   }, [user, profileForm]);
 
-  const preferencesForm = useForm<z.infer<typeof preferencesSchema>>({
-    resolver: zodResolver(preferencesSchema),
-    defaultValues: {
-      drawNotifications: true,
-      programUpdates: false,
-      pushNotifications: false,
-    },
-  });
-
   const onProfileSubmit = async (values: z.infer<typeof profileSchema>) => {
     setLoading(true);
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -82,16 +67,6 @@ function ProfilePage() {
     setLoading(false);
   };
   
-  const onPreferencesSubmit = async (values: z.infer<typeof preferencesSchema>) => {
-    setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    toast({
-      title: "Preferences Saved",
-      description: "Your notification settings have been updated.",
-    });
-    setLoading(false);
-  };
-
   if (!user) {
     return null; // Or a loading spinner
   }
@@ -147,79 +122,6 @@ function ProfilePage() {
                     <Button type="submit" disabled={loading}>
                       {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                       Save Changes
-                    </Button>
-                  </CardFooter>
-                </form>
-              </Form>
-            </Card>
-
-            <Card>
-              <Form {...preferencesForm}>
-                <form onSubmit={preferencesForm.handleSubmit(onPreferencesSubmit)}>
-                  <CardHeader>
-                    <CardTitle>Notifications</CardTitle>
-                    <CardDescription>Manage your email and push notification preferences.</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <FormField
-                      control={preferencesForm.control}
-                      name="drawNotifications"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                          <div className="space-y-0.5">
-                            <FormLabel className="text-base">Draw Notifications</FormLabel>
-                            <FormDescription>
-                              Receive emails about new Express Entry draws.
-                            </FormDescription>
-                          </div>
-                          <FormControl>
-                            <Switch checked={field.value} onCheckedChange={field.onChange} />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                     <FormField
-                      control={preferencesForm.control}
-                      name="pushNotifications"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                           <div className="space-y-0.5">
-                            <FormLabel className="text-base">Push Notifications</FormLabel>
-                            <FormDescription>
-                              Get browser notifications about new draws.
-                            </FormDescription>
-                          </div>
-                          <FormControl>
-                            <Switch 
-                              checked={field.value} 
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={preferencesForm.control}
-                      name="programUpdates"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                           <div className="space-y-0.5">
-                            <FormLabel className="text-base">Program Updates</FormLabel>
-                            <FormDescription>
-                              Get notified about changes to immigration programs.
-                            </FormDescription>
-                          </div>
-                          <FormControl>
-                            <Switch checked={field.value} onCheckedChange={field.onChange} />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                  </CardContent>
-                  <CardFooter className="border-t px-6 py-4">
-                    <Button type="submit" disabled={loading}>
-                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                      Save Preferences
                     </Button>
                   </CardFooter>
                 </form>
