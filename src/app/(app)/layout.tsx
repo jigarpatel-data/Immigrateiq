@@ -23,8 +23,6 @@ import {
   GanttChart,
   HelpCircle,
   LayoutDashboard,
-  ListChecks,
-  Landmark,
   LogOut,
   PanelLeft,
   Menu,
@@ -37,7 +35,6 @@ import Image from "next/image";
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/draw-tracker", icon: GanttChart, label: "Draw Tracker" },
-  { href: "/program-tracker", icon: ListChecks, label: "Program Tracker" },
   { href: "/chatbot", icon: Bot, label: "Chatbot" },
   { href: "/faq", icon: HelpCircle, label: "FAQ" },
 ];
