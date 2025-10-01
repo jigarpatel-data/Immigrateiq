@@ -142,24 +142,6 @@ function ProfilePage() {
                   <Button>Change Avatar</Button>
                 </CardContent>
               </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Saved Scores</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-                <div className="flex justify-between">
-                    <span className="text-muted-foreground">CRS Score:</span>
-                    <span className="font-semibold">498</span>
-                </div>
-                 <div className="flex justify-between">
-                    <span className="text-muted-foreground">FSW Points:</span>
-                    <span className="font-semibold">78 / 100</span>
-                </div>
-            </CardContent>
-             <CardFooter>
-                <Button variant="outline" className="w-full">Recalculate</Button>
-            </CardFooter>
-          </Card>
         </div>
       </div>
     </div>
