@@ -94,7 +94,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
               {user ? (
                 <div className="w-full flex flex-col gap-2 p-2">
                    <Link href="/profile" onClick={handleLinkClick} className="w-full">
-                      <div className="flex items-center justify-center group-data-[collapsible=icon]:justify-center gap-2 w-full p-2 hover:bg-sidebar-accent rounded-md">
+                      <div className="flex items-center justify-start group-data-[collapsible=icon]:justify-center gap-2 w-full p-2 hover:bg-sidebar-accent rounded-md">
                           <Avatar className="h-8 w-8">
                             <AvatarFallback>
                                 <User className="h-5 w-5" />
