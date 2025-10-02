@@ -24,11 +24,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Switch } from "@/components/ui/switch";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useState, useEffect } from "react";
 import { Loader2, User } from "lucide-react";
 import { withAuth, useAuth } from "@/hooks/use-auth";
+import { handleProfileUpdate } from "@/lib/auth";
 
 const profileSchema = z.object({
   name: z.string().min(1, "Name is required."),
@@ -59,11 +59,20 @@ function ProfilePage() {
 
   const onProfileSubmit = async (values: z.infer<typeof profileSchema>) => {
     setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    toast({
-      title: "Profile Updated",
-      description: "Your personal information has been saved.",
-    });
+    const { error } = await handleProfileUpdate({ displayName: values.name });
+
+    if (error) {
+        toast({
+            variant: "destructive",
+            title: "Error updating profile",
+            description: error,
+        });
+    } else {
+        toast({
+            title: "Profile Updated",
+            description: "Your personal information has been saved.",
+        });
+    }
     setLoading(false);
   };
   

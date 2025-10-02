@@ -11,6 +11,7 @@ import {
   onAuthStateChanged,
   sendPasswordResetEmail,
   sendEmailVerification,
+  updateProfile,
   type User
 } from "firebase/auth";
 
@@ -78,6 +79,20 @@ export async function handlePasswordReset(email: string): Promise<{error: string
   } catch (error: any) {
     return { error: error.message };
   }
+}
+
+export async function handleProfileUpdate(profileData: { displayName?: string; photoURL?: string }): Promise<{ error: string | null }> {
+    if (!auth.currentUser) {
+        return { error: "You must be logged in to update your profile." };
+    }
+    try {
+        await updateProfile(auth.currentUser, profileData);
+        // Force a refresh of the user's token to get the latest profile data
+        await auth.currentUser.getIdToken(true);
+        return { error: null };
+    } catch (error: any) {
+        return { error: error.message };
+    }
 }
 
 export function initAuthListener(callback: (user: User | null) => void) {
