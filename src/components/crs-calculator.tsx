@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bot, Loader2, User, RefreshCw } from "lucide-react";
+import { Bot, Loader2, User, RefreshCw, Send } from "lucide-react";
 import { crsCalculatorChatbot } from "@/lib/actions";
 import type { CrsCalculatorChatbotOutput } from "@/ai/flows/crs-calculator-chatbot";
 import { cn } from "@/lib/utils";
@@ -17,6 +17,7 @@ import {
   CardDescription,
   CardFooter,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 type ChatMessage = {
   role: "user" | "assistant";
@@ -195,17 +196,23 @@ export function CrsCalculator() {
               e.preventDefault();
               handleSubmit(inputValue);
             }}
-            className="flex w-full items-center gap-2"
+            className="relative w-full"
           >
-            <input
-              className="flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            <Input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Type your answer..."
               disabled={isLoading}
+              className="pr-12"
             />
-            <Button type="submit" disabled={isLoading}>
-              Send
+            <Button 
+              type="submit" 
+              size="icon" 
+              disabled={isLoading}
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8"
+            >
+              <Send className="h-4 w-4" />
+              <span className="sr-only">Send</span>
             </Button>
           </form>
         </CardFooter>
