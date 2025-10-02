@@ -94,11 +94,7 @@ function ProfilePage() {
             <Card>
               <Form {...profileForm}>
                 <form onSubmit={profileForm.handleSubmit(onProfileSubmit)}>
-                  <CardHeader>
-                    <CardTitle>Personal Information</CardTitle>
-                    <CardDescription>Update your name and email address.</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-4 pt-6">
                     <FormField
                       control={profileForm.control}
                       name="name"
