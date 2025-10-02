@@ -26,7 +26,7 @@ type ChatMessage = {
 
 const initialMessage: ChatMessage = {
     role: "assistant",
-    content: "I'll ask you a few questions to estimate your score. Let's start when you're ready! Just say 'hi' or 'start'.",
+    content: "I'll ask you a few questions to estimate your score. Let's start when you're ready!",
 };
 
 export function CrsCalculator() {
@@ -120,6 +120,7 @@ export function CrsCalculator() {
                   <Calculator className="mx-auto h-12 w-12 mb-4" />
                   <h2 className="text-xl font-semibold">CRS Score Calculator</h2>
                   <p>Answer the chatbot's questions to get an estimate of your CRS score.</p>
+                  <p className="mt-2">Type 'hi' to start.</p>
               </div>
             )}
             {messages.map((message, index) => (
