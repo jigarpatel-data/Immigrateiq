@@ -363,7 +363,6 @@ export function DrawTrackerClient({
                                         <div className="p-4 space-y-3">
                                             <div className="flex justify-between items-start gap-4">
                                                 <div className="flex-1">
-                                                    <p className="font-semibold text-base">{draw.Category}</p>
                                                     <span className="text-xs text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</span>
                                                 </div>
                                                 <div className="flex items-center gap-2">
@@ -381,6 +380,7 @@ export function DrawTrackerClient({
                                             </div>
                                             <Separator />
                                             <div className="space-y-2 text-sm">
+                                                 <p className="font-semibold text-base">{draw.Category}</p>
                                                 <div className="flex justify-start items-center gap-2">
                                                     <span className="text-muted-foreground">Min. Score:</span>
                                                     <span className="font-semibold">{draw.Score || 'N/A'}</span>
@@ -543,4 +543,5 @@ export function DrawTrackerClient({
     
 
     
+
 
