@@ -361,7 +361,7 @@ export function DrawTrackerClient({
                                             )}
                                         >
                                         <div className="p-4 space-y-3">
-                                            <div className="flex justify-between items-start gap-4">
+                                            <div className="flex justify-between items-center gap-4">
                                                 <div className="flex-1">
                                                     <span className="text-xs text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</span>
                                                 </div>
@@ -543,5 +543,6 @@ export function DrawTrackerClient({
     
 
     
+
 
 
