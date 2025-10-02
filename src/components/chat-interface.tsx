@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -134,12 +135,12 @@ export function ChatInterface() {
         <div className="border-t p-4 bg-background/50">
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex items-center gap-4"
+            className="relative"
           >
             <Textarea
               {...form.register("message")}
               placeholder="Ask a question about immigration..."
-              className="flex-1 resize-none"
+              className="flex-1 resize-none pr-12"
               rows={1}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
@@ -149,7 +150,12 @@ export function ChatInterface() {
               }}
               disabled={isLoading}
             />
-            <Button type="submit" size="icon" disabled={isLoading}>
+            <Button 
+              type="submit" 
+              size="icon" 
+              disabled={isLoading}
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8"
+            >
               <Send className="h-4 w-4" />
               <span className="sr-only">Send</span>
             </Button>
