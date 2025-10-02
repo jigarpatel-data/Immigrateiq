@@ -27,7 +27,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Switch } from "@/components/ui/switch";
 import { useState, useEffect } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, User } from "lucide-react";
 import { withAuth, useAuth } from "@/hooks/use-auth";
 
 const profileSchema = z.object({
@@ -132,15 +132,13 @@ function ProfilePage() {
               <Card className="text-center">
                 <CardHeader>
                   <Avatar className="mx-auto h-24 w-24 mb-4">
-                    <AvatarImage src={user.photoURL ?? `https://i.pravatar.cc/150?u=${user.uid}`} data-ai-hint="profile avatar" />
-                    <AvatarFallback>{user.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
+                    <AvatarFallback className="bg-muted">
+                        <User className="h-12 w-12 text-muted-foreground" />
+                    </AvatarFallback>
                   </Avatar>
                   <CardTitle>{user.displayName ?? "User"}</CardTitle>
                   <CardDescription>{user.email}</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <Button>Change Avatar</Button>
-                </CardContent>
               </Card>
         </div>
       </div>

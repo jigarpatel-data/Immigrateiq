@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   SidebarProvider,
   Sidebar,
@@ -26,6 +26,7 @@ import {
   LogOut,
   PanelLeft,
   Menu,
+  User,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { handleSignOut } from "@/lib/auth";
@@ -95,8 +96,9 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
                    <Link href="/profile" onClick={handleLinkClick} className="w-full">
                       <div className="flex items-center justify-center group-data-[collapsible=icon]:justify-center gap-2 w-full p-2 hover:bg-sidebar-accent rounded-md">
                           <Avatar className="h-8 w-8">
-                          <AvatarImage src={user.photoURL ?? `https://i.pravatar.cc/150?u=${user.uid}`} alt={user.displayName ?? "User"} data-ai-hint="profile avatar" />
-                          <AvatarFallback>{user.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
+                            <AvatarFallback>
+                                <User className="h-5 w-5" />
+                            </AvatarFallback>
                           </Avatar>
                           <div className="text-left group-data-[collapsible=icon]:hidden">
                           <p className="font-medium text-sm truncate">{user.displayName ?? user.email}</p>
@@ -133,16 +135,18 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
                   <div className="hidden lg:flex">
                      <Link href="/profile" >
                       <Avatar className="h-8 w-8">
-                          <AvatarImage src={user.photoURL ?? `https://i.pravatar.cc/150?u=${user.uid}`} alt={user.displayName ?? "User"} data-ai-hint="profile avatar" />
-                          <AvatarFallback>{user.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
+                          <AvatarFallback>
+                            <User className="h-5 w-5" />
+                          </AvatarFallback>
                       </Avatar>
                      </Link>
                   </div>
                    <div className="lg:hidden">
                     <Link href="/profile">
                         <Avatar className="h-8 w-8">
-                            <AvatarImage src={user.photoURL ?? `https://i.pravatar.cc/150?u=${user.uid}`} alt={user.displayName ?? "User"} data-ai-hint="profile avatar" />
-                            <AvatarFallback>{user.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
+                            <AvatarFallback>
+                                <User className="h-5 w-5" />
+                            </AvatarFallback>
                         </Avatar>
                       </Link>
                   </div>
