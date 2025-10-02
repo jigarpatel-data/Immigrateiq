@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Bot, Loader2, User, RefreshCw, Send } from "lucide-react";
+import { Bot, Loader2, User, RefreshCw, Send, Calculator } from "lucide-react";
 import { crsCalculatorChatbot } from "@/lib/actions";
 import type { CrsCalculatorChatbotOutput } from "@/ai/flows/crs-calculator-chatbot";
 import { cn } from "@/lib/utils";
@@ -26,11 +26,11 @@ type ChatMessage = {
 
 const initialMessage: ChatMessage = {
     role: "assistant",
-    content: "Welcome to the conversational CRS Calculator! I'll ask you a few questions to estimate your score. Let's start when you're ready! Just say 'hi' or 'start'.",
+    content: "I'll ask you a few questions to estimate your score. Let's start when you're ready! Just say 'hi' or 'start'.",
 };
 
 export function CrsCalculator() {
-  const [messages, setMessages] = useState<ChatMessage[]>([initialMessage]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFinished, setIsFinished] = useState(false);
   const [finalScore, setFinalScore] = useState<number | null>(null);
@@ -46,6 +46,13 @@ export function CrsCalculator() {
       });
     }
   };
+  
+  useEffect(() => {
+    if(messages.length === 0) {
+        // Don't start automatically, wait for user input
+    }
+  }, [messages]);
+
 
   useEffect(() => {
     scrollToBottom();
@@ -78,10 +85,14 @@ export function CrsCalculator() {
 
     const userMessage: ChatMessage = { role: "user", content: messageText };
     setIsLoading(true);
-    setMessages((prev) => [...prev, userMessage]);
+    
+    // If it's the first message, add the initial bot message first.
+    const currentMessages = messages.length === 0 ? [initialMessage, userMessage] : [...messages, userMessage];
+
+    setMessages(currentMessages);
     setInputValue("");
 
-    const chatHistory = [...messages, userMessage].map(msg => ({
+    const chatHistory = currentMessages.map(msg => ({
       role: msg.role === 'assistant' ? 'assistant' : 'user',
       content: msg.content
     }));
@@ -92,7 +103,7 @@ export function CrsCalculator() {
   }, [messages]);
 
   const restart = () => {
-    setMessages([initialMessage]);
+    setMessages([]);
     setIsFinished(false);
     setFinalScore(null);
     setScoreBreakdown(null);
@@ -101,15 +112,16 @@ export function CrsCalculator() {
   
   return (
     <Card className="h-[calc(100vh-16rem)] flex flex-col">
-      <CardHeader>
-        <CardTitle>CRS Score Calculator</CardTitle>
-        <CardDescription>
-          Answer the chatbot's questions to get an estimate of your CRS score.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="flex-1 flex flex-col justify-between overflow-hidden">
-        <ScrollArea className="flex-1 pr-4 -mr-4" viewportRef={scrollAreaRef}>
+      <CardContent className="flex-1 flex flex-col justify-between overflow-hidden p-0">
+        <ScrollArea className="flex-1 p-6" viewportRef={scrollAreaRef}>
           <div className="space-y-4">
+            {messages.length === 0 && !isLoading && (
+              <div className="text-center text-muted-foreground pt-16">
+                  <Calculator className="mx-auto h-12 w-12 mb-4" />
+                  <h2 className="text-xl font-semibold">CRS Score Calculator</h2>
+                  <p>Answer the chatbot's questions to get an estimate of your CRS score.</p>
+              </div>
+            )}
             {messages.map((message, index) => (
               <div
                 key={index}
@@ -188,9 +200,8 @@ export function CrsCalculator() {
             )}
           </div>
         </ScrollArea>
-      </CardContent>
-      {!isFinished && (
-        <CardFooter className="border-t pt-4">
+       {!isFinished && (
+        <div className="border-t p-4 bg-background/50">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -215,8 +226,9 @@ export function CrsCalculator() {
               <span className="sr-only">Send</span>
             </Button>
           </form>
-        </CardFooter>
+        </div>
       )}
+      </CardContent>
     </Card>
   );
 }
