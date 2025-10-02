@@ -100,7 +100,7 @@ export function CrsCalculator() {
   };
   
   return (
-    <Card className="h-[calc(100vh-15rem)] flex flex-col">
+    <Card className="h-[calc(100vh-16rem)] flex flex-col">
       <CardHeader>
         <CardTitle>CRS Score Calculator</CardTitle>
         <CardDescription>
