@@ -119,7 +119,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
         </Sidebar>
         <SidebarInset className="flex flex-col min-h-screen">
           {/* Unified Header for Mobile and Desktop */}
-          <header className="sticky top-0 z-10 flex h-14 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6">
+          <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm sm:px-6">
               <div className="flex items-center gap-2">
                   <SidebarTrigger className="lg:hidden">
                     <Menu />
@@ -129,12 +129,24 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
                   </Link>
               </div>
                {user && (
-                <Link href="/profile" className="lg:hidden">
-                  <Avatar className="h-8 w-8">
-                      <AvatarImage src={user.photoURL ?? `https://i.pravatar.cc/150?u=${user.uid}`} alt={user.displayName ?? "User"} data-ai-hint="profile avatar" />
-                      <AvatarFallback>{user.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
-                  </Avatar>
-                </Link>
+                <div className="flex items-center gap-4">
+                  <div className="hidden lg:flex">
+                     <Link href="/profile" >
+                      <Avatar className="h-8 w-8">
+                          <AvatarImage src={user.photoURL ?? `https://i.pravatar.cc/150?u=${user.uid}`} alt={user.displayName ?? "User"} data-ai-hint="profile avatar" />
+                          <AvatarFallback>{user.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
+                      </Avatar>
+                     </Link>
+                  </div>
+                   <div className="lg:hidden">
+                    <Link href="/profile">
+                        <Avatar className="h-8 w-8">
+                            <AvatarImage src={user.photoURL ?? `https://i.pravatar.cc/150?u=${user.uid}`} alt={user.displayName ?? "User"} data-ai-hint="profile avatar" />
+                            <AvatarFallback>{user.email?.[0].toUpperCase() ?? 'U'}</AvatarFallback>
+                        </Avatar>
+                      </Link>
+                  </div>
+                </div>
                )}
           </header>
           <div className="flex-1 overflow-y-auto">
