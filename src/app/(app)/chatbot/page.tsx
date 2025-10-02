@@ -27,7 +27,7 @@ function ChatbotPage() {
             CRS Calculator
             </TabsTrigger>
         </TabsList>
-        <TabsContent value="chatbot" className="flex-1 flex flex-col mt-4">
+        <TabsContent value="chatbot" className="flex-1 mt-4">
           <ChatInterface />
         </TabsContent>
         <TabsContent value="calculator" className="flex-1 mt-4">

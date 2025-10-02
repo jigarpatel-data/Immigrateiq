@@ -73,7 +73,7 @@ export function ChatInterface() {
   };
   
   return (
-    <Card className="flex-1 flex flex-col h-full">
+    <Card className="h-[calc(100vh-13rem)] flex flex-col">
       <CardContent className="flex-1 flex flex-col p-0">
         <ScrollArea className="flex-1 p-6" ref={scrollAreaRef}>
           <div className="space-y-6">
@@ -132,7 +132,7 @@ export function ChatInterface() {
             )}
           </div>
         </ScrollArea>
-        <div className="border-t p-4 bg-background/50">
+        <div className="border-t p-4 bg-background/50 mt-auto">
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="relative"
