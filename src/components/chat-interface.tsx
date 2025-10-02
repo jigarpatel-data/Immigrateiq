@@ -73,7 +73,7 @@ export function ChatInterface() {
   };
   
   return (
-    <Card className="h-[calc(100vh-11rem)] flex flex-col">
+    <Card className="h-[calc(100vh-15rem)] flex flex-col">
       <CardContent className="flex-1 flex flex-col p-0">
         <ScrollArea className="flex-1 p-6" ref={scrollAreaRef}>
           <div className="space-y-6">
