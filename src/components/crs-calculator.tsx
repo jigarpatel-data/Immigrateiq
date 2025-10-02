@@ -24,11 +24,6 @@ type ChatMessage = {
   content: string;
 };
 
-const initialMessage: ChatMessage = {
-    role: "assistant",
-    content: "I'll ask you a few questions to estimate your score. Let's start when you're ready!",
-};
-
 export function CrsCalculator() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -87,7 +82,7 @@ export function CrsCalculator() {
     setIsLoading(true);
     
     // If it's the first message, add the initial bot message first.
-    const currentMessages = messages.length === 0 ? [initialMessage, userMessage] : [...messages, userMessage];
+    const currentMessages = [...messages, userMessage];
 
     setMessages(currentMessages);
     setInputValue("");
