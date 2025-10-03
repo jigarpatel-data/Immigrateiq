@@ -157,9 +157,9 @@ export default function HomePage() {
                           <div className="w-full sm:w-auto flex-1 text-left">
                             <TypedText strings={searchQueries} />
                           </div>
-                          <Button asChild className="mr-1 rounded-md ml-auto self-end" size="icon" variant="secondary">
+                          <Button asChild className="mr-1 rounded-md ml-auto self-end h-8 w-8" size="icon" variant="secondary">
                             <Link href="/auth">
-                                <ArrowUpRight className="h-8 w-8" />
+                                <ArrowUpRight className="h-4 w-4" />
                             </Link>
                           </Button>
                         </div>
