@@ -89,7 +89,7 @@ export default function HomePage() {
             <div className="w-full max-w-7xl mx-auto px-[5%]">
                 <div className="max-w-3xl mx-auto">
                     <h1 className="text-5xl font-extrabold tracking-tight lg:text-6xl animate-fade-in-up">
-                        Find the fastest path to Canadian PR
+                        Find the fastest path to Canadian PR with AI-powered guidance
                     </h1>
                     <div className="mt-10 animate-fade-in-up animation-delay-3000">
                       <div className="relative rounded-full border bg-card p-2 shadow-inner">
