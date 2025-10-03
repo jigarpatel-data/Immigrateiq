@@ -151,7 +151,7 @@ export default function HomePage() {
                      <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-4xl mx-auto">
                         Check your eligibility, track immigration draws, and explore PR pathways - all in one place.
                      </p>
-                     <div className="mt-10 animate-fade-in-up animation-delay-3000 h-28">
+                     <div className="mt-10 animate-fade-in-up animation-delay-3000 h-28 w-full sm:w-5/6 lg:w-4/5 mx-auto">
                       <div data-name="search-container" className="relative rounded-md border bg-card p-4 shadow-inner h-full">
                         <div data-name="search-box" className="flex items-center h-full">
                           <div data-name="search-text-container" className="w-full sm:w-auto flex-1 text-left">
