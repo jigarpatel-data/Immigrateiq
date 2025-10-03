@@ -119,7 +119,7 @@ export default function HomePage() {
       </header>
       <main>
         {/* Hero Section */}
-        <section className="pt-40 pb-20 text-center bg-[#0A0B0B]">
+        <section className="pt-20 pb-20 text-center bg-[#0A0B0B]">
             <div className="w-full max-w-7xl mx-auto px-[5%]">
                  {heroImage && (
                 <div className="mb-12 relative aspect-[16/9] w-full max-w-4xl mx-auto rounded-xl overflow-hidden shadow-2xl">
@@ -136,7 +136,7 @@ export default function HomePage() {
                 )}
                 <div className="max-w-5xl mx-auto mt-12">
                     <h1 className="text-5xl font-extrabold tracking-tight lg:text-6xl animate-fade-in-up">
-                        Find the best path to Canadian PR with AI-powered guidance
+                        Find the fastest path to Canadian PR with AI-powered guidance
                     </h1>
                      <div className="mt-10 animate-fade-in-up animation-delay-3000">
                       <div className="relative rounded-full border bg-card p-2 shadow-inner">
@@ -326,4 +326,5 @@ export default function HomePage() {
     
 
     
+
 
