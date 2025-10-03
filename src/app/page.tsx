@@ -142,7 +142,7 @@ export default function HomePage() {
                         Check your eligibility, track immigration draws, and explore PR pathways - all in one place.
                      </p>
                      <div className="mt-10 animate-fade-in-up animation-delay-3000">
-                      <div className="relative rounded-full border bg-card p-4 shadow-inner">
+                      <div className="relative rounded-md border bg-card p-4 shadow-inner">
                         <div className="flex items-center">
                           <Search className="ml-4 h-8 w-8 text-muted-foreground" />
                           <div className="w-full text-left ml-4 overflow-hidden whitespace-nowrap">
@@ -332,6 +332,8 @@ export default function HomePage() {
 
 
 
+
+    
 
     
 
