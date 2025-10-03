@@ -69,7 +69,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">
       <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-sm print:hidden">
-          <div className="container mx-auto flex h-16 items-center justify-between px-[5%] md:px-6">
+          <div className="container mx-auto flex h-16 items-center justify-between px-[10%]">
             <Link href="/" className="flex items-center gap-2">
                 <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/Black%20background-final.png?alt=media&token=9086963b-efba-4599-8ff3-76ca37d7ba1c" alt="TheCanIndian Logo" width={150} height={40} />
             </Link>
