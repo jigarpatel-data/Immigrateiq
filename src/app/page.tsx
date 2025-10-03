@@ -134,7 +134,7 @@ export default function HomePage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent"></div>
                 </div>
                 )}
-                <div className="max-w-5xl mx-auto mt-0">
+                <div className="max-w-5xl mx-auto mt-4">
                     <h1 className="text-3xl font-extrabold tracking-tight md:text-5xl lg:text-6xl animate-fade-in-up">
                         Find the best path to Canadian PR with AI-powered guidance
                     </h1>
