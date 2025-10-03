@@ -142,9 +142,9 @@ export default function HomePage() {
                         Check your eligibility, track immigration draws, and explore PR pathways - all in one place.
                      </p>
                      <div className="mt-10 animate-fade-in-up animation-delay-3000">
-                      <div className="relative rounded-full border bg-card p-2 shadow-inner">
+                      <div className="relative rounded-full border bg-card p-4 shadow-inner">
                         <div className="flex items-center">
-                          <Search className="ml-4 h-5 w-5 text-muted-foreground" />
+                          <Search className="ml-4 h-8 w-8 text-muted-foreground" />
                           <div className="w-full text-left ml-4 overflow-hidden whitespace-nowrap">
                             <p className="animate-typing-container border-l-2 border-primary-foreground text-muted-foreground">
                               Search for NOC, programs, pr draws...
@@ -152,7 +152,7 @@ export default function HomePage() {
                           </div>
                           <Button asChild className="mr-1 rounded-md" size="icon" variant="secondary">
                             <Link href="/auth">
-                                <ArrowUpRight className="h-5 w-5" />
+                                <ArrowUpRight className="h-8 w-8" />
                             </Link>
                           </Button>
                         </div>
