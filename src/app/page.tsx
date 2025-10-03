@@ -130,7 +130,7 @@ export default function HomePage() {
                         <div className="flex items-center">
                           <Search className="ml-4 h-5 w-5 text-muted-foreground" />
                           <div className="w-full text-left ml-4 overflow-hidden whitespace-nowrap">
-                            <p className="animate-typing-container border-r-2 border-accent text-muted-foreground">
+                            <p className="animate-typing-container border-l-2 border-accent text-muted-foreground">
                               Check your eligibility, track immigration draws...
                             </p>
                           </div>
@@ -320,9 +320,3 @@ export default function HomePage() {
     </div>
   );
 }
-
-    
-
-    
-
-    
