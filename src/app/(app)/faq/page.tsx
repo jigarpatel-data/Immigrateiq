@@ -11,7 +11,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { withAuth } from '@/hooks/use-auth';
-import { Footer } from '@/components/footer';
 
 const faqData = [
   {
@@ -92,7 +91,6 @@ function FaqPage() {
           )}
         </Accordion>
       </div>
-      <Footer />
     </div>
   );
 }

@@ -4,11 +4,11 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function RootPage() {
+// This page is now a redirect. The new landing page is at /home
+export default function MarketingRootPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect to the new marketing page
     router.replace('/home');
   }, [router]);
 
