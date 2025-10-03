@@ -65,7 +65,6 @@ export const TypedText = ({
   return (
     <span className="text-muted-foreground relative">
         {text}
-        <span className="animate-blink-caret border-l-2 border-primary-foreground absolute right-[-2px] top-0 h-full"></span>
     </span>
   );
 };
