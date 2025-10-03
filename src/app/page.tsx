@@ -153,7 +153,7 @@ export default function HomePage() {
                      </p>
                      <div className="mt-10 animate-fade-in-up animation-delay-3000">
                       <div className="relative rounded-md border bg-card p-4 shadow-inner min-h-[100px]">
-                        <div className="flex items-center">
+                        <div data-name="search-box" className="flex items-center">
                           <div className="w-full sm:w-auto flex-1 text-left">
                             <TypedText strings={searchQueries} />
                           </div>
