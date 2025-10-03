@@ -223,7 +223,7 @@ export default function HomePage() {
                                 <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-accent" /> Expert booking discounts</li>
                                 <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-accent" /> Credits for AI chatbot</li>
                             </ul>
-                        </Content>
+                        </CardContent>
                         <CardFooter>
                           <Link href="/auth" className="w-full">
                             <Button className="w-full">Go Premium</Button>
