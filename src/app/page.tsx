@@ -153,9 +153,8 @@ export default function HomePage() {
                      </p>
                      <div className="mt-10 animate-fade-in-up animation-delay-3000">
                       <div className="relative rounded-md border bg-card p-4 shadow-inner min-h-[100px]">
-                        <div className="flex items-start flex-wrap">
-                          <Search className="ml-4 h-8 w-8 text-muted-foreground" />
-                          <div className="w-full sm:w-auto flex-1 text-left ml-4">
+                        <div className="flex items-center">
+                          <div className="w-full sm:w-auto flex-1 text-left">
                             <TypedText strings={searchQueries} />
                           </div>
                           <Button asChild className="mr-1 rounded-md ml-auto self-end" size="icon" variant="secondary">
@@ -331,30 +330,3 @@ export default function HomePage() {
     </div>
   );
 }
-
-    
-
-    
-
-    
-
-
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
