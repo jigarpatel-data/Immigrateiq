@@ -134,17 +134,20 @@ export default function HomePage() {
                     <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent"></div>
                 </div>
                 )}
-                <div className="max-w-5xl mx-auto mt-12">
+                <div className="max-w-5xl mx-auto mt-0">
                     <h1 className="text-5xl font-extrabold tracking-tight lg:text-6xl animate-fade-in-up">
-                        Find the fastest path to Canadian PR with AI-powered guidance
+                        Find the best path to Canadian PR with AI-powered guidance
                     </h1>
+                     <p className="mt-6 text-lg text-muted-foreground max-w-3xl mx-auto">
+                        Check your eligibility, track immigration draws, and explore PR pathways — all in one place.
+                     </p>
                      <div className="mt-10 animate-fade-in-up animation-delay-3000">
                       <div className="relative rounded-full border bg-card p-2 shadow-inner">
                         <div className="flex items-center">
                           <Search className="ml-4 h-5 w-5 text-muted-foreground" />
                           <div className="w-full text-left ml-4 overflow-hidden whitespace-nowrap">
                             <p className="animate-typing-container border-l-2 border-primary-foreground text-muted-foreground">
-                              Check your eligibility, track immigration draws...
+                              Search for NOC, programs, draws...
                             </p>
                           </div>
                           <Button asChild className="mr-1 rounded-md" size="icon" variant="secondary">
@@ -329,5 +332,7 @@ export default function HomePage() {
 
 
 
+
+    
 
     
