@@ -11,7 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { CheckCircle, BarChart, Search, Bot, BookUser, Star, Menu } from "lucide-react";
+import { CheckCircle, BarChart, Search, Bot, BookUser, Star, Menu, ArrowUpRight } from "lucide-react";
 import placeholderImages from "@/lib/placeholder-images.json";
 import { Footer } from "@/components/footer";
 import { useState } from "react";
@@ -134,8 +134,10 @@ export default function HomePage() {
                               Check your eligibility, track immigration draws...
                             </p>
                           </div>
-                          <Button asChild className="mr-1 rounded-full">
-                            <Link href="/auth">Get Started</Link>
+                          <Button asChild className="mr-1 rounded-md" size="icon">
+                            <Link href="/auth">
+                                <ArrowUpRight className="h-5 w-5" />
+                            </Link>
                           </Button>
                         </div>
                       </div>
@@ -318,5 +320,7 @@ export default function HomePage() {
     </div>
   );
 }
+
+    
 
     
