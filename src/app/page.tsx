@@ -74,10 +74,10 @@ export default function HomePage() {
                 <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/Black%20background-final.png?alt=media&token=9086963b-efba-4599-8ff3-76ca37d7ba1c" alt="TheCanIndian Logo" width={150} height={40} />
             </Link>
             <div className="flex items-center gap-2">
-                <Button variant="ghost" asChild>
+                <Button variant="ghost" size="sm" asChild>
                     <Link href="/auth">Sign In</Link>
                 </Button>
-                <Button asChild>
+                <Button size="sm" asChild>
                     <Link href="/auth">Get Started</Link>
                 </Button>
             </div>
@@ -101,7 +101,7 @@ export default function HomePage() {
                     </div>
                 </div>
                 {heroImage && (
-                <div className="mt-12 relative h-64 md:h-96 rounded-xl overflow-hidden shadow-2xl">
+                <div className="mt-12 relative h-56 md:h-96 rounded-xl overflow-hidden shadow-2xl">
                     <Image 
                         src={heroImage.src}
                         alt={heroImage.alt}
@@ -223,7 +223,7 @@ export default function HomePage() {
                                 <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-accent" /> Expert booking discounts</li>
                                 <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-accent" /> Credits for AI chatbot</li>
                             </ul>
-                        </CardContent>
+                        </Content>
                         <CardFooter>
                           <Link href="/auth" className="w-full">
                             <Button className="w-full">Go Premium</Button>
