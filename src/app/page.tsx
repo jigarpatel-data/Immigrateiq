@@ -138,7 +138,7 @@ export default function HomePage() {
                     <h1 className="text-3xl font-extrabold tracking-tight md:text-5xl lg:text-6xl animate-fade-in-up">
                         Find the best path to Canadian PR with AI-powered guidance
                     </h1>
-                     <p className="mt-6 text-lg text-muted-foreground max-w-4xl mx-auto">
+                     <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-4xl mx-auto">
                         Check your eligibility, track immigration draws, and explore PR pathways - all in one place.
                      </p>
                      <div className="mt-10 animate-fade-in-up animation-delay-3000">
@@ -332,6 +332,8 @@ export default function HomePage() {
 
 
 
+
+    
 
     
 
