@@ -135,7 +135,7 @@ export default function HomePage() {
                 </div>
                 )}
                 <div className="max-w-5xl mx-auto mt-0">
-                    <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl animate-fade-in-up">
+                    <h1 className="text-3xl font-extrabold tracking-tight md:text-5xl lg:text-6xl animate-fade-in-up">
                         Find the best path to Canadian PR with AI-powered guidance
                     </h1>
                      <p className="mt-6 text-lg text-muted-foreground max-w-4xl mx-auto">
@@ -332,6 +332,8 @@ export default function HomePage() {
 
 
 
+
+    
 
     
 
