@@ -106,7 +106,7 @@ export default {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'typing-container':
-          'typing 8s steps(40, end), blink-caret .75s step-end',
+          'typing 4s steps(40, end), blink-caret .75s step-end infinite',
         'fade-in-up': 'fade-in-up 0.5s ease-out forwards',
         'fade-in-up-1': 'fade-in-up 0.5s ease-out 3s forwards',
         'fade-in-up-2': 'fade-in-up 0.5s ease-out 3.5s forwards',
@@ -116,4 +116,3 @@ export default {
   },
   plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')],
 } satisfies Config;
-

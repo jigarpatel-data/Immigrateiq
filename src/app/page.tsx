@@ -69,7 +69,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       <header className="fixed top-0 z-40 w-full border-b bg-background/80 backdrop-blur-sm print:hidden">
-          <div className="container mx-auto flex h-16 items-center justify-between px-[10%]">
+          <div className="container mx-auto flex h-16 items-center justify-between px-[5%]">
             <Link href="/" className="flex items-center gap-2">
                 <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/Black%20background-final.png?alt=media&token=9086963b-efba-4599-8ff3-76ca37d7ba1c" alt="TheCanIndian Logo" width={150} height={40} />
             </Link>
@@ -88,16 +88,23 @@ export default function HomePage() {
         <section className="pt-40 pb-20 text-center">
             <div className="w-full max-w-7xl mx-auto px-[5%]">
                 <div className="max-w-3xl mx-auto">
-                    <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
-                        Find the fastest path to Canadian PR with AI-powered guidance
+                    <h1 className="text-5xl font-extrabold tracking-tight lg:text-6xl animate-fade-in-up">
+                        Find the fastest path to Canadian PR
                     </h1>
-                    <p className="mt-6 text-lg text-muted-foreground">
-                        Check your eligibility, track immigration draws, and explore PR pathways — all in one place.
-                    </p>
-                    <div className="mt-10">
-                        <Link href="/auth">
-                            <Button size="lg">Get Started Free</Button>
-                        </Link>
+                    <div className="mt-10 animate-fade-in-up animation-delay-3000">
+                      <div className="relative rounded-full border bg-card p-2 shadow-inner">
+                        <div className="flex items-center">
+                          <Search className="ml-4 h-5 w-5 text-muted-foreground" />
+                          <div className="w-full text-left ml-4 overflow-hidden whitespace-nowrap">
+                            <p className="animate-typing-container border-r-2 border-accent text-muted-foreground">
+                              Check your eligibility, track immigration draws...
+                            </p>
+                          </div>
+                          <Button asChild className="mr-1 rounded-full">
+                            <Link href="/auth">Get Started</Link>
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                 </div>
                 {heroImage && (
