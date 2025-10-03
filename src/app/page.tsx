@@ -119,7 +119,7 @@ export default function HomePage() {
       </header>
       <main>
         {/* Hero Section */}
-        <section className="pt-40 pb-20 text-center">
+        <section className="pt-40 pb-20 text-center bg-[#0A0B0B]">
             <div className="w-full max-w-7xl mx-auto px-[5%]">
                  {heroImage && (
                 <div className="mb-12 relative aspect-[16/9] w-full max-w-4xl mx-auto rounded-xl overflow-hidden shadow-2xl">
