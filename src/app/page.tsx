@@ -121,7 +121,7 @@ export default function HomePage() {
         {/* Hero Section */}
         <section className="pt-40 pb-20 text-center">
             <div className="w-full max-w-7xl mx-auto px-[5%]">
-                <div className="max-w-5xl mx-auto">
+                <div className="max-w-5xl mx-auto mt-20">
                     <h1 className="text-5xl font-extrabold tracking-tight lg:text-6xl animate-fade-in-up">
                         Find the fastest path to Canadian PR with AI-powered guidance
                     </h1>
