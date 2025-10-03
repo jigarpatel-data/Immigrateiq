@@ -152,12 +152,12 @@ export default function HomePage() {
                         Check your eligibility, track immigration draws, and explore PR pathways - all in one place.
                      </p>
                      <div className="mt-10 animate-fade-in-up animation-delay-3000">
-                      <div className="relative rounded-md border bg-card p-4 shadow-inner min-h-[128px]">
+                      <div data-name="search-container" className="relative rounded-md border bg-card p-4 shadow-inner min-h-[100px]">
                         <div data-name="search-box" className="flex items-center h-full">
-                          <div className="w-full sm:w-auto flex-1 text-left">
+                          <div data-name="search-text-container" className="w-full sm:w-auto flex-1 text-left">
                             <TypedText strings={searchQueries} />
                           </div>
-                          <Button asChild className="mr-1 rounded-md ml-auto self-end h-8 w-8" size="icon" variant="secondary">
+                          <Button data-name="search-action-button" asChild className="mr-1 rounded-md ml-auto self-end h-8 w-8" size="icon" variant="secondary">
                             <Link href="/auth">
                                 <ArrowUpRight className="h-4 w-4" />
                             </Link>
