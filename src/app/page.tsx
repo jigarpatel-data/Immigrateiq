@@ -134,7 +134,7 @@ export default function HomePage() {
                               Check your eligibility, track immigration draws...
                             </p>
                           </div>
-                          <Button asChild className="mr-1 rounded-md" size="icon">
+                          <Button asChild className="mr-1 rounded-md" size="icon" variant="secondary">
                             <Link href="/auth">
                                 <ArrowUpRight className="h-5 w-5" />
                             </Link>
