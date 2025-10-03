@@ -53,7 +53,7 @@ function FaqPage() {
   }, [searchTerm]);
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-theme(spacing.28))]">
+    <div className="flex flex-col">
       <div className="flex-grow max-w-4xl mx-auto w-full">
         <header className="text-center mb-6">
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Frequently Asked Questions</h1>
