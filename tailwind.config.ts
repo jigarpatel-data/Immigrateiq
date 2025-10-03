@@ -95,7 +95,7 @@ export default {
         },
         'blink-caret': {
           'from, to': { borderColor: 'transparent' },
-          '50%': { borderColor: 'hsl(var(--accent))' },
+          '50%': { borderColor: 'hsl(var(--primary-foreground))' },
         },
         'fade-in-up': {
           '0%': { opacity: '0', transform: 'translateY(10px)' },
