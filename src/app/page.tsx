@@ -67,7 +67,7 @@ export default function HomePage() {
   const heroImage = placeholderImages.find(p => p.id === 'hero-people-goals');
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="min-h-screen">
       <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-sm print:hidden">
           <div className="container mx-auto flex h-16 items-center justify-between px-[10%]">
             <Link href="/" className="flex items-center gap-2">
@@ -83,7 +83,7 @@ export default function HomePage() {
             </div>
           </div>
       </header>
-      <main className="flex-1">
+      <main>
         {/* Hero Section */}
         <section className="py-20 text-center">
             <div className="w-full max-w-7xl mx-auto px-[5%]">
