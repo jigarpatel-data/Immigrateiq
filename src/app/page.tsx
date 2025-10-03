@@ -22,6 +22,7 @@ import {
   SheetClose
 } from "@/components/ui/sheet";
 import { ParticleBackground } from "@/components/particle-background";
+import { TypedText } from "@/components/typed-text";
 
 const features = [
     { icon: <CheckCircle className="h-6 w-6 text-accent" />, text: "Personalized PR eligibility checker" },
@@ -71,6 +72,13 @@ const faqData = [
     question: "What makes this different?",
     answer: "We combine real-time immigration data, AI guidance, and personalized tools — all in one place, designed to be simple, transparent, and affordable.",
   },
+];
+
+const searchQueries = [
+    "Find me NOC for retail sales associate...",
+    "Find me PR draws for Dental Hygienist",
+    "Find me PR pathway for Registered Nurse",
+    "Search for programs, PR draws, NOCs...",
 ];
 
 export default function HomePage() {
@@ -148,9 +156,7 @@ export default function HomePage() {
                         <div className="flex items-center">
                           <Search className="ml-4 h-8 w-8 text-muted-foreground" />
                           <div className="w-full text-left ml-4 overflow-hidden whitespace-nowrap">
-                            <p className="animate-typing-container border-l-2 border-primary-foreground text-muted-foreground">
-                              Search for NOC, programs, pr draws...
-                            </p>
+                            <TypedText strings={searchQueries} />
                           </div>
                           <Button asChild className="mr-1 rounded-md" size="icon" variant="secondary">
                             <Link href="/auth">

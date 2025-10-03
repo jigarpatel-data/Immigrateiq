@@ -89,10 +89,6 @@ export default {
             height: '0',
           },
         },
-        'typing': {
-          from: { width: '0' },
-          to: { width: '100%' },
-        },
         'blink-caret': {
           'from, to': { borderColor: 'transparent' },
           '50%': { borderColor: 'hsl(var(--primary-foreground))' },
@@ -105,8 +101,7 @@ export default {
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
-        'typing-container':
-          'typing 4s steps(40, end), blink-caret .75s step-end infinite',
+        'blink-caret': 'blink-caret 1s step-end infinite',
         'fade-in-up': 'fade-in-up 0.5s ease-out forwards',
         'fade-in-up-1': 'fade-in-up 0.5s ease-out 3s forwards',
         'fade-in-up-2': 'fade-in-up 0.5s ease-out 3.5s forwards',
