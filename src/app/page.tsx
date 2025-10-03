@@ -21,6 +21,7 @@ import {
   SheetTrigger,
   SheetClose
 } from "@/components/ui/sheet";
+import { ParticleBackground } from "@/components/particle-background";
 
 const features = [
     { icon: <CheckCircle className="h-6 w-6 text-accent" />, text: "Personalized PR eligibility checker" },
@@ -119,8 +120,9 @@ export default function HomePage() {
       </header>
       <main>
         {/* Hero Section */}
-        <section className="pt-20 pb-20 text-center bg-[#0A0B0B]">
-            <div className="w-full max-w-7xl mx-auto px-[5%]">
+        <section className="pt-20 pb-20 text-center bg-[#0A0B0B] relative overflow-hidden">
+            <ParticleBackground />
+            <div className="w-full max-w-7xl mx-auto px-[5%] relative z-10">
                  {heroImage && (
                 <div className="relative aspect-[16/9] w-[70%] sm:w-full max-w-4xl mx-auto rounded-xl overflow-hidden shadow-2xl">
                     <Image 
