@@ -69,7 +69,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">
       <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-sm print:hidden">
-          <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
+          <div className="container mx-auto flex h-16 items-center justify-between px-[5%] md:px-6">
             <Link href="/" className="flex items-center gap-2">
                 <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/Black%20background-final.png?alt=media&token=9086963b-efba-4599-8ff3-76ca37d7ba1c" alt="TheCanIndian Logo" width={150} height={40} />
             </Link>
@@ -85,38 +85,40 @@ export default function HomePage() {
       </header>
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="container py-20 text-center">
-            <div className="max-w-3xl mx-auto">
-                <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
-                    Find the fastest path to Canadian PR with AI-powered guidance
-                </h1>
-                <p className="mt-6 text-lg text-muted-foreground">
-                    Check your eligibility, track immigration draws, and explore PR pathways — all in one place.
-                </p>
-                <div className="mt-10">
-                    <Link href="/auth">
-                        <Button size="lg">Get Started Free</Button>
-                    </Link>
+        <section className="py-20 text-center">
+            <div className="w-full max-w-7xl mx-auto px-[5%]">
+                <div className="max-w-3xl mx-auto">
+                    <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
+                        Find the fastest path to Canadian PR with AI-powered guidance
+                    </h1>
+                    <p className="mt-6 text-lg text-muted-foreground">
+                        Check your eligibility, track immigration draws, and explore PR pathways — all in one place.
+                    </p>
+                    <div className="mt-10">
+                        <Link href="/auth">
+                            <Button size="lg">Get Started Free</Button>
+                        </Link>
+                    </div>
                 </div>
+                {heroImage && (
+                <div className="mt-12 relative h-64 md:h-96 rounded-xl overflow-hidden shadow-2xl">
+                    <Image 
+                        src={heroImage.src}
+                        alt={heroImage.alt}
+                        fill
+                        priority
+                        className="object-cover"
+                        data-ai-hint={heroImage['data-ai-hint']}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent"></div>
+                </div>
+                )}
             </div>
-            {heroImage && (
-              <div className="mt-12 relative h-64 md:h-96 rounded-xl overflow-hidden shadow-2xl">
-                  <Image 
-                      src={heroImage.src}
-                      alt={heroImage.alt}
-                      fill
-                      priority
-                      className="object-cover"
-                      data-ai-hint={heroImage['data-ai-hint']}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent"></div>
-              </div>
-            )}
         </section>
 
         {/* Core Value Proposition */}
         <section id="why-us" className="py-20 bg-muted/30">
-          <div className="container text-center">
+          <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
             <h2 className="text-3xl font-bold">Why choose our app?</h2>
             <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
                 Simplify your immigration journey with tools built to save you time and stress.
@@ -134,7 +136,7 @@ export default function HomePage() {
 
         {/* How It Works Section */}
         <section id="features" className="py-20">
-          <div className="container text-center">
+          <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
             <h2 className="text-3xl font-bold">How It Works</h2>
             <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
                 Everything you need for a smarter immigration strategy.
@@ -157,7 +159,7 @@ export default function HomePage() {
 
         {/* Social Proof Placeholder */}
         <section id="social-proof" className="py-20 bg-muted/30">
-          <div className="container text-center">
+          <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
             <h2 className="text-3xl font-bold">Trusted by Aspiring Canadians</h2>
              <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
                 Join thousands of users who are simplifying their journey to Canada.
@@ -173,7 +175,7 @@ export default function HomePage() {
         
         {/* Call-to-Action */}
         <section id="cta" className="py-20">
-            <div className="container text-center">
+            <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
                 <h2 className="text-3xl font-bold">Ready to take the next step?</h2>
                 <div className="mt-6">
                     <Link href="/auth">
@@ -185,7 +187,7 @@ export default function HomePage() {
 
         {/* Pricing Section */}
         <section id="pricing" className="py-20 bg-muted/30">
-            <div className="container text-center">
+            <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
                  <h2 className="text-3xl font-bold">Simple & Transparent Pricing</h2>
                  <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                     <Card className="text-left">
@@ -234,7 +236,7 @@ export default function HomePage() {
 
         {/* About Section */}
         <section id="about" className="py-20">
-            <div className="container text-center max-w-3xl mx-auto">
+            <div className="w-full max-w-7xl mx-auto px-[5%] text-center max-w-3xl">
                 <h2 className="text-3xl font-bold">About Us</h2>
                 <p className="mt-6 text-lg text-muted-foreground">
                     We’re immigrants ourselves. We built this app because the process was confusing, costly, and overwhelming. Our mission is simple: <strong>make immigration easier, faster, and more transparent for everyone.</strong>
@@ -244,7 +246,7 @@ export default function HomePage() {
 
         {/* FAQ Section */}
         <section id="faq" className="py-20 bg-muted/30">
-            <div className="container max-w-3xl mx-auto">
+            <div className="w-full max-w-7xl mx-auto px-[5%] max-w-3xl">
                 <h2 className="text-3xl font-bold text-center">Frequently Asked Questions</h2>
                 <Accordion type="single" collapsible className="w-full mt-8">
                     {faqData.map((faq, index) => (
@@ -261,7 +263,7 @@ export default function HomePage() {
 
         {/* Final CTA */}
         <section id="final-cta" className="py-20 border-t">
-          <div className="container text-center">
+          <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
             <h2 className="text-3xl font-bold">Start your PR journey today — it’s free.</h2>
             <div className="mt-6">
                 <Link href="/auth">
