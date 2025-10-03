@@ -1,4 +1,6 @@
 
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -9,9 +11,16 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { CheckCircle, BarChart, Search, Bot, BookUser, Star } from "lucide-react";
+import { CheckCircle, BarChart, Search, Bot, BookUser, Star, Menu } from "lucide-react";
 import placeholderImages from "@/lib/placeholder-images.json";
 import { Footer } from "@/components/footer";
+import { useState } from "react";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetClose
+} from "@/components/ui/sheet";
 
 const features = [
     { icon: <CheckCircle className="h-6 w-6 text-accent" />, text: "Personalized PR eligibility checker" },
@@ -65,6 +74,7 @@ const faqData = [
 
 export default function HomePage() {
   const heroImage = placeholderImages.find(p => p.id === 'hero-people-goals');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen">
@@ -73,13 +83,37 @@ export default function HomePage() {
             <Link href="/" className="flex items-center gap-2">
                 <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/Black%20background-final.png?alt=media&token=9086963b-efba-4599-8ff3-76ca37d7ba1c" alt="TheCanIndian Logo" width={150} height={40} />
             </Link>
-            <div className="flex items-center gap-2">
+            <div className="hidden items-center gap-2 md:flex">
                 <Button variant="ghost" size="sm" asChild>
                     <Link href="/auth">Sign In</Link>
                 </Button>
                 <Button size="sm" asChild>
                     <Link href="/auth">Get Started</Link>
                 </Button>
+            </div>
+            <div className="md:hidden">
+                <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                    <SheetTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                            <Menu className="h-6 w-6" />
+                            <span className="sr-only">Open menu</span>
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent side="right">
+                        <nav className="flex flex-col gap-6 text-lg font-medium mt-10">
+                            <SheetClose asChild>
+                                <Link href="/auth" className="text-muted-foreground transition-colors hover:text-foreground">
+                                    Sign In
+                                </Link>
+                            </SheetClose>
+                             <SheetClose asChild>
+                                <Link href="/auth" className="text-foreground transition-colors hover:text-foreground">
+                                    Get Started
+                                </Link>
+                            </SheetClose>
+                        </nav>
+                    </SheetContent>
+                </Sheet>
             </div>
           </div>
       </header>
@@ -91,7 +125,7 @@ export default function HomePage() {
                     <h1 className="text-5xl font-extrabold tracking-tight lg:text-6xl animate-fade-in-up">
                         Find the fastest path to Canadian PR with AI-powered guidance
                     </h1>
-                    <div className="mt-10 animate-fade-in-up animation-delay-3000">
+                     <div className="mt-10 animate-fade-in-up animation-delay-3000">
                       <div className="relative rounded-full border bg-card p-2 shadow-inner">
                         <div className="flex items-center">
                           <Search className="ml-4 h-5 w-5 text-muted-foreground" />
