@@ -53,7 +53,7 @@ const featureCards = [
         icon: <Search className="h-10 w-10 text-accent mb-4" />
     },
     { 
-        title: "AI Assistant", 
+        title: "AI Assistant",
         description: "Get instant, reliable answers to your immigration questions.",
         icon: <Bot className="h-10 w-10 text-accent mb-4" />
     },
@@ -152,13 +152,13 @@ export default function HomePage() {
                         Check your eligibility, track immigration draws, and explore PR pathways - all in one place.
                      </p>
                      <div className="mt-10 animate-fade-in-up animation-delay-3000">
-                      <div className="relative rounded-md border bg-card p-4 shadow-inner">
-                        <div className="flex items-center">
+                      <div className="relative rounded-md border bg-card p-4 shadow-inner min-h-[100px]">
+                        <div className="flex items-start flex-wrap">
                           <Search className="ml-4 h-8 w-8 text-muted-foreground" />
-                          <div className="w-full text-left ml-4 overflow-hidden whitespace-nowrap">
+                          <div className="w-full sm:w-auto flex-1 text-left ml-4">
                             <TypedText strings={searchQueries} />
                           </div>
-                          <Button asChild className="mr-1 rounded-md" size="icon" variant="secondary">
+                          <Button asChild className="mr-1 rounded-md ml-auto self-end" size="icon" variant="secondary">
                             <Link href="/auth">
                                 <ArrowUpRight className="h-8 w-8" />
                             </Link>
@@ -340,6 +340,8 @@ export default function HomePage() {
 
 
 
+
+    
 
     
 
