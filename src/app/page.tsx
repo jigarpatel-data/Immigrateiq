@@ -87,7 +87,7 @@ export default function HomePage() {
                 <Button variant="ghost" size="sm" asChild>
                     <Link href="/auth">Sign In</Link>
                 </Button>
-                <Button size="sm" asChild>
+                <Button size="sm" variant="secondary" asChild>
                     <Link href="/auth">Get Started</Link>
                 </Button>
             </div>
@@ -320,6 +320,8 @@ export default function HomePage() {
     </div>
   );
 }
+
+    
 
     
 
