@@ -85,7 +85,7 @@ export default function HomePage() {
       </header>
       <main>
         {/* Hero Section */}
-        <section className="pt-32 pb-20 text-center">
+        <section className="pt-40 pb-20 text-center">
             <div className="w-full max-w-7xl mx-auto px-[5%]">
                 <div className="max-w-3xl mx-auto">
                     <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
