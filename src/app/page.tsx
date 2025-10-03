@@ -135,7 +135,7 @@ export default function HomePage() {
                 </div>
                 )}
                 <div className="max-w-5xl mx-auto mt-0">
-                    <h1 className="text-5xl font-extrabold tracking-tight lg:text-6xl animate-fade-in-up">
+                    <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl animate-fade-in-up">
                         Find the best path to Canadian PR with AI-powered guidance
                     </h1>
                      <p className="mt-6 text-lg text-muted-foreground max-w-4xl mx-auto">
@@ -147,7 +147,7 @@ export default function HomePage() {
                           <Search className="ml-4 h-5 w-5 text-muted-foreground" />
                           <div className="w-full text-left ml-4 overflow-hidden whitespace-nowrap">
                             <p className="animate-typing-container border-l-2 border-primary-foreground text-muted-foreground">
-                              Search for NOC, programs, draws...
+                              Search for NOC, programs, pr draws...
                             </p>
                           </div>
                           <Button asChild className="mr-1 rounded-md" size="icon" variant="secondary">
@@ -332,6 +332,8 @@ export default function HomePage() {
 
 
 
+
+    
 
     
 
