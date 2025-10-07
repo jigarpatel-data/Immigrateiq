@@ -56,8 +56,8 @@ function FaqPage() {
     <div className="flex flex-col">
       <div className="flex-grow max-w-4xl mx-auto w-full">
         <header className="text-center mb-6">
-          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Frequently Asked Questions</h1>
-          <p className="text-muted-foreground mt-2">
+          <h1 className="text-xl md:text-2xl font-bold tracking-tight">Frequently Asked Questions</h1>
+          <p className="text-muted-foreground mt-2 text-sm">
             Find answers to common questions about Canadian immigration.
           </p>
         </header>
@@ -78,7 +78,7 @@ function FaqPage() {
             filteredFaqs.map((faq, index) => (
               <AccordionItem key={index} value={`item-${index}`}>
                 <AccordionTrigger className="text-left text-base">{faq.question}</AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">
+                <AccordionContent className="text-muted-foreground text-sm">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>

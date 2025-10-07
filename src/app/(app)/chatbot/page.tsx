@@ -11,8 +11,8 @@ function ChatbotPage() {
   return (
     <div className="flex flex-col h-full">
       <header className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">AI Assistant & Tools</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-xl md:text-2xl font-bold tracking-tight">AI Assistant & Tools</h1>
+        <p className="text-muted-foreground text-sm">
           Your personal guide for Canadian immigration queries and calculators.
         </p>
       </header>

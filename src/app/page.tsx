@@ -145,10 +145,10 @@ export default function HomePage() {
                 </div>
                 )}
                 <div className="max-w-5xl mx-auto mt-4">
-                    <h1 className="text-3xl font-extrabold tracking-tight md:text-5xl lg:text-6xl animate-fade-in-up">
+                    <h1 className="text-2xl font-extrabold tracking-tight md:text-4xl lg:text-5xl animate-fade-in-up">
                         Find the best path to Canadian PR with AI-powered guidance
                     </h1>
-                     <p className="mt-6 text-base sm:text-lg text-muted-foreground max-w-4xl mx-auto">
+                     <p className="mt-6 text-sm sm:text-base text-muted-foreground max-w-4xl mx-auto">
                         Check your eligibility, track immigration draws, and explore PR pathways - all in one place.
                      </p>
                      <div className="mt-10 animate-fade-in-up animation-delay-3000 h-28 w-full sm:w-5/6 lg:w-4/5 mx-auto">
@@ -172,8 +172,8 @@ export default function HomePage() {
         {/* Core Value Proposition */}
         <section id="why-us" className="py-20 bg-muted/30">
           <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
-            <h2 className="text-3xl font-bold">Why choose our app?</h2>
-            <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
+            <h2 className="text-2xl font-bold">Why choose our app?</h2>
+            <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-sm">
                 Simplify your immigration journey with tools built to save you time and stress.
             </p>
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -190,8 +190,8 @@ export default function HomePage() {
         {/* How It Works Section */}
         <section id="features" className="py-20">
           <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
-            <h2 className="text-3xl font-bold">How It Works</h2>
-            <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
+            <h2 className="text-2xl font-bold">How It Works</h2>
+            <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-sm">
                 Everything you need for a smarter immigration strategy.
             </p>
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -202,7 +202,7 @@ export default function HomePage() {
                             <CardTitle>{card.title}</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <p className="text-muted-foreground">{card.description}</p>
+                            <p className="text-muted-foreground text-sm">{card.description}</p>
                         </CardContent>
                     </Card>
                 ))}
@@ -213,8 +213,8 @@ export default function HomePage() {
         {/* Social Proof Placeholder */}
         <section id="social-proof" className="py-20 bg-muted/30">
           <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
-            <h2 className="text-3xl font-bold">Trusted by Aspiring Canadians</h2>
-            <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
+            <h2 className="text-2xl font-bold">Trusted by Aspiring Canadians</h2>
+            <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-sm">
                 Join thousands of users who are simplifying their journey to Canada.
             </p>
             <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -229,7 +229,7 @@ export default function HomePage() {
         {/* Call-to-Action */}
         <section id="cta" className="py-20">
             <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
-                <h2 className="text-3xl font-bold">Ready to take the next step?</h2>
+                <h2 className="text-2xl font-bold">Ready to take the next step?</h2>
                 <div className="mt-6">
                     <Link href="/auth">
                         <Button size="lg">Get Started Free</Button>
@@ -241,7 +241,7 @@ export default function HomePage() {
         {/* Pricing Section */}
         <section id="pricing" className="py-20 bg-muted/30">
             <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
-                <h2 className="text-3xl font-bold">Simple & Transparent Pricing</h2>
+                <h2 className="text-2xl font-bold">Simple & Transparent Pricing</h2>
                 <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                     <Card className="text-left">
                         <CardHeader>
@@ -249,7 +249,7 @@ export default function HomePage() {
                             <CardDescription>Get started with the essentials.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <p className="text-4xl font-bold">$0</p>
+                            <p className="text-3xl font-bold">$0</p>
                             <ul className="space-y-2 text-muted-foreground">
                                 <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-green-500" /> Basic Score eligibility check</li>
                                 <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-green-500" /> Chatbot trial (3 days)</li>
@@ -268,7 +268,7 @@ export default function HomePage() {
                             <CardDescription>Unlock the full suite of immigration tools.</CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <p className="text-4xl font-bold">$5 <span className="text-lg font-normal text-muted-foreground">/ month</span></p>
+                            <p className="text-3xl font-bold">$5 <span className="text-base font-normal text-muted-foreground">/ month</span></p>
                             <ul className="space-y-2">
                                 <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-accent" /> Draw tracker</li>
                                 <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-accent" /> Historical data</li>
@@ -290,8 +290,8 @@ export default function HomePage() {
         {/* About Section */}
         <section id="about" className="py-20">
             <div className="w-full max-w-7xl mx-auto px-[5%] text-center max-w-3xl">
-                <h2 className="text-3xl font-bold">About Us</h2>
-                <p className="mt-6 text-lg text-muted-foreground">
+                <h2 className="text-2xl font-bold">About Us</h2>
+                <p className="mt-6 text-base text-muted-foreground">
                     We’re immigrants ourselves. We built this app because the process was confusing, costly, and overwhelming. Our mission is simple: <strong>make immigration easier, faster, and more transparent for everyone.</strong>
                 </p>
             </div>
@@ -300,12 +300,12 @@ export default function HomePage() {
         {/* FAQ Section */}
         <section id="faq" className="py-20 bg-muted/30">
             <div className="w-full max-w-7xl mx-auto px-[5%] max-w-3xl">
-                <h2 className="text-3xl font-bold text-center">Frequently Asked Questions</h2>
+                <h2 className="text-2xl font-bold text-center">Frequently Asked Questions</h2>
                 <Accordion type="single" collapsible className="w-full mt-8">
                     {faqData.map((faq, index) => (
                         <AccordionItem key={index} value={`item-${index}`}>
-                            <AccordionTrigger className="text-left text-lg">{faq.question}</AccordionTrigger>
-                            <AccordionContent className="text-muted-foreground text-base">
+                            <AccordionTrigger className="text-left text-base">{faq.question}</AccordionTrigger>
+                            <AccordionContent className="text-muted-foreground text-sm">
                                 {faq.answer}
                             </AccordionContent>
                         </AccordionItem>
@@ -317,7 +317,7 @@ export default function HomePage() {
         {/* Final CTA */}
         <section id="final-cta" className="py-20 border-t">
           <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
-            <h2 className="text-3xl font-bold">Start your PR journey today — it’s free.</h2>
+            <h2 className="text-2xl font-bold">Start your PR journey today — it’s free.</h2>
             <div className="mt-6">
                 <Link href="/auth">
                     <Button size="lg">Get Started Free</Button>

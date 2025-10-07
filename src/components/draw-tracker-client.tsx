@@ -243,8 +243,8 @@ export function DrawTrackerClient({
                   <CardHeader>
                     <div className="flex justify-between items-start">
                         <div>
-                          <CardTitle className="text-2xl md:text-3xl font-bold tracking-tight">{title}</CardTitle>
-                          <CardDescription className="pt-1">{description}</CardDescription>
+                          <CardTitle className="text-xl md:text-2xl font-bold tracking-tight">{title}</CardTitle>
+                          <CardDescription className="pt-1 text-sm">{description}</CardDescription>
                         </div>
                          <div className="hidden lg:flex items-center space-x-2">
                           <Switch
@@ -500,7 +500,7 @@ export function DrawTrackerClient({
                               <CardHeader>
                                   <div className="flex justify-between items-start">
                                       <div className={cn(isPanelOpen ? "opacity-100" : "opacity-0")}>
-                                          <CardTitle className="text-lg font-bold">{selectedDraw?.Category}</CardTitle>
+                                          <CardTitle className="text-base font-bold">{selectedDraw?.Category}</CardTitle>
                                           <CardDescription>{selectedDraw?.['Draw Date']}</CardDescription>
                                       </div>
                                       <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setIsPanelOpen(!isPanelOpen)}>
@@ -543,6 +543,7 @@ export function DrawTrackerClient({
     
 
     
+
 
 
 

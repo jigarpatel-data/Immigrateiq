@@ -83,8 +83,8 @@ function ProfilePage() {
   return (
     <div className="space-y-6">
        <header>
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Profile</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-xl md:text-2xl font-bold tracking-tight">Profile</h1>
+        <p className="text-muted-foreground text-sm">
           Manage your account information and preferences.
         </p>
       </header>
