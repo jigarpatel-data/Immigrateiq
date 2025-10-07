@@ -14,6 +14,7 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({ user: null, loading: true });
 
 const protectedPaths = [
+    "/dashboard",
     "/draw-tracker",
     "/program-tracker",
     "/chatbot",
@@ -21,7 +22,7 @@ const protectedPaths = [
     "/profile",
 ];
 
-const publicPaths = ["/auth", "/dashboard"];
+const publicPaths = ["/", "/auth"];
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -89,5 +90,3 @@ export function withAuth<P extends object>(Component: React.ComponentType<P>) {
     return <Component {...props} />;
   };
 }
-
-    
