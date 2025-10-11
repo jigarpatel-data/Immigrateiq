@@ -84,7 +84,7 @@ export default function HomePage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background text-foreground border-l border-r">
+    <div className="min-h-screen bg-background text-foreground">
       <header className="fixed top-0 z-40 w-full border-b bg-sidebar-background text-sidebar-foreground print:hidden">
           <div className="container mx-auto flex h-16 items-center justify-between px-[5%]">
             <Link href="/" className="flex items-center gap-2">
@@ -124,7 +124,8 @@ export default function HomePage() {
             </div>
           </div>
       </header>
-      <main>
+      <main className="relative">
+        <div className="absolute top-0 left-[5%] h-full w-px bg-border hidden md:block" />
         {/* Hero Section */}
         <section className="pt-20 pb-20 text-center bg-background text-foreground relative overflow-hidden">
             <div className="w-full max-w-7xl mx-auto px-[5%] relative z-10">
@@ -310,7 +311,6 @@ export default function HomePage() {
           </div>
         </section>
       </main>
-      <div className="fixed top-0 left-[5%] h-full w-px bg-border hidden md:block" />
       <Footer />
     </div>
   );
