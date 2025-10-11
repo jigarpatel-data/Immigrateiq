@@ -129,19 +129,6 @@ export default function HomePage() {
         {/* Hero Section */}
         <section className="pt-20 pb-20 text-center bg-sidebar-background text-sidebar-foreground relative overflow-hidden">
             <div className="w-full max-w-7xl mx-auto px-[5%] relative z-10">
-                 {heroImage && (
-                <div className="relative aspect-[16/9] w-full max-w-4xl mx-auto rounded-xl overflow-hidden shadow-2xl">
-                    <Image 
-                        src={heroImage.src}
-                        alt={heroImage.alt}
-                        fill
-                        priority
-                        className="object-contain"
-                        data-ai-hint={heroImage['data-ai-hint']}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-sidebar-background via-sidebar-background/50 to-transparent"></div>
-                </div>
-                )}
                 <div className="max-w-5xl mx-auto mt-4">
                     <h1 className="text-2xl font-extrabold tracking-tight md:text-4xl lg:text-5xl animate-fade-in-up">
                         Find the best path to Canadian PR with AI-powered guidance
