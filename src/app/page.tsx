@@ -157,9 +157,9 @@ export default function HomePage() {
         </section>
 
         {/* Core Value Proposition */}
-        <section id="why-us" className="bg-muted">
-          <div className="w-full px-[5%] py-20">
-            <div className="max-w-7xl mx-auto text-center">
+        <section id="why-us">
+          <div className="w-full px-[5%] bg-muted">
+            <div className="max-w-7xl mx-auto text-center py-20">
               <h2 className="text-2xl font-bold">Why choose our app?</h2>
               <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-sm">
                   Simplify your immigration journey with tools built to save you time and stress.
@@ -177,9 +177,9 @@ export default function HomePage() {
         </section>
 
         {/* How It Works Section */}
-        <section id="features" className="bg-background">
-          <div className="w-full px-[5%] py-20">
-            <div className="max-w-7xl mx-auto text-center">
+        <section id="features">
+          <div className="w-full px-[5%] bg-background">
+            <div className="max-w-7xl mx-auto text-center py-20">
               <h2 className="text-2xl font-bold">How It Works</h2>
               <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-sm">
                   Everything you need for a smarter immigration strategy.
@@ -202,9 +202,9 @@ export default function HomePage() {
         </section>
 
         {/* Social Proof Placeholder */}
-        <section id="social-proof" className="bg-muted">
-          <div className="w-full px-[5%] py-20">
-            <div className="max-w-7xl mx-auto text-center">
+        <section id="social-proof">
+          <div className="w-full px-[5%] bg-muted">
+            <div className="max-w-7xl mx-auto text-center py-20">
               <h2 className="text-2xl font-bold">What Our Users Are Saying</h2>
               <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-sm">
                   Join thousands of users who are simplifying their journey to Canada.
@@ -220,8 +220,8 @@ export default function HomePage() {
         </section>
         
         {/* Call-to-Action */}
-        <section id="cta" className="bg-background">
-            <div className="w-full max-w-7xl mx-auto px-[5%] py-20 text-center">
+        <section id="cta">
+            <div className="w-full max-w-7xl mx-auto px-[5%] py-20 text-center bg-background">
                 <h2 className="text-2xl font-bold">Ready to take the next step?</h2>
                 <div className="mt-6">
                     <Link href="/auth">
@@ -232,9 +232,9 @@ export default function HomePage() {
         </section>
 
         {/* Pricing Section */}
-        <section id="pricing" className="bg-muted">
-            <div className="w-full px-[5%] py-20">
-              <div className="max-w-7xl mx-auto text-center">
+        <section id="pricing">
+            <div className="w-full px-[5%] bg-muted">
+              <div className="max-w-7xl mx-auto text-center py-20">
                   <h2 className="text-2xl font-bold">Simple & Transparent Pricing</h2>
                   <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                       <Card className="text-left shadow-lg">
@@ -283,9 +283,9 @@ export default function HomePage() {
         </section>
 
         {/* About Section */}
-        <section id="about" className="bg-background">
-            <div className="w-full px-[5%] py-20">
-              <div className="max-w-7xl mx-auto text-center max-w-3xl">
+        <section id="about">
+            <div className="w-full px-[5%] bg-background">
+              <div className="max-w-7xl mx-auto text-center max-w-3xl py-20">
                   <h2 className="text-2xl font-bold">About Us</h2>
                   <p className="mt-6 text-base text-muted-foreground">
                       We’re immigrants ourselves. We built this app because the process was confusing, costly, and overwhelming. Our mission is simple: <strong>make immigration easier, faster, and more transparent for everyone.</strong>
@@ -295,9 +295,9 @@ export default function HomePage() {
         </section>
 
         {/* FAQ Section */}
-        <section id="faq" className="bg-muted">
-          <div className="w-full px-[5%] py-20">
-            <div className="max-w-7xl mx-auto max-w-3xl">
+        <section id="faq">
+          <div className="w-full px-[5%] bg-muted">
+            <div className="max-w-7xl mx-auto max-w-3xl py-20">
                 <h2 className="text-2xl font-bold text-center">Frequently Asked Questions</h2>
                 <Accordion type="single" collapsible className="w-full mt-8">
                     {faqData.map((faq, index) => (
