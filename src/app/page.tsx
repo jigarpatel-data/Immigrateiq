@@ -86,6 +86,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="fixed top-16 bottom-[88px] left-[5%] w-px bg-border hidden md:block z-20" />
+      <div className="fixed top-16 bottom-[88px] right-[5%] w-px bg-border hidden md:block z-20" />
       <header className="fixed top-0 z-40 w-full border-b bg-sidebar-background text-sidebar-foreground print:hidden">
           <div className="container mx-auto flex h-16 items-center justify-between px-[5%]">
             <Link href="/" className="flex items-center gap-2">
