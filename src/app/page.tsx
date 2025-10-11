@@ -84,7 +84,7 @@ export default function HomePage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground border-l border-r">
       <header className="fixed top-0 z-40 w-full border-b bg-sidebar-background text-sidebar-foreground print:hidden">
           <div className="container mx-auto flex h-16 items-center justify-between px-[5%]">
             <Link href="/" className="flex items-center gap-2">
