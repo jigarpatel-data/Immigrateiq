@@ -157,7 +157,7 @@ export default function HomePage() {
         </section>
 
         {/* Core Value Proposition */}
-        <section id="why-us" className="py-20">
+        <section id="why-us" className="py-20 bg-muted">
           <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
             <h2 className="text-2xl font-bold">Why choose our app?</h2>
             <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-sm">
@@ -165,7 +165,7 @@ export default function HomePage() {
             </p>
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((feature, index) => (
-                <div key={index} className="flex items-start text-left gap-4 p-4 rounded-lg hover:bg-muted transition-colors">
+                <div key={index} className="flex items-start text-left gap-4 p-4 rounded-lg hover:bg-background/50 transition-colors">
                     {feature.icon}
                     <span className="font-medium">{feature.text}</span>
                 </div>
@@ -317,5 +317,7 @@ export default function HomePage() {
     </div>
   );
 }
+
+    
 
     
