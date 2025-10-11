@@ -296,7 +296,7 @@ export default function HomePage() {
 
         {/* FAQ Section */}
         <section id="faq">
-          <div className="w-full px-[5%] bg-muted">
+          <div className="w-full px-[5%]">
             <div className="max-w-7xl mx-auto max-w-3xl py-20">
                 <h2 className="text-2xl font-bold text-center">Frequently Asked Questions</h2>
                 <Accordion type="single" collapsible className="w-full mt-8">
