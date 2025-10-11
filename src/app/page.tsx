@@ -152,6 +152,7 @@ export default function HomePage() {
                       </div>
                     </div>
                 </div>
+                 <div className="absolute bottom-0 left-[5%] right-[5%] h-px bg-border hidden md:block z-20" />
             </div>
         </section>
 
@@ -316,5 +317,7 @@ export default function HomePage() {
     </div>
   );
 }
+
+    
 
     
