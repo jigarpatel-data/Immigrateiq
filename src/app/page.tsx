@@ -90,7 +90,7 @@ export default function HomePage() {
       <header className="fixed top-0 z-40 w-full border-b bg-sidebar-background/80 text-sidebar-foreground backdrop-blur-sm print:hidden">
           <div className="container mx-auto flex h-16 items-center justify-between px-[5%]">
             <Link href="/" className="flex items-center gap-2">
-                <span className="font-bold text-lg">Immigration University</span>
+                <span className="font-bold text-lg">Immigrateiq</span>
             </Link>
             <div className="hidden items-center gap-2 md:flex">
                 <Button variant="ghost" size="sm" asChild className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">

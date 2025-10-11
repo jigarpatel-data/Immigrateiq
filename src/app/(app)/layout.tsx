@@ -68,7 +68,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
              <div className="flex items-center justify-between p-2">
                 <Link href="/dashboard" className="flex items-center gap-2 group-data-[collapsible=icon]:hidden">
                    <GraduationCap className="h-6 w-6" />
-                   <span className="font-bold text-lg">Immigration Uni</span>
+                   <span className="font-bold text-lg">Immigrateiq</span>
                 </Link>
                 <SidebarTrigger>
                   <PanelLeft />
