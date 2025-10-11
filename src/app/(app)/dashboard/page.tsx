@@ -40,14 +40,14 @@ const chartData = [
 const chartConfig = {
   score: {
     label: "CRS Score",
-    color: "hsl(var(--accent))",
+    color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig;
 
 const eligibilityData = [
   { program: "Express Entry", value: 45, fill: "hsl(var(--chart-1))" },
   { program: "PNP", value: 30, fill: "hsl(var(--chart-2))" },
-  { program: "Other", value: 25, fill: "hsl(var(--chart-4))" },
+  { program: "Other", value: 25, fill: "hsl(var(--chart-3))" },
 ];
 
 const eligibilityConfig = {
@@ -64,7 +64,7 @@ const eligibilityConfig = {
     },
     Other: {
       label: "Other",
-      color: "hsl(var(--chart-4))",
+      color: "hsl(var(--chart-3))",
     },
 } satisfies ChartConfig;
 
@@ -224,7 +224,7 @@ export default function DashboardPage() {
                     <TableRow key={draw.date}>
                       <TableCell className="font-medium">{draw.date}</TableCell>
                       <TableCell>
-                        <Badge variant={draw.program === 'General' ? 'default' : 'secondary'} className={draw.program === 'General' ? 'bg-accent text-accent-foreground' : ''}>{draw.program}</Badge>
+                        <Badge variant={'outline'} className="font-normal">{draw.program}</Badge>
                       </TableCell>
                       <TableCell className="text-right">{draw.invitations}</TableCell>
                       <TableCell className="text-right font-semibold">{draw.score}</TableCell>
@@ -239,7 +239,7 @@ export default function DashboardPage() {
               <div key={draw.date} className="rounded-lg border p-4 space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="font-semibold text-sm">{draw.date}</span>
-                  <Badge variant={draw.program === 'General' ? 'default' : 'secondary'} className={draw.program === 'General' ? 'bg-accent text-accent-foreground' : ''}>{draw.program}</Badge>
+                  <Badge variant={'outline'} className="font-normal">{draw.program}</Badge>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Invitations:</span>
@@ -247,7 +247,7 @@ export default function DashboardPage() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">CRS Score:</span>
-                  <span className="font-bold text-accent">{draw.score}</span>
+                  <span className="font-bold">{draw.score}</span>
                 </div>
               </div>
             ))}

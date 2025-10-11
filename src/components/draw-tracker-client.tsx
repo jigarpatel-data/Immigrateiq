@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from 'react';
@@ -28,7 +27,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from '@/components/ui/button';
-import { Award, Building, Calendar, ExternalLink, Filter, Info, Loader2, Search, Users, X, ArrowUp, List, Table as TableIcon, ChevronsRight, ChevronsLeft } from 'lucide-react';
+import { Award, Building, Calendar, ExternalLink, Filter, Info, Loader2, Search, Users, X, ArrowUp, List, Table as TableIcon, ChevronsRight, ChevronsLeft, Separator as SeparatorIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import {
@@ -239,7 +238,7 @@ export function DrawTrackerClient({
       <div className={cn("grid grid-cols-1 items-start gap-6 lg:grid-cols-3")}>
           <div className={cn("lg:col-span-2 space-y-6", !isPanelOpen && "lg:col-span-3")}>
               <div className="sticky top-6 z-10">
-                <Card>
+                <Card className="shadow-lg">
                   <CardHeader>
                     <div className="flex justify-between items-start">
                         <div>
@@ -356,8 +355,8 @@ export function DrawTrackerClient({
                                             key={draw.id} 
                                             onClick={() => handleDrawClick(draw)}
                                             className={cn(
-                                                "cursor-pointer transition-all",
-                                                selectedDraw?.id === draw.id && 'border-accent ring-2 ring-accent'
+                                                "cursor-pointer transition-all shadow-lg",
+                                                selectedDraw?.id === draw.id && 'border-primary ring-2 ring-primary'
                                             )}
                                         >
                                         <div className="p-4 space-y-3">
@@ -366,9 +365,9 @@ export function DrawTrackerClient({
                                                     <span className="text-xs text-muted-foreground flex items-center gap-2"><Calendar className="h-4 w-4" />{draw["Draw Date"]}</span>
                                                 </div>
                                                 <div className="flex items-center gap-2">
-                                                    <Badge variant="secondary" className="flex items-center gap-1.5 text-xs">
-                                                    <Building className="h-3.5 w-3.5" />
-                                                    {draw.Province}
+                                                    <Badge variant="outline" className="flex items-center gap-1.5 text-xs font-normal">
+                                                      <Building className="h-3.5 w-3.5" />
+                                                      {draw.Province}
                                                     </Badge>
                                                     <Button variant="ghost" size="icon" className="h-8 w-8" asChild onClick={(e) => e.stopPropagation()}>
                                                         <Link href={draw.URL} target="_blank" rel="noopener noreferrer">
@@ -379,23 +378,32 @@ export function DrawTrackerClient({
                                                 </div>
                                             </div>
                                             <Separator />
-                                            <div className="space-y-2 text-sm">
-                                                 <p className="font-semibold text-base">{draw.Category}</p>
-                                                <div className="flex justify-start items-center gap-2">
+                                            <div className="space-y-2 text-xs">
+                                                <p className="font-semibold text-sm">{draw.Category}</p>
+                                                <div className="flex flex-col sm:flex-row sm:gap-6">
+                                                  <div className="flex items-center gap-2 sm:w-32">
                                                     <span className="text-muted-foreground">Min. Score:</span>
                                                     <span className="font-semibold">{draw.Score || 'N/A'}</span>
-                                                </div>
-                                                <div className="flex justify-start items-center gap-2">
+                                                  </div>
+                                                  <Separator orientation="vertical" className="h-5 hidden sm:block" />
+                                                  <div className="flex items-center gap-2">
                                                     <span className="text-muted-foreground">Invitations:</span>
                                                     <div className="flex items-center gap-1.5">
-                                                        <span className="font-semibold">{draw["Total Draw Invitations"] || 'N/A'}</span>
-                                                        <TooltipProvider>
-                                                            <Tooltip>
-                                                                <TooltipTrigger asChild><button onClick={(e) => e.stopPropagation()}><Info className="h-4 w-4 text-muted-foreground" /></button></TooltipTrigger>
-                                                                <TooltipContent><p className="max-w-xs">Invitations for this specific draw, not just this occupation.</p></TooltipContent>
-                                                            </Tooltip>
-                                                        </TooltipProvider>
+                                                      <span className="font-semibold">{draw["Total Draw Invitations"] || 'N/A'}</span>
+                                                      <TooltipProvider>
+                                                        <Tooltip>
+                                                          <TooltipTrigger asChild>
+                                                            <button onClick={(e) => e.stopPropagation()}>
+                                                              <Info className="h-4 w-4 text-muted-foreground" />
+                                                            </button>
+                                                          </TooltipTrigger>
+                                                          <TooltipContent>
+                                                            <p className="max-w-xs">Invitations for this specific draw, not just this occupation.</p>
+                                                          </TooltipContent>
+                                                        </Tooltip>
+                                                      </TooltipProvider>
                                                     </div>
+                                                  </div>
                                                 </div>
                                                 <div className="flex justify-start items-start gap-2">
                                                     <span className="text-muted-foreground shrink-0">NOC/Occupations:</span>
@@ -408,7 +416,7 @@ export function DrawTrackerClient({
                                 </div>
                             ) : (
                                 <div className="pt-4">
-                                <Card>
+                                <Card className="shadow-lg">
                                     <div className="relative overflow-x-auto">
                                     <Table>
                                         <TableHeader className="sticky top-0 bg-card z-10">
@@ -470,7 +478,7 @@ export function DrawTrackerClient({
                             onClick={scrollToTop}
                             variant="outline"
                             size="icon"
-                            className="absolute bottom-2 right-4 h-10 w-10 rounded-full ring-1 ring-white"
+                            className="absolute bottom-2 right-4 h-10 w-10 rounded-full shadow-lg"
                         >
                             <ArrowUp className="h-5 w-5" />
                             <span className="sr-only">Scroll to top</span>
@@ -496,7 +504,7 @@ export function DrawTrackerClient({
                               </SheetContent>
                           </Sheet>
                       ) : (
-                          <Card className={cn("flex flex-col h-[calc(100vh-8rem)] transition-all", isPanelOpen ? "w-full" : "w-0")}>
+                          <Card className={cn("flex flex-col h-[calc(100vh-8rem)] transition-all shadow-lg", isPanelOpen ? "w-full" : "w-0")}>
                               <CardHeader>
                                   <div className="flex justify-between items-start">
                                       <div className={cn(isPanelOpen ? "opacity-100" : "opacity-0")}>
@@ -523,27 +531,3 @@ export function DrawTrackerClient({
     </div>
   );
 }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-
-    
-
-    
-
-
-
-

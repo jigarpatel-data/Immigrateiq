@@ -25,37 +25,37 @@ import { ParticleBackground } from "@/components/particle-background";
 import { TypedText } from "@/components/typed-text";
 
 const features = [
-    { icon: <CheckCircle className="h-6 w-6 text-accent" />, text: "Personalized PR eligibility checker" },
-    { icon: <BarChart className="h-6 w-6 text-accent" />, text: "Real-time immigration draw tracker" },
-    { icon: <BarChart className="h-6 w-6 text-accent" />, text: "Real-time immigration Program tracker" },
-    { icon: <Search className="h-6 w-6 text-accent" />, text: "Find NOC for your occupation" },
-    { icon: <BookUser className="h-6 w-6 text-accent" />, text: "Find programs eligible for PGWP" },
-    { icon: <BookUser className="h-6 w-6 text-accent" />, text: "Find occupation eligible for Spousal open work permit" },
-    { icon: <Bot className="h-6 w-6 text-accent" />, text: "AI chatbot for PR questions" },
-    { icon: <CheckCircle className="h-6 w-6 text-accent" />, text: "Score calculator" },
-    { icon: <Star className="h-6 w-6 text-accent" />, text: "Expert consultation booking" },
+    { icon: <CheckCircle className="h-6 w-6 text-primary" />, text: "Personalized PR eligibility checker" },
+    { icon: <BarChart className="h-6 w-6 text-primary" />, text: "Real-time immigration draw tracker" },
+    { icon: <BarChart className="h-6 w-6 text-primary" />, text: "Real-time immigration Program tracker" },
+    { icon: <Search className="h-6 w-6 text-primary" />, text: "Find NOC for your occupation" },
+    { icon: <BookUser className="h-6 w-6 text-primary" />, text: "Find programs eligible for PGWP" },
+    { icon: <BookUser className="h-6 w-6 text-primary" />, text: "Find occupation eligible for Spousal open work permit" },
+    { icon: <Bot className="h-6 w-6 text-primary" />, text: "AI chatbot for PR questions" },
+    { icon: <CheckCircle className="h-6 w-6 text-primary" />, text: "Score calculator" },
+    { icon: <Star className="h-6 w-6 text-primary" />, text: "Expert consultation booking" },
 ]
 
 const featureCards = [
     { 
         title: "Eligibility Checker", 
         description: "Enter your details, instantly see your score & options.",
-        icon: <CheckCircle className="h-10 w-10 text-accent mb-4" />
+        icon: <CheckCircle className="h-10 w-10 text-primary mb-4" />
     },
     { 
         title: "Draw Tracker", 
         description: "Stay updated on the latest cutoffs and invitations.",
-        icon: <BarChart className="h-10 w-10 text-accent mb-4" />
+        icon: <BarChart className="h-10 w-10 text-primary mb-4" />
     },
     { 
         title: "NOC Finder", 
         description: "Match your job code to the right PR programs.",
-        icon: <Search className="h-10 w-10 text-accent mb-4" />
+        icon: <Search className="h-10 w-10 text-primary mb-4" />
     },
     { 
         title: "AI Assistant",
         description: "Get instant, reliable answers to your immigration questions.",
-        icon: <Bot className="h-10 w-10 text-accent mb-4" />
+        icon: <Bot className="h-10 w-10 text-primary mb-4" />
     },
 ]
 
@@ -86,29 +86,29 @@ export default function HomePage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen">
-      <header className="fixed top-0 z-40 w-full border-b bg-background/80 backdrop-blur-sm print:hidden">
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="fixed top-0 z-40 w-full border-b bg-sidebar-background/80 text-sidebar-foreground backdrop-blur-sm print:hidden">
           <div className="container mx-auto flex h-16 items-center justify-between px-[5%]">
             <Link href="/" className="flex items-center gap-2">
                 <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/Black%20background-final.png?alt=media&token=9086963b-efba-4599-8ff3-76ca37d7ba1c" alt="TheCanIndian Logo" width={150} height={40} />
             </Link>
             <div className="hidden items-center gap-2 md:flex">
-                <Button variant="ghost" size="sm" asChild>
+                <Button variant="ghost" size="sm" asChild className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                     <Link href="/auth">Sign In</Link>
                 </Button>
-                <Button size="sm" variant="secondary" asChild>
+                <Button size="sm" variant="secondary" asChild className="bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/80">
                     <Link href="/auth">Get Started</Link>
                 </Button>
             </div>
             <div className="md:hidden">
                 <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                     <SheetTrigger asChild>
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" className="text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                             <Menu className="h-6 w-6" />
                             <span className="sr-only">Open menu</span>
                         </Button>
                     </SheetTrigger>
-                    <SheetContent side="right">
+                    <SheetContent side="right" className="bg-sidebar-background text-sidebar-foreground">
                         <nav className="flex flex-col gap-6 text-lg font-medium mt-10">
                             <SheetClose asChild>
                                 <Link href="/auth" className="text-muted-foreground transition-colors hover:text-foreground">
@@ -128,11 +128,11 @@ export default function HomePage() {
       </header>
       <main>
         {/* Hero Section */}
-        <section className="pt-20 pb-20 text-center bg-[#0A0B0B] relative overflow-hidden">
+        <section className="pt-20 pb-20 text-center bg-sidebar-background text-sidebar-foreground relative overflow-hidden">
             <ParticleBackground />
             <div className="w-full max-w-7xl mx-auto px-[5%] relative z-10">
                  {heroImage && (
-                <div className="relative aspect-[16/9] w-[70%] sm:w-full max-w-4xl mx-auto rounded-xl overflow-hidden shadow-2xl">
+                <div className="relative aspect-[16/9] w-full max-w-4xl mx-auto rounded-xl overflow-hidden shadow-2xl">
                     <Image 
                         src={heroImage.src}
                         alt={heroImage.alt}
@@ -141,7 +141,7 @@ export default function HomePage() {
                         className="object-contain"
                         data-ai-hint={heroImage['data-ai-hint']}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-sidebar-background via-sidebar-background/50 to-transparent"></div>
                 </div>
                 )}
                 <div className="max-w-5xl mx-auto mt-4">
@@ -152,7 +152,7 @@ export default function HomePage() {
                         Check your eligibility, track immigration draws, and explore PR pathways - all in one place.
                      </p>
                      <div className="mt-10 animate-fade-in-up animation-delay-3000 h-28 w-full sm:w-5/6 lg:w-4/5 mx-auto">
-                      <div data-name="search-container" className="relative rounded-md border bg-card p-4 shadow-inner h-full">
+                      <div data-name="search-container" className="relative rounded-md border border-sidebar-border bg-sidebar-background/50 p-4 shadow-inner h-full">
                         <div data-name="search-box" className="flex items-center h-full">
                           <div data-name="search-text-container" className="w-full sm:w-auto flex-1 text-left">
                             <TypedText strings={searchQueries} />
@@ -196,7 +196,7 @@ export default function HomePage() {
             </p>
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {featureCards.map((card, index) => (
-                    <Card key={index} className="text-center">
+                    <Card key={index} className="text-center shadow-lg">
                         <CardHeader>
                             {card.icon}
                             <CardTitle>{card.title}</CardTitle>
@@ -213,7 +213,7 @@ export default function HomePage() {
         {/* Social Proof Placeholder */}
         <section id="social-proof" className="py-20 bg-muted/30">
           <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
-            <h2 className="text-2xl font-bold">Trusted by Aspiring Canadians</h2>
+            <h2 className="text-2xl font-bold">What Our Users Are Saying</h2>
             <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-sm">
                 Join thousands of users who are simplifying their journey to Canada.
             </p>
@@ -243,7 +243,7 @@ export default function HomePage() {
             <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
                 <h2 className="text-2xl font-bold">Simple & Transparent Pricing</h2>
                 <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                    <Card className="text-left">
+                    <Card className="text-left shadow-lg">
                         <CardHeader>
                             <CardTitle>Free</CardTitle>
                             <CardDescription>Get started with the essentials.</CardDescription>
@@ -258,11 +258,11 @@ export default function HomePage() {
                         </CardContent>
                         <CardFooter>
                             <Link href="/auth" className="w-full">
-                                <Button className="w-full" variant="outline">Start for Free</Button>
+                                <Button className="w-full" variant="secondary">Start for Free</Button>
                             </Link>
                         </CardFooter>
                     </Card>
-                    <Card className="text-left border-accent ring-2 ring-accent">
+                    <Card className="text-left border-primary ring-2 ring-primary shadow-lg">
                         <CardHeader>
                             <CardTitle>Premium</CardTitle>
                             <CardDescription>Unlock the full suite of immigration tools.</CardDescription>
@@ -270,11 +270,11 @@ export default function HomePage() {
                         <CardContent className="space-y-4">
                             <p className="text-3xl font-bold">$5 <span className="text-base font-normal text-muted-foreground">/ month</span></p>
                             <ul className="space-y-2">
-                                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-accent" /> Draw tracker</li>
-                                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-accent" /> Historical data</li>
-                                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-accent" /> Unlimited chatbot access</li>
-                                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-accent" /> Expert booking discounts</li>
-                                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-accent" /> Credits for AI chatbot</li>
+                                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Draw tracker</li>
+                                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Historical data</li>
+                                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Unlimited chatbot access</li>
+                                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Expert booking discounts</li>
+                                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Credits for AI chatbot</li>
                             </ul>
                         </CardContent>
                         <CardFooter>

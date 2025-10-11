@@ -106,7 +106,7 @@ export function CrsCalculator() {
   };
   
   return (
-    <Card className="h-[calc(100vh-16rem)] flex flex-col">
+    <Card className="h-[calc(100vh-16rem)] flex flex-col shadow-lg">
       <CardContent className="flex-1 flex flex-col justify-between overflow-hidden p-0">
         <ScrollArea className="flex-1 p-6" viewportRef={scrollAreaRef}>
           <div className="space-y-4">
@@ -127,9 +127,9 @@ export function CrsCalculator() {
                 )}
               >
                 {message.role === "assistant" && (
-                  <Avatar className="h-8 w-8 border">
-                    <AvatarFallback>
-                      <Bot className="h-5 w-5 text-primary" />
+                   <Avatar className="h-8 w-8 border">
+                    <AvatarFallback className="bg-secondary">
+                      <Bot className="h-5 w-5 text-secondary-foreground" />
                     </AvatarFallback>
                   </Avatar>
                 )}
@@ -138,7 +138,7 @@ export function CrsCalculator() {
                     "max-w-md rounded-lg px-4 py-2 text-sm",
                     message.role === "user"
                       ? "bg-primary text-primary-foreground"
-                      : "bg-muted"
+                      : "bg-secondary text-secondary-foreground"
                   )}
                 >
                   <p>{message.content}</p>
@@ -155,8 +155,8 @@ export function CrsCalculator() {
             {isLoading && (
               <div className="flex items-start gap-3">
                 <Avatar className="h-8 w-8 border">
-                  <AvatarFallback>
-                    <Bot className="h-5 w-5 text-primary" />
+                  <AvatarFallback className="bg-secondary">
+                    <Bot className="h-5 w-5 text-secondary-foreground" />
                   </AvatarFallback>
                 </Avatar>
                 <div className="rounded-lg bg-muted px-4 py-2 text-sm">

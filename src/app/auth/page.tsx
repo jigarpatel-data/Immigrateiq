@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export default function AuthPage() {
   return (
-    <div className="flex items-center justify-center w-full min-h-screen bg-background">
+    <div className="flex items-center justify-center w-full min-h-screen bg-sidebar-background text-sidebar-foreground">
       <div className="flex-1 flex flex-col justify-center items-center p-8">
         <div className="w-full max-w-md space-y-6">
           <div className="flex justify-center flex-col items-center gap-2">

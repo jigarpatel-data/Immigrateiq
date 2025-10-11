@@ -73,7 +73,7 @@ export function ChatInterface() {
   };
   
   return (
-    <Card className="h-[calc(100vh-16rem)] flex flex-col">
+    <Card className="h-[calc(100vh-16rem)] flex flex-col shadow-lg">
       <CardContent className="flex-1 flex flex-col p-0">
         <ScrollArea className="flex-1 p-6" ref={scrollAreaRef}>
           <div className="space-y-6">
@@ -94,8 +94,8 @@ export function ChatInterface() {
               >
                 {message.role === "assistant" && (
                   <Avatar className="h-8 w-8 border">
-                    <AvatarFallback>
-                      <Bot className="h-5 w-5 text-primary" />
+                    <AvatarFallback className="bg-secondary">
+                      <Bot className="h-5 w-5 text-secondary-foreground" />
                     </AvatarFallback>
                   </Avatar>
                 )}
@@ -104,7 +104,7 @@ export function ChatInterface() {
                     "max-w-md rounded-lg px-4 py-3 text-sm",
                     message.role === "user"
                       ? "bg-primary text-primary-foreground"
-                      : "bg-muted"
+                      : "bg-secondary text-secondary-foreground"
                   )}
                 >
                   {message.content.split('\n').map((line, i) => <p key={i}>{line}</p>)}
@@ -121,8 +121,8 @@ export function ChatInterface() {
              {isLoading && (
               <div className="flex items-start gap-4 justify-start">
                 <Avatar className="h-8 w-8 border">
-                   <AvatarFallback>
-                      <Bot className="h-5 w-5 text-primary" />
+                   <AvatarFallback className="bg-secondary">
+                      <Bot className="h-5 w-5 text-secondary-foreground" />
                     </AvatarFallback>
                 </Avatar>
                 <div className="max-w-md rounded-lg px-4 py-3 text-sm bg-muted flex items-center">

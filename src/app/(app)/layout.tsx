@@ -49,7 +49,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
     router.push('/auth');
   }
 
-  const visibleNavItems = user ? navItems : navItems.slice(0,1);
+  const visibleNavItems = user ? navItems : [];
 
   // This inner component is necessary to use the useSidebar hook
   const SidebarLayout = ({ children: mainContent }: { children: React.ReactNode }) => {
@@ -66,7 +66,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
           <SidebarHeader>
              <div className="flex items-center justify-between p-2">
                 <Link href="/dashboard" className="flex items-center gap-2 group-data-[collapsible=icon]:hidden">
-                  <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/android-chrome-192x192.png?alt=media&token=4e79ad3d-2db0-4b6c-bc68-efa3d2633eb8" alt="TheCanIndian Logo" width={48} height={48} />
+                  <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/Black%20background-final.png?alt=media&token=9086963b-efba-4599-8ff3-76ca37d7ba1c" alt="TheCanIndian Logo" width={120} height={48} />
                 </Link>
                 <SidebarTrigger>
                   <PanelLeft />
@@ -105,7 +105,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
                           </div>
                       </div>
                     </Link>
-                    <Button variant="ghost" onClick={onSignOut} className="w-full justify-start group-data-[collapsible=icon]:justify-center">
+                    <Button variant="ghost" onClick={onSignOut} className="w-full justify-start group-data-[collapsible=icon]:justify-center text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                       <LogOut className="h-4 w-4 mr-2 group-data-[collapsible=icon]:mr-0"/>
                       <span className="group-data-[collapsible=icon]:hidden">Logout</span>
                     </Button>
@@ -113,7 +113,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
               ) : (
                  <div className="w-full flex flex-col gap-2 p-2">
                   <Link href="/auth">
-                    <Button className="w-full">Sign In</Button>
+                    <Button className="w-full bg-sidebar-primary text-sidebar-primary-foreground hover:bg-sidebar-primary/80">Sign In</Button>
                   </Link>
                 </div>
               )}
@@ -126,30 +126,19 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
                   <SidebarTrigger className="lg:hidden">
                     <Menu />
                   </SidebarTrigger>
-                  <Link href="/dashboard" className="flex items-center gap-2">
-                      <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/Black%20background-final.png?alt=media&token=9086963b-efba-4599-8ff3-76ca37d7ba1c" alt="TheCanIndian Logo" width={120} height={48} />
+                  <Link href="/dashboard" className="flex items-center gap-2 lg:hidden">
+                       <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/android-chrome-192x192.png?alt=media&token=4e79ad3d-2db0-4b6c-bc68-efa3d2633eb8" alt="TheCanIndian Logo" width={32} height={32} />
                   </Link>
               </div>
                {user && (
                 <div className="flex items-center gap-4">
-                  <div className="hidden lg:flex">
-                     <Link href="/profile" >
+                  <Link href="/profile">
                       <Avatar className="h-8 w-8">
                           <AvatarFallback>
                             <User className="h-5 w-5" />
                           </AvatarFallback>
                       </Avatar>
-                     </Link>
-                  </div>
-                   <div className="lg:hidden">
-                    <Link href="/profile">
-                        <Avatar className="h-8 w-8">
-                            <AvatarFallback>
-                                <User className="h-5 w-5" />
-                            </AvatarFallback>
-                        </Avatar>
-                      </Link>
-                  </div>
+                   </Link>
                 </div>
                )}
           </header>
