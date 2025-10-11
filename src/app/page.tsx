@@ -81,12 +81,11 @@ const searchQueries = [
 ];
 
 export default function HomePage() {
-  const heroImage = placeholderImages.find(p => p.id === 'hero-people-goals');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="fixed top-0 z-40 w-full border-b bg-sidebar-background/80 text-sidebar-foreground backdrop-blur-sm print:hidden">
+      <header className="fixed top-0 z-40 w-full border-b bg-sidebar-background text-sidebar-foreground print:hidden">
           <div className="container mx-auto flex h-16 items-center justify-between px-[5%]">
             <Link href="/" className="flex items-center gap-2">
                 <span className="font-bold text-lg">Immigrateiq</span>
@@ -315,3 +314,5 @@ export default function HomePage() {
     </div>
   );
 }
+
+    
