@@ -22,6 +22,7 @@ import {
   SheetClose
 } from "@/components/ui/sheet";
 import { TypedText } from "@/components/typed-text";
+import { cn } from "@/lib/utils";
 
 const features = [
     { icon: <CheckCircle className="h-6 w-6 text-primary" />, text: "Personalized PR eligibility checker" },
@@ -189,7 +190,7 @@ export default function HomePage() {
                 </p>
                 <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {featureCards.map((card, index) => (
-                        <Card key={index} className="text-center shadow-lg">
+                        <Card key={index} className={cn("text-center shadow-lg opacity-0", `animate-fade-in-up animation-delay-${3000 + index * 500}`)}>
                             <CardHeader>
                                 {card.icon}
                                 <CardTitle>{card.title}</CardTitle>
@@ -306,9 +307,9 @@ export default function HomePage() {
 
         {/* FAQ Section */}
         <section id="faq">
-          <div className="w-full px-[5%]">
-            <div className="w-full bg-muted">
-              <div className="max-w-7xl mx-auto max-w-3xl py-20">
+          <div className="w-full px-[5%] py-20">
+            <div className="w-full">
+              <div className="max-w-7xl mx-auto max-w-3xl">
                   <h2 className="text-2xl font-bold text-center">Frequently Asked Questions</h2>
                   <Accordion type="single" collapsible className="w-full mt-8">
                       {faqData.map((faq, index) => (

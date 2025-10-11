@@ -106,4 +106,7 @@
   .animation-delay-4000 {
     animation-delay: 4s;
   }
+  .animation-delay-4500 {
+    animation-delay: 4.5s;
+  }
 }
