@@ -310,6 +310,7 @@ export default function HomePage() {
           </div>
         </section>
       </main>
+      <div className="fixed top-0 left-[5%] h-full w-px bg-border hidden md:block" />
       <Footer />
     </div>
   );
