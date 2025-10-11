@@ -28,7 +28,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { CustomGoogleIcon } from "@/components/icons";
-import { Loader2, Info, Eye, EyeOff, CheckCircle } from "lucide-react";
+import { Loader2, Info, Eye, EyeOff, CheckCircle, GraduationCap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { handleSignIn, handleSignUp, handleGoogleSignIn, handlePasswordReset } from "@/lib/auth";
 import { useRouter } from "next/navigation";
@@ -317,9 +317,9 @@ export function AuthForm() {
         <Form {...passwordResetForm}>
           <form onSubmit={passwordResetForm.handleSubmit(onPasswordResetSubmit)}>
             <AlertDialogHeader className="items-center text-center">
-               <Link href="/" className="flex flex-col items-center">
-                <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/android-chrome-192x192.png?alt=media&token=4e79ad3d-2db0-4b6c-bc68-efa3d2633eb8" alt="TheCanIndian Logo" width={100} height={100} className="z-10 relative mb-[-30px]" />
-                <Image src="https://firebasestorage.googleapis.com/v0/b/thecanindian.firebasestorage.app/o/Black%20background-final.png?alt=media&token=9086963b-efba-4599-8ff3-76ca37d7ba1c" alt="TheCanIndian Logo" width={200} height={80} />
+               <Link href="/" className="flex flex-col items-center gap-2 text-center">
+                    <GraduationCap className="h-12 w-12" />
+                    <h1 className="text-xl font-bold">Immigration University</h1>
               </Link>
               <AlertDialogTitle>Forgot Password?</AlertDialogTitle>
               <AlertDialogDescription>
