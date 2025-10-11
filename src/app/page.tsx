@@ -154,7 +154,7 @@ export default function HomePage() {
         </section>
 
         {/* Core Value Proposition */}
-        <section id="why-us" className="py-20 bg-muted/30">
+        <section id="why-us" className="py-20">
           <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
             <h2 className="text-2xl font-bold">Why choose our app?</h2>
             <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-sm">
@@ -195,7 +195,7 @@ export default function HomePage() {
         </section>
 
         {/* Social Proof Placeholder */}
-        <section id="social-proof" className="py-20 bg-muted/30">
+        <section id="social-proof" className="py-20">
           <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
             <h2 className="text-2xl font-bold">What Our Users Are Saying</h2>
             <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-sm">
@@ -223,7 +223,7 @@ export default function HomePage() {
         </section>
 
         {/* Pricing Section */}
-        <section id="pricing" className="py-20 bg-muted/30">
+        <section id="pricing" className="py-20">
             <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
                 <h2 className="text-2xl font-bold">Simple & Transparent Pricing</h2>
                 <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -282,7 +282,7 @@ export default function HomePage() {
         </section>
 
         {/* FAQ Section */}
-        <section id="faq" className="py-20 bg-muted/30">
+        <section id="faq" className="py-20">
             <div className="w-full max-w-7xl mx-auto px-[5%] max-w-3xl">
                 <h2 className="text-2xl font-bold text-center">Frequently Asked Questions</h2>
                 <Accordion type="single" collapsible className="w-full mt-8">
