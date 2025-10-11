@@ -85,6 +85,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <div className="fixed top-16 bottom-0 left-[5%] w-px bg-border hidden md:block z-0" />
       <header className="fixed top-0 z-40 w-full border-b bg-sidebar-background text-sidebar-foreground print:hidden">
           <div className="container mx-auto flex h-16 items-center justify-between px-[5%]">
             <Link href="/" className="flex items-center gap-2">
@@ -125,7 +126,6 @@ export default function HomePage() {
           </div>
       </header>
       <main className="relative">
-        <div className="absolute top-0 left-[5%] h-full w-px bg-border hidden md:block" />
         {/* Hero Section */}
         <section className="pt-20 pb-20 text-center bg-background text-foreground relative overflow-hidden">
             <div className="w-full max-w-7xl mx-auto px-[5%] relative z-10">
