@@ -126,7 +126,7 @@ export default function HomePage() {
       </header>
       <main>
         {/* Hero Section */}
-        <section className="pt-20 pb-20 text-center bg-sidebar-background text-sidebar-foreground relative overflow-hidden">
+        <section className="pt-20 pb-20 text-center bg-background text-foreground relative overflow-hidden">
             <div className="w-full max-w-7xl mx-auto px-[5%] relative z-10">
                 <div className="max-w-5xl mx-auto mt-4">
                     <h1 className="text-2xl font-extrabold tracking-tight md:text-4xl lg:text-5xl animate-fade-in-up">
@@ -136,7 +136,7 @@ export default function HomePage() {
                         Check your eligibility, track immigration draws, and explore PR pathways - all in one place.
                      </p>
                      <div className="mt-10 animate-fade-in-up animation-delay-3000 h-28 w-full sm:w-5/6 lg:w-4/5 mx-auto">
-                      <div data-name="search-container" className="relative rounded-md border border-sidebar-border bg-sidebar-background/50 p-4 shadow-inner h-full">
+                      <div data-name="search-container" className="relative rounded-md border border-border bg-card/50 p-4 shadow-inner h-full">
                         <div data-name="search-box" className="flex items-center h-full">
                           <div data-name="search-text-container" className="w-full sm:w-auto flex-1 text-left">
                             <TypedText strings={searchQueries} />
