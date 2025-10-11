@@ -157,65 +157,71 @@ export default function HomePage() {
         </section>
 
         {/* Core Value Proposition */}
-        <section id="why-us" className="py-20 bg-muted">
-          <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
-            <h2 className="text-2xl font-bold">Why choose our app?</h2>
-            <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-sm">
-                Simplify your immigration journey with tools built to save you time and stress.
-            </p>
-            <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {features.map((feature, index) => (
-                <div key={index} className="flex items-start text-left gap-4 p-4 rounded-lg hover:bg-background/50 transition-colors">
-                    {feature.icon}
-                    <span className="font-medium">{feature.text}</span>
-                </div>
-              ))}
+        <section id="why-us" className="bg-muted">
+          <div className="w-full px-[5%] py-20">
+            <div className="max-w-7xl mx-auto text-center">
+              <h2 className="text-2xl font-bold">Why choose our app?</h2>
+              <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-sm">
+                  Simplify your immigration journey with tools built to save you time and stress.
+              </p>
+              <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {features.map((feature, index) => (
+                  <div key={index} className="flex items-start text-left gap-4 p-4 rounded-lg hover:bg-background/50 transition-colors">
+                      {feature.icon}
+                      <span className="font-medium">{feature.text}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
         {/* How It Works Section */}
-        <section id="features" className="py-20 bg-background">
-          <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
-            <h2 className="text-2xl font-bold">How It Works</h2>
-            <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-sm">
-                Everything you need for a smarter immigration strategy.
-            </p>
-            <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {featureCards.map((card, index) => (
-                    <Card key={index} className="text-center shadow-lg">
-                        <CardHeader>
-                            {card.icon}
-                            <CardTitle>{card.title}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-muted-foreground text-sm">{card.description}</p>
-                        </CardContent>
-                    </Card>
-                ))}
+        <section id="features" className="bg-background">
+          <div className="w-full px-[5%] py-20">
+            <div className="max-w-7xl mx-auto text-center">
+              <h2 className="text-2xl font-bold">How It Works</h2>
+              <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-sm">
+                  Everything you need for a smarter immigration strategy.
+              </p>
+              <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {featureCards.map((card, index) => (
+                      <Card key={index} className="text-center shadow-lg">
+                          <CardHeader>
+                              {card.icon}
+                              <CardTitle>{card.title}</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                              <p className="text-muted-foreground text-sm">{card.description}</p>
+                          </CardContent>
+                      </Card>
+                  ))}
+              </div>
             </div>
           </div>
         </section>
 
         {/* Social Proof Placeholder */}
-        <section id="social-proof" className="py-20 bg-muted">
-          <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
-            <h2 className="text-2xl font-bold">What Our Users Are Saying</h2>
-            <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-sm">
-                Join thousands of users who are simplifying their journey to Canada.
-            </p>
-            <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Placeholder for testimonials */}
-                <Card><CardContent className="p-6"><p className="italic">"This app was a game-changer for my Express Entry application." - Priya S.</p></CardContent></Card>
-                <Card><CardContent className="p-6"><p className="italic">"The draw tracker is incredibly useful. Finally, all the info in one place!" - Omar A.</p></CardContent></Card>
-                <Card><CardContent className="p-6"><p className="italic">"I used the AI chatbot to clarify so many doubts. Highly recommended!" - Chen L.</p></CardContent></Card>
+        <section id="social-proof" className="bg-muted">
+          <div className="w-full px-[5%] py-20">
+            <div className="max-w-7xl mx-auto text-center">
+              <h2 className="text-2xl font-bold">What Our Users Are Saying</h2>
+              <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-sm">
+                  Join thousands of users who are simplifying their journey to Canada.
+              </p>
+              <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Placeholder for testimonials */}
+                  <Card><CardContent className="p-6"><p className="italic">"This app was a game-changer for my Express Entry application." - Priya S.</p></CardContent></Card>
+                  <Card><CardContent className="p-6"><p className="italic">"The draw tracker is incredibly useful. Finally, all the info in one place!" - Omar A.</p></CardContent></Card>
+                  <Card><CardContent className="p-6"><p className="italic">"I used the AI chatbot to clarify so many doubts. Highly recommended!" - Chen L.</p></CardContent></Card>
+              </div>
             </div>
           </div>
         </section>
         
         {/* Call-to-Action */}
-        <section id="cta" className="py-20 bg-background">
-            <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
+        <section id="cta" className="bg-background">
+            <div className="w-full max-w-7xl mx-auto px-[5%] py-20 text-center">
                 <h2 className="text-2xl font-bold">Ready to take the next step?</h2>
                 <div className="mt-6">
                     <Link href="/auth">
@@ -226,67 +232,72 @@ export default function HomePage() {
         </section>
 
         {/* Pricing Section */}
-        <section id="pricing" className="py-20 bg-muted">
-            <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
-                <h2 className="text-2xl font-bold">Simple & Transparent Pricing</h2>
-                <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                    <Card className="text-left shadow-lg">
-                        <CardHeader>
-                            <CardTitle>Free</CardTitle>
-                            <CardDescription>Get started with the essentials.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <p className="text-3xl font-bold">$0</p>
-                            <ul className="space-y-2 text-muted-foreground">
-                                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-green-500" /> Basic Score eligibility check</li>
-                                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-green-500" /> Chatbot trial (3 days)</li>
-                                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-green-500" /> Score calculator</li>
-                            </ul>
-                        </CardContent>
-                        <CardFooter>
+        <section id="pricing" className="bg-muted">
+            <div className="w-full px-[5%] py-20">
+              <div className="max-w-7xl mx-auto text-center">
+                  <h2 className="text-2xl font-bold">Simple & Transparent Pricing</h2>
+                  <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                      <Card className="text-left shadow-lg">
+                          <CardHeader>
+                              <CardTitle>Free</CardTitle>
+                              <CardDescription>Get started with the essentials.</CardDescription>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
+                              <p className="text-3xl font-bold">$0</p>
+                              <ul className="space-y-2 text-muted-foreground">
+                                  <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-green-500" /> Basic Score eligibility check</li>
+                                  <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-green-500" /> Chatbot trial (3 days)</li>
+                                  <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-green-500" /> Score calculator</li>
+                              </ul>
+                          </CardContent>
+                          <CardFooter>
+                              <Link href="/auth" className="w-full">
+                                  <Button className="w-full" variant="secondary">Start for Free</Button>
+                              </Link>
+                          </CardFooter>
+                      </Card>
+                      <Card className="text-left border-primary ring-2 ring-primary shadow-lg">
+                          <CardHeader>
+                              <CardTitle>Premium</CardTitle>
+                              <CardDescription>Unlock the full suite of immigration tools.</CardDescription>
+                          </CardHeader>
+                          <CardContent className="space-y-4">
+                              <p className="text-3xl font-bold">$5 <span className="text-base font-normal text-muted-foreground">/ month</span></p>
+                              <ul className="space-y-2">
+                                  <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Draw tracker</li>
+                                  <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Historical data</li>
+                                  <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Unlimited chatbot access</li>
+                                  <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Expert booking discounts</li>
+                                  <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Credits for AI chatbot</li>
+                              </ul>
+                          </CardContent>
+                          <CardFooter>
                             <Link href="/auth" className="w-full">
-                                <Button className="w-full" variant="secondary">Start for Free</Button>
+                              <Button className="w-full">Go Premium</Button>
                             </Link>
-                        </CardFooter>
-                    </Card>
-                    <Card className="text-left border-primary ring-2 ring-primary shadow-lg">
-                        <CardHeader>
-                            <CardTitle>Premium</CardTitle>
-                            <CardDescription>Unlock the full suite of immigration tools.</CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <p className="text-3xl font-bold">$5 <span className="text-base font-normal text-muted-foreground">/ month</span></p>
-                            <ul className="space-y-2">
-                                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Draw tracker</li>
-                                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Historical data</li>
-                                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Unlimited chatbot access</li>
-                                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Expert booking discounts</li>
-                                <li className="flex items-center gap-2"><CheckCircle className="h-5 w-5 text-primary" /> Credits for AI chatbot</li>
-                            </ul>
-                        </CardContent>
-                        <CardFooter>
-                          <Link href="/auth" className="w-full">
-                            <Button className="w-full">Go Premium</Button>
-                          </Link>
-                        </CardFooter>
-                    </Card>
-                </div>
+                          </CardFooter>
+                      </Card>
+                  </div>
+              </div>
             </div>
         </section>
 
         {/* About Section */}
-        <section id="about" className="py-20 bg-background">
-            <div className="w-full max-w-7xl mx-auto px-[5%] text-center max-w-3xl">
-                <h2 className="text-2xl font-bold">About Us</h2>
-                <p className="mt-6 text-base text-muted-foreground">
-                    We’re immigrants ourselves. We built this app because the process was confusing, costly, and overwhelming. Our mission is simple: <strong>make immigration easier, faster, and more transparent for everyone.</strong>
-                </p>
+        <section id="about" className="bg-background">
+            <div className="w-full px-[5%] py-20">
+              <div className="max-w-7xl mx-auto text-center max-w-3xl">
+                  <h2 className="text-2xl font-bold">About Us</h2>
+                  <p className="mt-6 text-base text-muted-foreground">
+                      We’re immigrants ourselves. We built this app because the process was confusing, costly, and overwhelming. Our mission is simple: <strong>make immigration easier, faster, and more transparent for everyone.</strong>
+                  </p>
+              </div>
             </div>
         </section>
 
         {/* FAQ Section */}
-        <section id="faq" className="py-20 bg-muted">
-            <div className="w-full max-w-7xl mx-auto px-[5%] max-w-3xl">
+        <section id="faq" className="bg-muted">
+          <div className="w-full px-[5%] py-20">
+            <div className="max-w-7xl mx-auto max-w-3xl">
                 <h2 className="text-2xl font-bold text-center">Frequently Asked Questions</h2>
                 <Accordion type="single" collapsible className="w-full mt-8">
                     {faqData.map((faq, index) => (
@@ -299,6 +310,7 @@ export default function HomePage() {
                     ))}
                 </Accordion>
             </div>
+          </div>
         </section>
 
         {/* Final CTA */}
@@ -317,9 +329,3 @@ export default function HomePage() {
     </div>
   );
 }
-
-    
-
-    
-
-    
