@@ -108,6 +108,8 @@ export function DrawTrackerClient({
         setOffset(undefined);
       } else if (isLoadMore) {
         setLoadingMore(true);
+      } else {
+        setLoading(true);
       }
       setError(null);
       
@@ -131,7 +133,7 @@ export function DrawTrackerClient({
         setHasMore(false);
       }
       
-      if(isNewFilter) {
+      if(!isLoadMore) {
         setLoading(false);
       }
       if(isLoadMore) {
@@ -191,7 +193,7 @@ export function DrawTrackerClient({
   // This useEffect will run when any filter or search term changes
   useEffect(() => {
     fetchDraws(undefined, true);
-  }, [activeSearchTerm, provinceFilter, categoryFilter, fetchDraws]);
+  }, [activeSearchTerm, provinceFilter, categoryFilter]);
 
 
   const resetFilters = () => {
@@ -351,7 +353,7 @@ export function DrawTrackerClient({
               </div>
                 <div className="relative">
                     <ScrollArea className="h-[calc(100vh-17rem)]" viewportRef={viewportRef} onScroll={handleScroll}>
-                        {loading && allDraws.length === 0 ? (
+                        {loading ? (
                             <div className="flex flex-col items-center justify-center text-center py-16">
                                 <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
                                 <h1 className="text-xl md:text-2xl font-bold tracking-tight">Loading Draws...</h1>
@@ -403,7 +405,7 @@ export function DrawTrackerClient({
                                             <div className="space-y-2 text-xs">
                                                 <p className="font-semibold text-sm">{draw.Category}</p>
                                                 <div className="flex flex-col sm:flex-row sm:gap-6">
-                                                  <div className="flex items-center gap-2 sm:w-32">
+                                                  <div className="flex items-center gap-2 sm:w-40">
                                                     <span className="text-muted-foreground">Min. Score:</span>
                                                     <span className="font-semibold">{draw.Score || 'N/A'}</span>
                                                   </div>
@@ -557,3 +559,4 @@ export function DrawTrackerClient({
     
 
     
+
