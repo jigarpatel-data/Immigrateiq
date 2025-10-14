@@ -362,7 +362,7 @@ export function AuthForm() {
     <AlertDialog open={isVerificationDialogOpen} onOpenChange={setIsVerificationDialogOpen}>
         <AlertDialogContent>
             <AlertDialogHeader>
-                <AlertDialogTitle>Verification Email Sent</AlertDialogTitle>
+                <AlertDialogTitle>Verification Email Sent (check spam flder)</AlertDialogTitle>
                 <AlertDialogDescription>
                   Please check your inbox to verify your email address. Once verified, you can{" "}
                   <button
@@ -385,3 +385,5 @@ export function AuthForm() {
     </>
   );
 }
+
+    

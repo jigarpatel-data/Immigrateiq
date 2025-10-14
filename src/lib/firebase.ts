@@ -4,12 +4,12 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  "projectId": "immigration-uni-84368757-ca3d4",
-  "appId": "1:958434784267:web:2d2b4b445582f3484c25eb",
-  "storageBucket": "immigration-uni-84368757-ca3d4.appspot.com",
-  "apiKey": "AIzaSyDaLwmuGvjOez8542Q12345y3NoF5s39qA",
-  "authDomain": "immigration-uni-84368757-ca3d4.firebaseapp.com",
-  "messagingSenderId": "958434784267"
+  apiKey: "AIzaSyD3_j3i6ogbRa9HcE4UsUty2ZLnuS_hAxU",
+  authDomain: "immigration-uni-84368757-ca3d4.firebaseapp.com",
+  projectId: "immigration-uni-84368757-ca3d4",
+  storageBucket: "immigration-uni-84368757-ca3d4.firebasestorage.app",
+  messagingSenderId: "9301678245",
+  appId: "1:9301678245:web:af5821c3a6af840d30554c"
 };
 
 
