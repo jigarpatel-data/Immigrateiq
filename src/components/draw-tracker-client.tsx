@@ -130,8 +130,13 @@ export function DrawTrackerClient({
       } else {
         setHasMore(false);
       }
-      setLoading(false);
-      setLoadingMore(false);
+      
+      if(isNewFilter) {
+        setLoading(false);
+      }
+      if(isLoadMore) {
+        setLoadingMore(false);
+      }
   }, [provinceFilter, categoryFilter, activeSearchTerm]);
   
   const handleDrawClick = useCallback(async (draw: Draw) => {
@@ -551,5 +556,7 @@ export function DrawTrackerClient({
     </div>
   );
 }
+
+    
 
     
