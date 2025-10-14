@@ -318,7 +318,7 @@ export function AuthForm() {
           <form onSubmit={passwordResetForm.handleSubmit(onPasswordResetSubmit)}>
             <AlertDialogHeader className="items-center text-center">
                <Link href="/" className="flex flex-col items-center gap-2 text-center">
-                    <GraduationCap className="h-12 w-12" />
+                    
                     <h1 className="text-xl font-bold">Immigrateiq</h1>
               </Link>
               <AlertDialogTitle>Forgot Password?</AlertDialogTitle>
@@ -385,5 +385,3 @@ export function AuthForm() {
     </>
   );
 }
-
-    
