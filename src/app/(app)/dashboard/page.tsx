@@ -80,13 +80,6 @@ const recentDraws = [
 export default function DashboardPage() {
   return (
     <div className="space-y-6">
-      <header>
-        <h1 className="text-xl md:text-2xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground text-sm">
-          Your personalized Canadian immigration overview.
-        </p>
-      </header>
-
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

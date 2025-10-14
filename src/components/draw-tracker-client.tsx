@@ -57,8 +57,6 @@ import { Label } from '@/components/ui/label';
 
 
 type DrawTrackerClientProps = {
-    title: string;
-    description: string;
     initialDraws: Draw[];
     initialOffset?: string;
     initialError?: string;
@@ -67,8 +65,6 @@ type DrawTrackerClientProps = {
 };
 
 export function DrawTrackerClient({ 
-    title,
-    description,
     initialDraws, 
     initialOffset, 
     initialError, 
@@ -237,15 +233,11 @@ export function DrawTrackerClient({
     <div className="space-y-6">
       <div className={cn("grid grid-cols-1 items-start gap-6 lg:grid-cols-3")}>
           <div className={cn("lg:col-span-2 space-y-6", !isPanelOpen && "lg:col-span-3")}>
-              <div className="sticky top-6 z-10">
+              <div className="sticky top-0 z-10 -mt-4 pt-4 bg-background">
                 <Card className="shadow-lg">
                   <CardHeader>
                     <div className="flex justify-between items-start">
-                        <div>
-                          <CardTitle className="text-xl md:text-2xl font-bold tracking-tight">{title}</CardTitle>
-                          <CardDescription className="pt-1 text-sm">{description}</CardDescription>
-                        </div>
-                         <div className="hidden lg:flex items-center space-x-2">
+                        <div className="hidden lg:flex items-center space-x-2">
                           <Switch
                             id="table-view-switch"
                             checked={viewMode === 'table'}
@@ -260,7 +252,7 @@ export function DrawTrackerClient({
                            <div className="relative flex-grow">
                               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                               <Input 
-                                  placeholder="Search draws by NOC, category, or province..."
+                                  placeholder="Search by NOC, category, or province..."
                                   value={rawSearchTerm}
                                   onChange={(e) => setRawSearchTerm(e.target.value)}
                                   className="pl-10"
@@ -328,7 +320,7 @@ export function DrawTrackerClient({
                 </Card>
               </div>
                 <div className="relative">
-                    <ScrollArea className="h-[calc(100vh-22rem)]" viewportRef={viewportRef} onScroll={handleScroll}>
+                    <ScrollArea className="h-[calc(100vh-17rem)]" viewportRef={viewportRef} onScroll={handleScroll}>
                         {loading && allDraws.length === 0 ? (
                             <div className="flex flex-col items-center justify-center text-center py-16">
                                 <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
@@ -488,7 +480,7 @@ export function DrawTrackerClient({
           </div>
           <div className={cn("lg:col-span-1 hidden", isPanelOpen && "lg:block")}>
               {selectedDraw && (
-                  <div className="sticky top-6">
+                  <div className="sticky top-0">
                       {isMobile ? (
                           <Sheet open={!!selectedDraw && isMobile} onOpenChange={(isOpen) => { if (!isOpen) setSelectedDraw(null); }}>
                               <SheetContent side="right" className="w-full sm:max-w-lg p-0 flex flex-col">
@@ -504,7 +496,7 @@ export function DrawTrackerClient({
                               </SheetContent>
                           </Sheet>
                       ) : (
-                          <Card className={cn("flex flex-col h-[calc(100vh-8rem)] transition-all shadow-lg", isPanelOpen ? "w-full" : "w-0")}>
+                          <Card className={cn("flex flex-col h-[calc(100vh-6.5rem)] transition-all shadow-lg", isPanelOpen ? "w-full" : "w-0")}>
                               <CardHeader>
                                   <div className="flex justify-between items-start">
                                       <div className={cn(isPanelOpen ? "opacity-100" : "opacity-0")}>

@@ -32,13 +32,13 @@ import {
 import { useAuth } from "@/hooks/use-auth";
 import { handleSignOut } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/draw-tracker", icon: GanttChart, label: "Draw Tracker" },
-  { href: "/chatbot", icon: Bot, label: "Chatbot" },
+  { href: "/chatbot", icon: Bot, label: "AI Assistant" },
   { href: "/faq", icon: HelpCircle, label: "FAQ" },
+  { href: "/profile", icon: User, label: "Profile", hidden: true },
 ];
 
 function AppLayoutComponent({ children }: { children: React.ReactNode }) {
@@ -50,7 +50,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
     router.push('/auth');
   }
 
-  const visibleNavItems = user ? navItems : [];
+  const visibleNavItems = user ? navItems.filter(item => !item.hidden) : [];
 
   // This inner component is necessary to use the useSidebar hook
   const SidebarLayout = ({ children: mainContent }: { children: React.ReactNode }) => {
@@ -60,6 +60,10 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
     const handleLinkClick = () => {
       setOpenMobile(false);
     };
+
+    const currentPage = navItems.find(item => pathname.startsWith(item.href));
+    const pageTitle = currentPage ? currentPage.label : "";
+
 
     return (
       <>
@@ -128,9 +132,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
                   <SidebarTrigger className="lg:hidden">
                     <Menu />
                   </SidebarTrigger>
-                  <Link href="/dashboard" className="flex items-center gap-2 lg:hidden">
-                       <GraduationCap className="h-6 w-6" />
-                  </Link>
+                  <h1 className="text-lg font-semibold">{pageTitle}</h1>
               </div>
                {user && (
                 <div className="flex items-center gap-4">

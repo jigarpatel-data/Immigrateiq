@@ -82,13 +82,6 @@ function ProfilePage() {
 
   return (
     <div className="space-y-6">
-       <header>
-        <h1 className="text-xl md:text-2xl font-bold tracking-tight">Profile</h1>
-        <p className="text-muted-foreground text-sm">
-          Manage your account information and preferences.
-        </p>
-      </header>
-      
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
             <Card>

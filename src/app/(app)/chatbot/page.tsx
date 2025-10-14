@@ -10,12 +10,6 @@ import { Bot, Calculator } from "lucide-react";
 function ChatbotPage() {
   return (
     <div className="flex flex-col h-full">
-      <header className="mb-6">
-        <h1 className="text-xl md:text-2xl font-bold tracking-tight">AI Assistant & Tools</h1>
-        <p className="text-muted-foreground text-sm">
-          Your personal guide for Canadian immigration queries and calculators.
-        </p>
-      </header>
       <Tabs defaultValue="chatbot" className="flex-1 flex flex-col">
         <TabsList className="grid w-full grid-cols-2 max-w-md">
           <TabsTrigger value="chatbot">

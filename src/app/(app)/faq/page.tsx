@@ -55,13 +55,6 @@ function FaqPage() {
   return (
     <div className="flex flex-col">
       <div className="flex-grow max-w-4xl mx-auto w-full">
-        <header className="text-center mb-6">
-          <h1 className="text-xl md:text-2xl font-bold tracking-tight">Frequently Asked Questions</h1>
-          <p className="text-muted-foreground mt-2 text-sm">
-            Find answers to common questions about Canadian immigration.
-          </p>
-        </header>
-
         <div className="relative mb-6">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
           <Input 

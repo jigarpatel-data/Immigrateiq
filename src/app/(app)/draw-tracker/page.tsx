@@ -1,3 +1,4 @@
+
 import { getAirtableDraws, getUniqueFieldValues } from '@/lib/airtable';
 import { DrawTrackerClient } from '@/components/draw-tracker-client';
 
@@ -19,8 +20,6 @@ async function DrawTrackerPage() {
 
   return (
       <DrawTrackerClient
-        title="Draw Tracker"
-        description="Explore the latest Provincial and Federal immigration draws."
         initialDraws={initialDraws}
         initialOffset={initialOffset}
         initialError={initialError || filterOptionsError}
