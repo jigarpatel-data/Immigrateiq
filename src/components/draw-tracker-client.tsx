@@ -316,6 +316,34 @@ export function DrawTrackerClient({
                           )}
                         </form>
                       </div>
+                      {activeFilterCount > 0 && (
+                        <div className="flex flex-wrap gap-2 pt-4">
+                            {activeSearchTerm && (
+                                <Badge variant="secondary" className="flex items-center gap-1.5">
+                                    <span>{activeSearchTerm}</span>
+                                    <button onClick={() => { setRawSearchTerm(''); setActiveSearchTerm(''); }} className="rounded-full hover:bg-muted-foreground/20">
+                                        <X className="h-3 w-3" />
+                                    </button>
+                                </Badge>
+                            )}
+                            {provinceFilter !== 'All' && (
+                                <Badge variant="secondary" className="flex items-center gap-1.5">
+                                    <span>{provinceFilter}</span>
+                                    <button onClick={() => setProvinceFilter('All')} className="rounded-full hover:bg-muted-foreground/20">
+                                        <X className="h-3 w-3" />
+                                    </button>
+                                </Badge>
+                            )}
+                             {categoryFilter !== 'All' && (
+                                <Badge variant="secondary" className="flex items-center gap-1.5">
+                                    <span>{categoryFilter}</span>
+                                    <button onClick={() => setCategoryFilter('All')} className="rounded-full hover:bg-muted-foreground/20">
+                                        <X className="h-3 w-3" />
+                                    </button>
+                                </Badge>
+                            )}
+                        </div>
+                      )}
                   </CardHeader>
                 </Card>
               </div>
@@ -523,3 +551,5 @@ export function DrawTrackerClient({
     </div>
   );
 }
+
+    
