@@ -76,8 +76,8 @@
     --destructive: 0 72% 51%; /* Brighter Red for dark theme */
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 20%; /* Grey for borders */
-    --input: 0 0% 20%;
+    --border: 0 0% 25%; /* Grey for borders */
+    --input: 0 0% 25%;
     --ring: 0 0% 83.1%;
     
     --chart-1: 204 70% 53%;
