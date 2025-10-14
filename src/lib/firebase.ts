@@ -4,13 +4,12 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  "projectId": "thecanindian",
-  "appId": "1:369816088263:web:f517a23ced8e01d61898e2",
-  "storageBucket": "thecanindian.firebasestorage.app",
-  "apiKey": "AIzaSyBwgxY7qUOmHZBxOx9f2BFS_Hwie5Dy1Ok",
-  "authDomain": "thecanindian.firebaseapp.com",
-  "measurementId": "",
-  "messagingSenderId": "369816088263"
+  "projectId": "immigration-uni-84368757-ca3d4",
+  "appId": "1:958434784267:web:2d2b4b445582f3484c25eb",
+  "storageBucket": "immigration-uni-84368757-ca3d4.appspot.com",
+  "apiKey": "AIzaSyDaLwmuGvjOez8542Q12345y3NoF5s39qA",
+  "authDomain": "immigration-uni-84368757-ca3d4.firebaseapp.com",
+  "messagingSenderId": "958434784267"
 };
 
 
