@@ -364,7 +364,17 @@ export function AuthForm() {
             <AlertDialogHeader>
                 <AlertDialogTitle>Verification Email Sent</AlertDialogTitle>
                 <AlertDialogDescription>
-                Please check your inbox to verify your email address. Once verified, you can log in.
+                  Please check your inbox to verify your email address. Once verified, you can{" "}
+                  <button
+                    className="underline text-primary font-semibold"
+                    onClick={() => {
+                      setIsVerificationDialogOpen(false);
+                      setActiveTab("login");
+                    }}
+                  >
+                    log in here
+                  </button>
+                  .
                 </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
