@@ -19,6 +19,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   AlertDialog,
+  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -61,6 +62,7 @@ export function AuthForm() {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
+  const [isVerificationDialogOpen, setIsVerificationDialogOpen] = useState(false);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showSignUpPassword, setShowSignUpPassword] = useState(false);
   const { toast } = useToast();
@@ -117,12 +119,9 @@ export function AuthForm() {
         variant: "destructive",
       });
     } else {
-      toast({
-        title: "Verification Email Sent",
-        description: "Please check your inbox to verify your email address and log in.",
-      });
       signUpForm.reset();
-      setActiveTab("login"); // Switch to login tab
+      setActiveTab("login");
+      setIsVerificationDialogOpen(true);
     }
     setLoading(false);
   };
@@ -171,6 +170,7 @@ export function AuthForm() {
   };
 
   return (
+    <>
     <AlertDialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-2">
@@ -358,5 +358,20 @@ export function AuthForm() {
         </Form>
       </AlertDialogContent>
     </AlertDialog>
+    
+    <AlertDialog open={isVerificationDialogOpen} onOpenChange={setIsVerificationDialogOpen}>
+        <AlertDialogContent>
+            <AlertDialogHeader>
+                <AlertDialogTitle>Verification Email Sent</AlertDialogTitle>
+                <AlertDialogDescription>
+                Please check your inbox to verify your email address. Once verified, you can log in.
+                </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+                <AlertDialogAction onClick={() => setIsVerificationDialogOpen(false)}>Close</AlertDialogAction>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+    </AlertDialog>
+    </>
   );
 }
