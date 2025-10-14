@@ -241,19 +241,8 @@ export function DrawTrackerClient({
               <div className="sticky top-0 z-10 -mt-4 pt-4 bg-background">
                 <Card className="shadow-lg">
                   <CardHeader>
-                    <div className="flex justify-between items-start">
-                        <div className="hidden lg:flex items-center space-x-2">
-                          <Switch
-                            id="table-view-switch"
-                            checked={viewMode === 'table'}
-                            onCheckedChange={(checked) => setViewMode(checked ? 'table' : 'card')}
-                          />
-                          <Label htmlFor="table-view-switch">Table View</Label>
-                        </div>
-                    </div>
-                      
                       <div className="pt-4">
-                        <form onSubmit={handleSearch} className="flex gap-2">
+                        <form onSubmit={handleSearch} className="flex gap-2 items-center">
                            <div className="relative flex-grow">
                               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                               <Input 
@@ -262,6 +251,14 @@ export function DrawTrackerClient({
                                   onChange={(e) => setRawSearchTerm(e.target.value)}
                                   className="pl-10"
                               />
+                          </div>
+                          <div className="hidden lg:flex items-center space-x-2">
+                            <Switch
+                              id="table-view-switch"
+                              checked={viewMode === 'table'}
+                              onCheckedChange={(checked) => setViewMode(checked ? 'table' : 'card')}
+                            />
+                            <Label htmlFor="table-view-switch">Table View</Label>
                           </div>
                           <Sheet open={isFilterSheetOpen} onOpenChange={setIsFilterSheetOpen}>
                             <SheetTrigger asChild>
