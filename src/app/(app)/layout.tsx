@@ -68,8 +68,8 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
     return (
       <>
         <Sidebar collapsible="icon">
-          <SidebarHeader>
-             <div className="flex items-center justify-between p-2">
+          <SidebarHeader className="h-14 flex items-center p-0 border-b group-data-[collapsible=icon]:justify-center">
+             <div className="flex items-center justify-between w-full px-4">
                 <Link href="/dashboard" className="flex items-center gap-2 group-data-[collapsible=icon]:hidden">
                    <GraduationCap className="h-6 w-6" />
                    <span className="font-bold text-lg">Immigrateiq</span>
