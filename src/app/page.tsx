@@ -329,7 +329,7 @@ export default function HomePage() {
         {/* Final CTA */}
         <section id="final-cta" className="py-20 border-t bg-background">
           <div className="w-full max-w-7xl mx-auto px-[5%] text-center">
-            <h2 className="text-2xl font-bold">Start your PR journey today — it’s free.</h2>
+            <h2 className="text-2xl font-bold">Start your PR journey today - it’s free.</h2>
             <div className="mt-6">
                 <Link href="/auth">
                     <Button size="lg">Get Started Free</Button>
