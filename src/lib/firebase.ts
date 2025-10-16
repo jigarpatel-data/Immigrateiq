@@ -9,7 +9,7 @@ const firebaseConfig = {
   projectId: "immigration-uni-84368757-ca3d4",
   storageBucket: "immigration-uni-84368757-ca3d4.firebasestorage.app",
   messagingSenderId: "9301678245",
-  appId: "1:9301678245:web:af5821c3a6af840d30554c"
+  appId: "1:9301678245:web:bdc2bffad50c925030554c"
 };
 
 
