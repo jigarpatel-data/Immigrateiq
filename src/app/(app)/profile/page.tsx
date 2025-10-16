@@ -26,9 +26,10 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useState, useEffect } from "react";
-import { Loader2, User } from "lucide-react";
+import { Loader2, User, ExternalLink } from "lucide-react";
 import { withAuth, useAuth } from "@/hooks/use-auth";
 import { handleProfileUpdate } from "@/lib/auth";
+import { handleCheckout } from "@/lib/stripe";
 
 const profileSchema = z.object({
   name: z.string().min(1, "Name is required."),
@@ -38,6 +39,7 @@ const profileSchema = z.object({
 function ProfilePage() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
   const { user } = useAuth();
   
   const profileForm = useForm<z.infer<typeof profileSchema>>({
@@ -76,9 +78,28 @@ function ProfilePage() {
     setLoading(false);
   };
   
+  const onUpgrade = async () => {
+    setIsCheckoutLoading(true);
+    try {
+        await handleCheckout();
+    } catch (error) {
+        console.error(error);
+        toast({
+            variant: "destructive",
+            title: "Checkout Error",
+            description: "Could not proceed to checkout. Please try again.",
+        });
+    } finally {
+        setIsCheckoutLoading(false);
+    }
+  };
+
   if (!user) {
     return null; // Or a loading spinner
   }
+
+  // For now, we assume all logged-in users are on the "Free" plan
+  const currentPlan = "Free"; 
 
   return (
     <div className="space-y-6">
@@ -87,7 +108,11 @@ function ProfilePage() {
             <Card>
               <Form {...profileForm}>
                 <form onSubmit={profileForm.handleSubmit(onProfileSubmit)}>
-                  <CardContent className="space-y-4 pt-6">
+                  <CardHeader>
+                      <CardTitle>Personal Information</CardTitle>
+                      <CardDescription>Update your name and view your email.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
                     <FormField
                       control={profileForm.control}
                       name="name"
@@ -124,6 +149,36 @@ function ProfilePage() {
                   </CardFooter>
                 </form>
               </Form>
+            </Card>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle>Subscription</CardTitle>
+                    <CardDescription>Manage your plan and billing details.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="font-semibold">Current Plan</p>
+                            <p className="text-muted-foreground">{currentPlan}</p>
+                        </div>
+                        {currentPlan === "Free" && (
+                            <Button onClick={onUpgrade} disabled={isCheckoutLoading}>
+                                {isCheckoutLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Upgrade to Premium"}
+                            </Button>
+                        )}
+                    </div>
+                </CardContent>
+                 {currentPlan !== "Free" && (
+                    <CardFooter className="border-t px-6 py-4">
+                        <Button variant="outline" asChild>
+                            <a href="https://billing.stripe.com/p/login/YOUR_PORTAL_LINK" target="_blank">
+                                Manage Billing
+                                <ExternalLink className="ml-2 h-4 w-4" />
+                            </a>
+                        </Button>
+                    </CardFooter>
+                 )}
             </Card>
         </div>
         <div className="space-y-6">

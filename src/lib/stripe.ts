@@ -2,7 +2,7 @@
 "use server";
 
 import { redirect } from 'next/navigation';
-import { auth } from './firebase'; // Corrected import
+import { auth } from './firebase';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
 
@@ -12,13 +12,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function handleCheckout() {
     const currentUser = auth.currentUser;
-
-    if (!currentUser) {
-        throw new Error("User must be logged in to checkout.");
-    }
-    
     const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!; 
-
     const headersList = headers();
     const origin = headersList.get('origin');
 
@@ -30,7 +24,7 @@ export async function handleCheckout() {
                 quantity: 1,
             }],
             mode: 'subscription',
-            customer_email: currentUser.email!,
+            customer_email: currentUser?.email, // Pre-fill email if user is logged in
             success_url: `${origin}/dashboard?session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${origin}/`,
         });

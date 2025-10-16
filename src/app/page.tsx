@@ -91,15 +91,7 @@ export default function HomePage() {
   const { user } = useAuth();
 
   const onCheckout = async () => {
-    if (!user) {
-        // This should be handled by routing, but as a fallback
-        toast({
-            variant: "destructive",
-            title: "Not signed in",
-            description: "Please sign in to go to checkout.",
-        });
-        return;
-    }
+    // No longer require user to be signed in
     setIsCheckoutLoading(true);
     try {
         await handleCheckout();
