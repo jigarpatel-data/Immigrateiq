@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -32,10 +32,11 @@ import { CustomGoogleIcon } from "@/components/icons";
 import { Loader2, Info, Eye, EyeOff, CheckCircle, GraduationCap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { handleSignIn, handleSignUp, handleGoogleSignIn, handlePasswordReset } from "@/lib/auth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { handleCheckout } from "@/lib/stripe";
 
 const signUpSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -67,6 +68,8 @@ export function AuthForm() {
   const [showSignUpPassword, setShowSignUpPassword] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectToCheckout = searchParams.get('redirect_to') === 'checkout';
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -94,6 +97,24 @@ export function AuthForm() {
     ];
   }, [password]);
 
+  const handleAuthSuccess = async () => {
+    if (redirectToCheckout) {
+      try {
+        await handleCheckout();
+        // The handleCheckout function will redirect, so no router.push is needed here.
+      } catch (error) {
+        toast({
+          title: "Checkout Error",
+          description: "Could not proceed to checkout. Please try again.",
+          variant: "destructive",
+        });
+        setLoading(false);
+      }
+    } else {
+      router.push("/dashboard");
+    }
+  };
+
   const onLoginSubmit = async (values: z.infer<typeof loginSchema>) => {
     setLoading(true);
     const { error } = await handleSignIn(values.email, values.password);
@@ -103,10 +124,10 @@ export function AuthForm() {
         description: error,
         variant: "destructive",
       });
+      setLoading(false);
     } else {
-      router.push("/dashboard");
+      handleAuthSuccess();
     }
-    setLoading(false);
   };
 
   const onSignUpSubmit = async (values: z.infer<typeof signUpSchema>) => {
@@ -118,12 +139,16 @@ export function AuthForm() {
         description: error,
         variant: "destructive",
       });
+      setLoading(false);
     } else {
+      // After sign up, the user needs to verify their email. 
+      // We can't proceed to checkout yet. We show them the verification dialog.
+      // After verification, they will log in, and the login flow will handle the redirect.
       signUpForm.reset();
       setActiveTab("login");
       setIsVerificationDialogOpen(true);
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const onPasswordResetSubmit = async (values: z.infer<typeof passwordResetSchema>) => {
@@ -165,7 +190,7 @@ export function AuthForm() {
         });
         setLoading(false);
     } else {
-      router.push("/dashboard");
+      handleAuthSuccess();
     }
   };
 
@@ -179,6 +204,11 @@ export function AuthForm() {
         </TabsList>
         <TabsContent value="login">
           <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
+            {redirectToCheckout && (
+                <div className="mb-4 text-center text-sm p-3 bg-muted rounded-md text-muted-foreground">
+                    <p>Sign in or create an account to complete your premium purchase.</p>
+                </div>
+            )}
             <Form {...loginForm}>
               <form onSubmit={loginForm.handleSubmit(onLoginSubmit)} className="space-y-4">
                 <FormField
@@ -245,6 +275,11 @@ export function AuthForm() {
         </TabsContent>
         <TabsContent value="signup">
             <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6">
+              {redirectToCheckout && (
+                  <div className="mb-4 text-center text-sm p-3 bg-muted rounded-md text-muted-foreground">
+                      <p>Create an account to complete your premium purchase.</p>
+                  </div>
+              )}
               <Form {...signUpForm}>
                 <form onSubmit={signUpForm.handleSubmit(onSignUpSubmit)} className="space-y-4">
                   <FormField

@@ -26,6 +26,7 @@ import { cn } from "@/lib/utils";
 import { handleCheckout } from "@/lib/stripe";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
+import { useRouter } from "next/navigation";
 
 const features = [
     { icon: <CheckCircle className="h-6 w-6 text-primary" />, text: "Personalized PR eligibility checker" },
@@ -89,21 +90,26 @@ export default function HomePage() {
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
+  const router = useRouter();
 
   const onCheckout = async () => {
-    // No longer require user to be signed in
     setIsCheckoutLoading(true);
-    try {
-        await handleCheckout();
-    } catch (error) {
-        console.error(error);
-        toast({
-            variant: "destructive",
-            title: "Checkout Error",
-            description: "Could not proceed to checkout. Please try again.",
-        });
-    } finally {
-        setIsCheckoutLoading(false);
+    // If user is logged in, go to checkout. Otherwise, go to auth page with redirect.
+    if (user) {
+        try {
+            await handleCheckout();
+        } catch (error) {
+            console.error(error);
+            toast({
+                variant: "destructive",
+                title: "Checkout Error",
+                description: "Could not proceed to checkout. Please try again.",
+            });
+        } finally {
+            setIsCheckoutLoading(false);
+        }
+    } else {
+        router.push('/auth?redirect_to=checkout');
     }
 };
 
