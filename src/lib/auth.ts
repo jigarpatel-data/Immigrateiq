@@ -19,9 +19,10 @@ export async function handleSignUp(email: string, password: string):Promise<{err
   try {
     await setPersistence(auth, browserLocalPersistence);
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    // We send the verification email, but we no longer sign them out.
+    // The redirect to checkout will happen, and verification will be enforced 
+    // when they try to access protected routes later.
     await sendEmailVerification(userCredential.user);
-    // Sign out the user immediately after creation. They must verify email before logging in.
-    await firebaseSignOut(auth);
     return { error: null };
   } catch (error: any) {
     if (error.code === 'auth/email-already-in-use') {
