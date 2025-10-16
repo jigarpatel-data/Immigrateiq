@@ -106,5 +106,3 @@ export function initAuthListener(callback: (user: User | null) => void) {
     }
   });
 }
-
-    

@@ -141,13 +141,7 @@ export function AuthForm() {
       });
       setLoading(false);
     } else {
-      // After sign up, the user needs to verify their email. 
-      // We can't proceed to checkout yet. We show them the verification dialog.
-      // After verification, they will log in, and the login flow will handle the redirect.
-      signUpForm.reset();
-      setActiveTab("login");
-      setIsVerificationDialogOpen(true);
-      setLoading(false);
+      handleAuthSuccess();
     }
   };
 
