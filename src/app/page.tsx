@@ -11,7 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { CheckCircle, BarChart, Search, Bot, BookUser, Star, Menu, ArrowUpRight } from "lucide-react";
+import { CheckCircle, BarChart, Search, Bot, BookUser, Star, Menu, ArrowUpRight, Loader2 } from "lucide-react";
 import placeholderImages from "@/lib/placeholder-images.json";
 import { Footer } from "@/components/footer";
 import { useState } from "react";
@@ -23,6 +23,9 @@ import {
 } from "@/components/ui/sheet";
 import { TypedText } from "@/components/typed-text";
 import { cn } from "@/lib/utils";
+import { handleCheckout } from "@/lib/stripe";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/use-auth";
 
 const features = [
     { icon: <CheckCircle className="h-6 w-6 text-primary" />, text: "Personalized PR eligibility checker" },
@@ -83,6 +86,35 @@ const searchQueries = [
 
 export default function HomePage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
+  const { toast } = useToast();
+  const { user } = useAuth();
+
+  const onCheckout = async () => {
+    if (!user) {
+        // This should be handled by routing, but as a fallback
+        toast({
+            variant: "destructive",
+            title: "Not signed in",
+            description: "Please sign in to go to checkout.",
+        });
+        return;
+    }
+    setIsCheckoutLoading(true);
+    try {
+        await handleCheckout();
+    } catch (error) {
+        console.error(error);
+        toast({
+            variant: "destructive",
+            title: "Checkout Error",
+            description: "Could not proceed to checkout. Please try again.",
+        });
+    } finally {
+        setIsCheckoutLoading(false);
+    }
+};
+
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -280,9 +312,10 @@ export default function HomePage() {
                                 </ul>
                             </CardContent>
                             <CardFooter>
-                              <Link href="/auth" className="w-full">
-                                <Button className="w-full">Go Premium</Button>
-                              </Link>
+                              <Button onClick={onCheckout} disabled={isCheckoutLoading} className="w-full">
+                                {isCheckoutLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                Go Premium
+                              </Button>
                             </CardFooter>
                         </Card>
                     </div>
