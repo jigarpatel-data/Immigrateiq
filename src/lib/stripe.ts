@@ -17,8 +17,7 @@ export async function handleCheckout() {
         throw new Error("User must be logged in to checkout.");
     }
     
-    // IMPORTANT: Replace this with the actual Price ID from your Stripe product.
-    const priceId = 'YOUR_PRICE_ID_HERE'; 
+    const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!; 
 
     const headersList = headers();
     const origin = headersList.get('origin');
