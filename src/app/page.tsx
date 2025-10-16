@@ -111,7 +111,7 @@ export default function HomePage() {
     } else {
         router.push('/auth?redirect_to=checkout');
     }
-};
+  };
 
 
   return (
@@ -373,3 +373,5 @@ export default function HomePage() {
     </div>
   );
 }
+
+    
