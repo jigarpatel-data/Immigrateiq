@@ -12,6 +12,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -26,12 +34,13 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useState, useEffect } from "react";
-import { Loader2, User, ExternalLink } from "lucide-react";
+import { Loader2, User, ExternalLink, ShieldCheck } from "lucide-react";
 import { withAuth, useAuth } from "@/hooks/use-auth";
 import { handleProfileUpdate } from "@/lib/auth";
 import { getCheckoutUrl, getPortalUrl } from "@/lib/stripe";
 import { db, app } from "@/lib/firebase";
-import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
+import { Badge } from "@/components/ui/badge";
 
 const profileSchema = z.object({
   name: z.string().min(1, "Name is required."),
@@ -41,6 +50,14 @@ const profileSchema = z.object({
 type Subscription = {
     status: 'active' | 'trialing' | 'past_due' | 'canceled';
     plan: string;
+    current_period_end: { seconds: number };
+};
+
+type Payment = {
+    id: string;
+    created: { seconds: number };
+    amount: number;
+    status: string;
 };
 
 
@@ -51,6 +68,7 @@ function ProfilePage() {
   const [isPortalLoading, setIsPortalLoading] = useState(false);
   const { user } = useAuth();
   const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const [payments, setPayments] = useState<Payment[]>([]);
   const [isSubscriptionLoading, setIsSubscriptionLoading] = useState(true);
   
   const profileForm = useForm<z.infer<typeof profileSchema>>({
@@ -71,7 +89,7 @@ function ProfilePage() {
       const subscriptionsRef = collection(db, 'customers', user.uid, 'subscriptions');
       const q = query(subscriptionsRef, where("status", "in", ["trialing", "active"]));
 
-      const unsubscribe = onSnapshot(q, (snapshot) => {
+      const unsubscribeSub = onSnapshot(q, (snapshot) => {
         if (!snapshot.empty) {
             const subData = snapshot.docs[0].data() as Subscription;
             setSubscription(subData);
@@ -84,7 +102,21 @@ function ProfilePage() {
         setIsSubscriptionLoading(false);
       });
 
-      return () => unsubscribe();
+      const paymentsRef = collection(db, 'customers', user.uid, 'payments');
+      const paymentsQuery = query(paymentsRef, orderBy('created', 'desc'));
+      
+      const unsubscribePayments = onSnapshot(paymentsQuery, (snapshot) => {
+        const paymentsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Payment));
+        setPayments(paymentsData);
+      }, (error) => {
+        console.error("Error fetching payments:", error);
+      });
+
+
+      return () => {
+        unsubscribeSub();
+        unsubscribePayments();
+      };
     }
   }, [user, profileForm]);
 
@@ -147,6 +179,9 @@ function ProfilePage() {
   }
 
   const currentPlan = subscription ? "Premium" : "Free";
+  const nextBillingDate = subscription?.current_period_end 
+    ? new Date(subscription.current_period_end.seconds * 1000).toLocaleDateString() 
+    : null;
 
   return (
     <div className="space-y-6">
@@ -179,9 +214,15 @@ function ProfilePage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Email</FormLabel>
-                          <FormControl>
+                           <div className="flex items-center gap-2">
                             <Input type="email" placeholder="your@email.com" {...field} disabled />
-                          </FormControl>
+                             {user.emailVerified && (
+                                <div className="flex items-center gap-1 text-sm text-green-600">
+                                    <ShieldCheck className="h-4 w-4" />
+                                    <span>Verified</span>
+                                </div>
+                            )}
+                          </div>
                            <FormDescription>You cannot change your email address.</FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -209,15 +250,25 @@ function ProfilePage() {
                             <Loader2 className="h-6 w-6 animate-spin" />
                         </div>
                     ) : (
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="font-semibold">Current Plan</p>
-                                <p className="text-muted-foreground">{currentPlan}</p>
+                        <div className="space-y-4">
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="font-semibold">Current Plan</p>
+                                    <p className="text-muted-foreground">{currentPlan}</p>
+                                </div>
+                                {currentPlan === "Free" && (
+                                    <Button onClick={onUpgrade} disabled={isCheckoutLoading}>
+                                        {isCheckoutLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Upgrade to Premium"}
+                                    </Button>
+                                )}
                             </div>
-                            {currentPlan === "Free" && (
-                                <Button onClick={onUpgrade} disabled={isCheckoutLoading}>
-                                    {isCheckoutLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Upgrade to Premium"}
-                                </Button>
+                            {nextBillingDate && (
+                                <div className="flex items-center justify-between pt-4 border-t">
+                                     <div>
+                                        <p className="font-semibold">Next Billing Date</p>
+                                        <p className="text-muted-foreground">{nextBillingDate}</p>
+                                    </div>
+                                </div>
                             )}
                         </div>
                     )}
@@ -226,11 +277,42 @@ function ProfilePage() {
                     <CardFooter className="border-t px-6 py-4">
                         <Button onClick={onManageBilling} disabled={isPortalLoading} variant="outline">
                             {isPortalLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ExternalLink className="mr-2 h-4 w-4" />}
-                            Manage Billing
+                            Manage Billing in Stripe
                         </Button>
                     </CardFooter>
                  )}
             </Card>
+
+             {currentPlan !== "Free" && payments.length > 0 && (
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Payment History</CardTitle>
+                        <CardDescription>A record of your recent payments.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                <TableHead>Date</TableHead>
+                                <TableHead>Amount</TableHead>
+                                <TableHead className="text-right">Status</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {payments.map((payment) => (
+                                <TableRow key={payment.id}>
+                                    <TableCell>{new Date(payment.created.seconds * 1000).toLocaleDateString()}</TableCell>
+                                    <TableCell>${(payment.amount / 100).toFixed(2)}</TableCell>
+                                    <TableCell className="text-right">
+                                        <Badge variant={payment.status === 'succeeded' ? 'default' : 'destructive'}>{payment.status}</Badge>
+                                    </TableCell>
+                                </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </CardContent>
+                </Card>
+            )}
         </div>
         <div className="space-y-6">
               <Card className="text-center">
@@ -251,3 +333,5 @@ function ProfilePage() {
 }
 
 export default withAuth(ProfilePage);
+
+    
