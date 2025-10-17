@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 import Stripe from 'stripe';
 import { getFirestore, doc, addDoc, collection, onSnapshot } from 'firebase/firestore';
-import { app } from './firebase';
+import { app, auth } from './firebase'; // Import auth
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: '2024-06-20',
@@ -13,14 +13,18 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 const db = getFirestore(app);
 
-export async function handleCheckout(userId: string) {
+export async function handleCheckout() {
     const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!; 
     const headersList = headers();
     const origin = headersList.get('origin');
+    
+    // Get the current user directly from auth
+    const user = auth.currentUser;
 
-    if (!userId) {
+    if (!user) {
         throw new Error("User is not authenticated.");
     }
+    const userId = user.uid;
 
     try {
         // Create a new checkout session in the 'customers' collection for the user.
