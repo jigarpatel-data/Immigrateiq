@@ -55,31 +55,37 @@ export const getCheckoutUrl = async (
 export const getPortalUrl = async (app: FirebaseApp): Promise<string> => {
   const auth = getAuth(app);
   const user = auth.currentUser;
-  if (!user) throw new Error("User is not authenticated");
 
+  if (!user) throw new Error("User is not authenticated.");
 
   let dataWithUrl: any;
   try {
     const functions = getFunctions(app, "us-central1");
+    // The function name is provided by the Stripe extension.
     const functionRef = httpsCallable(
       functions,
       "ext-firestore-stripe-payments-createPortalLink"
     );
     const { data } = await functionRef({
-      returnUrl: window.location.origin + '/profile',
+      returnUrl: `${window.location.origin}/profile`,
     });
 
     dataWithUrl = data as { url: string };
   } catch (error) {
     console.error(error);
-    throw new Error("Failed to create portal link.");
+    // Provide a more specific error message if possible.
+    if (error instanceof Error && 'details' in error) {
+        const details = (error as any).details;
+        if (details && details.code === 'unauthenticated') {
+            throw new Error("Authentication error: You must be logged in to manage billing.");
+        }
+    }
+    throw new Error("Failed to create billing portal link.");
   }
 
-  return new Promise<string>((resolve, reject) => {
-    if (dataWithUrl.url) {
-      resolve(dataWithUrl.url);
-    } else {
-      reject(new Error("No portal url returned"));
-    }
-  });
+  if (dataWithUrl.url) {
+    return dataWithUrl.url;
+  } else {
+    throw new Error("No portal URL returned. This can happen if the user has no active subscriptions.");
+  }
 };
