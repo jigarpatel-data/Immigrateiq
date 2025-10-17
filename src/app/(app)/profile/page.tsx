@@ -284,52 +284,6 @@ function ProfilePage() {
                  )}
             </Card>
 
-             {currentPlan !== "Free" && payments.length > 0 && (
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Payment History</CardTitle>
-                        <CardDescription>A record of your recent payments.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                <TableHead>Date</TableHead>
-                                <TableHead>Amount</TableHead>
-                                <TableHead className="text-right">Status</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {payments.map((payment) => (
-                                <TableRow key={payment.id}>
-                                    <TableCell>
-                                      {(() => {
-                                        if (!payment.created) return 'Invalid Date';
-                                        if (typeof payment.created === 'number') {
-                                          return new Date(payment.created * 1000).toISOString();
-                                        }
-                                        if (typeof payment.created === 'object' && 'seconds' in payment.created) {
-                                          return new Date(payment.created.seconds * 1000).toISOString();
-                                        }
-                                        // @ts-ignore
-                                        if (typeof payment.created.toDate === 'function') {
-                                            // @ts-ignore
-                                            return payment.created.toDate().toISOString();
-                                        }
-                                        return 'Invalid Date';
-                                      })()}
-                                    </TableCell>
-                                    <TableCell>${(payment.amount / 100).toFixed(2)}</TableCell>
-                                    <TableCell className="text-right">
-                                        <Badge variant={payment.status === 'succeeded' ? 'default' : 'destructive'}>{payment.status}</Badge>
-                                    </TableCell>
-                                </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </CardContent>
-                </Card>
-            )}
         </div>
         <div className="space-y-6">
               <Card className="text-center">
