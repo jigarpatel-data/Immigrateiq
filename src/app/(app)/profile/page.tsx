@@ -39,7 +39,7 @@ import { withAuth, useAuth } from "@/hooks/use-auth";
 import { handleProfileUpdate } from "@/lib/auth";
 import { getCheckoutUrl, getPortalUrl } from "@/lib/stripe";
 import { db, app } from "@/lib/firebase";
-import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
+import { collection, query, where, onSnapshot, orderBy, Timestamp } from "firebase/firestore";
 import { Badge } from "@/components/ui/badge";
 
 const profileSchema = z.object({
@@ -50,12 +50,12 @@ const profileSchema = z.object({
 type Subscription = {
     status: 'active' | 'trialing' | 'past_due' | 'canceled';
     plan: string;
-    current_period_end: { seconds: number };
+    current_period_end: Timestamp;
 };
 
 type Payment = {
     id: string;
-    created: { seconds: number };
+    created: Timestamp;
     amount: number;
     status: string;
 };
@@ -180,7 +180,7 @@ function ProfilePage() {
 
   const currentPlan = subscription ? "Premium" : "Free";
   const nextBillingDate = subscription?.current_period_end 
-    ? new Date(subscription.current_period_end.seconds * 1000).toLocaleDateString() 
+    ? subscription.current_period_end.toDate().toLocaleDateString()
     : null;
 
   return (
@@ -301,7 +301,11 @@ function ProfilePage() {
                             <TableBody>
                                 {payments.map((payment) => (
                                 <TableRow key={payment.id}>
-                                    <TableCell>{new Date(payment.created.seconds * 1000).toLocaleDateString()}</TableCell>
+                                    <TableCell>
+                                      {payment.created && typeof payment.created.toDate === 'function'
+                                        ? payment.created.toDate().toLocaleDateString()
+                                        : 'Invalid Date'}
+                                    </TableCell>
                                     <TableCell>${(payment.amount / 100).toFixed(2)}</TableCell>
                                     <TableCell className="text-right">
                                         <Badge variant={payment.status === 'succeeded' ? 'default' : 'destructive'}>{payment.status}</Badge>
@@ -334,4 +338,5 @@ function ProfilePage() {
 
 export default withAuth(ProfilePage);
 
+    
     
