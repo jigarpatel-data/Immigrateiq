@@ -55,7 +55,7 @@ type Subscription = {
 
 type Payment = {
     id: string;
-    created: Timestamp;
+    created: Timestamp | { seconds: number; nanoseconds: number } | number;
     amount: number;
     status: string;
 };
@@ -303,9 +303,21 @@ function ProfilePage() {
                                 {payments.map((payment) => (
                                 <TableRow key={payment.id}>
                                     <TableCell>
-                                      {payment.created && 'seconds' in payment.created
-                                        ? new Date(payment.created.seconds * 1000).toISOString()
-                                        : 'Invalid Date'}
+                                      {(() => {
+                                        if (!payment.created) return 'Invalid Date';
+                                        if (typeof payment.created === 'number') {
+                                          return new Date(payment.created * 1000).toISOString();
+                                        }
+                                        if (typeof payment.created === 'object' && 'seconds' in payment.created) {
+                                          return new Date(payment.created.seconds * 1000).toISOString();
+                                        }
+                                        // @ts-ignore
+                                        if (typeof payment.created.toDate === 'function') {
+                                            // @ts-ignore
+                                            return payment.created.toDate().toISOString();
+                                        }
+                                        return 'Invalid Date';
+                                      })()}
                                     </TableCell>
                                     <TableCell>${(payment.amount / 100).toFixed(2)}</TableCell>
                                     <TableCell className="text-right">
@@ -338,3 +350,5 @@ function ProfilePage() {
 }
 
 export default withAuth(ProfilePage);
+
+    
