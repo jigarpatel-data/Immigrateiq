@@ -179,6 +179,7 @@ function ProfilePage() {
   }
 
   const currentPlan = subscription ? "Premium" : "Free";
+  const currentPlanText = subscription ? "Premium ($5)" : "Free";
   const nextBillingDate = subscription?.current_period_end 
     ? new Date(subscription.current_period_end.seconds * 1000).toLocaleDateString()
     : null;
@@ -254,7 +255,7 @@ function ProfilePage() {
                             <div className="flex items-center justify-between">
                                 <div>
                                     <p className="font-semibold">Current Plan</p>
-                                    <p className="text-muted-foreground">{currentPlan}</p>
+                                    <p className="text-muted-foreground">{currentPlanText}</p>
                                 </div>
                                 {currentPlan === "Free" && (
                                     <Button onClick={onUpgrade} disabled={isCheckoutLoading}>
@@ -302,7 +303,7 @@ function ProfilePage() {
                                 {payments.map((payment) => (
                                 <TableRow key={payment.id}>
                                     <TableCell>
-                                      {payment.created && payment.created.seconds
+                                      {payment.created && 'seconds' in payment.created
                                         ? new Date(payment.created.seconds * 1000).toISOString()
                                         : 'Invalid Date'}
                                     </TableCell>
@@ -337,7 +338,3 @@ function ProfilePage() {
 }
 
 export default withAuth(ProfilePage);
-
-    
-
-    
