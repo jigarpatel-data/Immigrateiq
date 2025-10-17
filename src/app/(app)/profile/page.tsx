@@ -303,7 +303,7 @@ function ProfilePage() {
                                 <TableRow key={payment.id}>
                                     <TableCell>
                                       {payment.created && payment.created.seconds
-                                        ? new Date(payment.created.seconds * 1000).toLocaleDateString()
+                                        ? new Date(payment.created.seconds * 1000).toISOString()
                                         : 'Invalid Date'}
                                     </TableCell>
                                     <TableCell>${(payment.amount / 100).toFixed(2)}</TableCell>
@@ -337,5 +337,7 @@ function ProfilePage() {
 }
 
 export default withAuth(ProfilePage);
+
+    
 
     
