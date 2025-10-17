@@ -36,7 +36,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { handleCheckout } from "@/lib/stripe";
+import { getCheckoutUrl } from "@/lib/stripe";
 import type { User } from "firebase/auth";
 
 const signUpSchema = z.object({
@@ -101,12 +101,13 @@ export function AuthForm() {
   const handleAuthSuccess = async (user?: User | null) => {
     if (redirectToCheckout && user) {
       try {
-        await handleCheckout(user.uid);
-        // The handleCheckout function will redirect, so no router.push is needed here.
-      } catch (error) {
+        const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
+        const url = await getCheckoutUrl(priceId);
+        window.location.assign(url);
+      } catch (error: any) {
         toast({
           title: "Checkout Error",
-          description: "Could not proceed to checkout. Please try again.",
+          description: error.message || "Could not proceed to checkout. Please try again.",
           variant: "destructive",
         });
         setLoading(false);

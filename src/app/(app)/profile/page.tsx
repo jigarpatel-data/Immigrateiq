@@ -29,9 +29,9 @@ import { useState, useEffect } from "react";
 import { Loader2, User, ExternalLink } from "lucide-react";
 import { withAuth, useAuth } from "@/hooks/use-auth";
 import { handleProfileUpdate } from "@/lib/auth";
-import { handleCheckout } from "@/lib/stripe";
+import { getCheckoutUrl, getPortalUrl } from "@/lib/stripe";
 import { db } from "@/lib/firebase";
-import { collection, query, where, getDocs, onSnapshot } from "firebase/firestore";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 
 const profileSchema = z.object({
   name: z.string().min(1, "Name is required."),
@@ -41,7 +41,6 @@ const profileSchema = z.object({
 type Subscription = {
     status: 'active' | 'trialing' | 'past_due' | 'canceled';
     plan: string;
-    // Add other fields from your subscription document if needed
 };
 
 
@@ -49,6 +48,7 @@ function ProfilePage() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
+  const [isPortalLoading, setIsPortalLoading] = useState(false);
   const { user } = useAuth();
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [isSubscriptionLoading, setIsSubscriptionLoading] = useState(true);
@@ -108,24 +108,42 @@ function ProfilePage() {
   };
   
   const onUpgrade = async () => {
-    if (!user) return;
     setIsCheckoutLoading(true);
     try {
-        await handleCheckout(user.uid);
-    } catch (error) {
+        const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
+        const url = await getCheckoutUrl(priceId);
+        window.location.assign(url);
+    } catch (error: any) {
         console.error(error);
         toast({
             variant: "destructive",
             title: "Checkout Error",
-            description: "Could not proceed to checkout. Please try again.",
+            description: error.message || "Could not proceed to checkout. Please try again.",
         });
     } finally {
         setIsCheckoutLoading(false);
     }
   };
 
+  const onManageBilling = async () => {
+    setIsPortalLoading(true);
+    try {
+        const url = await getPortalUrl();
+        window.location.assign(url);
+    } catch (error: any) {
+        console.error(error);
+        toast({
+            variant: "destructive",
+            title: "Billing Error",
+            description: error.message || "Could not open billing portal. Please try again.",
+        });
+    } finally {
+        setIsPortalLoading(false);
+    }
+  };
+
   if (!user) {
-    return null; // Or a loading spinner
+    return null;
   }
 
   const currentPlan = subscription ? "Premium" : "Free";
@@ -206,11 +224,9 @@ function ProfilePage() {
                 </CardContent>
                  {currentPlan !== "Free" && !isSubscriptionLoading && (
                     <CardFooter className="border-t px-6 py-4">
-                        <Button variant="outline" asChild>
-                            <a href={process.env.NEXT_PUBLIC_STRIPE_PORTAL_LINK} target="_blank">
-                                Manage Billing
-                                <ExternalLink className="ml-2 h-4 w-4" />
-                            </a>
+                        <Button onClick={onManageBilling} disabled={isPortalLoading} variant="outline">
+                            {isPortalLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <ExternalLink className="mr-2 h-4 w-4" />}
+                            Manage Billing
                         </Button>
                     </CardFooter>
                  )}

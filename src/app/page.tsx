@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/sheet";
 import { TypedText } from "@/components/typed-text";
 import { cn } from "@/lib/utils";
-import { handleCheckout } from "@/lib/stripe";
+import { getCheckoutUrl } from "@/lib/stripe";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
@@ -94,18 +94,18 @@ export default function HomePage() {
 
   const onCheckout = async () => {
     setIsCheckoutLoading(true);
-    // If user is logged in, go to checkout. Otherwise, go to auth page with redirect.
     if (user) {
         try {
-            await handleCheckout();
-        } catch (error) {
+            const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
+            const url = await getCheckoutUrl(priceId);
+            window.location.assign(url);
+        } catch (error: any) {
             console.error(error);
             toast({
                 variant: "destructive",
                 title: "Checkout Error",
-                description: "Could not proceed to checkout. Please try again.",
+                description: error.message || "Could not proceed to checkout. Please try again.",
             });
-        } finally {
             setIsCheckoutLoading(false);
         }
     } else {
