@@ -30,7 +30,7 @@ import { Loader2, User, ExternalLink } from "lucide-react";
 import { withAuth, useAuth } from "@/hooks/use-auth";
 import { handleProfileUpdate } from "@/lib/auth";
 import { getCheckoutUrl, getPortalUrl } from "@/lib/stripe";
-import { db } from "@/lib/firebase";
+import { db, app } from "@/lib/firebase";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 
 const profileSchema = z.object({
@@ -111,7 +111,7 @@ function ProfilePage() {
     setIsCheckoutLoading(true);
     try {
         const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
-        const url = await getCheckoutUrl(priceId);
+        const url = await getCheckoutUrl(app, priceId);
         window.location.assign(url);
     } catch (error: any) {
         console.error(error);
@@ -128,7 +128,7 @@ function ProfilePage() {
   const onManageBilling = async () => {
     setIsPortalLoading(true);
     try {
-        const url = await getPortalUrl();
+        const url = await getPortalUrl(app);
         window.location.assign(url);
     } catch (error: any) {
         console.error(error);
