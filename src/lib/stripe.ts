@@ -1,4 +1,3 @@
-
 "use client";
 
 import { FirebaseApp } from "firebase/app";
@@ -71,7 +70,7 @@ export const getPortalUrl = async (app: FirebaseApp): Promise<string> => {
     });
 
     dataWithUrl = data as { url: string };
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     // Provide a more specific error message if possible.
     if (error instanceof Error && 'details' in error) {
@@ -80,12 +79,14 @@ export const getPortalUrl = async (app: FirebaseApp): Promise<string> => {
             throw new Error("Authentication error: You must be logged in to manage billing.");
         }
     }
-    throw new Error("Failed to create billing portal link.");
+    // Pass along the specific error from the function call
+    throw new Error(error.message || "Failed to create billing portal link.");
   }
 
   if (dataWithUrl.url) {
     return dataWithUrl.url;
   } else {
-    throw new Error("No portal URL returned. This can happen if the user has no active subscriptions.");
+    // This can happen if the user has no active subscriptions or if there's a configuration issue.
+    throw new Error("No portal URL returned. This can happen if there are no active subscriptions or if the Stripe Customer Portal is not configured.");
   }
 };
