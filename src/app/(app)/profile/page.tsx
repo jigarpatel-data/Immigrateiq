@@ -30,17 +30,28 @@ import { Loader2, User, ExternalLink } from "lucide-react";
 import { withAuth, useAuth } from "@/hooks/use-auth";
 import { handleProfileUpdate } from "@/lib/auth";
 import { handleCheckout } from "@/lib/stripe";
+import { db } from "@/lib/firebase";
+import { collection, query, where, getDocs, onSnapshot } from "firebase/firestore";
 
 const profileSchema = z.object({
   name: z.string().min(1, "Name is required."),
   email: z.string().email("Invalid email address.").optional(),
 });
 
+type Subscription = {
+    status: 'active' | 'trialing' | 'past_due' | 'canceled';
+    plan: string;
+    // Add other fields from your subscription document if needed
+};
+
+
 function ProfilePage() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
   const { user } = useAuth();
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const [isSubscriptionLoading, setIsSubscriptionLoading] = useState(true);
   
   const profileForm = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
@@ -56,6 +67,24 @@ function ProfilePage() {
         name: user.displayName ?? '',
         email: user.email ?? '',
       });
+      
+      const subscriptionsRef = collection(db, 'customers', user.uid, 'subscriptions');
+      const q = query(subscriptionsRef, where("status", "in", ["trialing", "active"]));
+
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        if (!snapshot.empty) {
+            const subData = snapshot.docs[0].data() as Subscription;
+            setSubscription(subData);
+        } else {
+            setSubscription(null);
+        }
+        setIsSubscriptionLoading(false);
+      }, (error) => {
+        console.error("Error fetching subscription:", error);
+        setIsSubscriptionLoading(false);
+      });
+
+      return () => unsubscribe();
     }
   }, [user, profileForm]);
 
@@ -79,9 +108,10 @@ function ProfilePage() {
   };
   
   const onUpgrade = async () => {
+    if (!user) return;
     setIsCheckoutLoading(true);
     try {
-        await handleCheckout();
+        await handleCheckout(user.uid);
     } catch (error) {
         console.error(error);
         toast({
@@ -98,8 +128,7 @@ function ProfilePage() {
     return null; // Or a loading spinner
   }
 
-  // For now, we assume all logged-in users are on the "Free" plan
-  const currentPlan = "Free"; 
+  const currentPlan = subscription ? "Premium" : "Free";
 
   return (
     <div className="space-y-6">
@@ -157,22 +186,28 @@ function ProfilePage() {
                     <CardDescription>Manage your plan and billing details.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="font-semibold">Current Plan</p>
-                            <p className="text-muted-foreground">{currentPlan}</p>
+                    {isSubscriptionLoading ? (
+                        <div className="flex items-center justify-center">
+                            <Loader2 className="h-6 w-6 animate-spin" />
                         </div>
-                        {currentPlan === "Free" && (
-                            <Button onClick={onUpgrade} disabled={isCheckoutLoading}>
-                                {isCheckoutLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Upgrade to Premium"}
-                            </Button>
-                        )}
-                    </div>
+                    ) : (
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="font-semibold">Current Plan</p>
+                                <p className="text-muted-foreground">{currentPlan}</p>
+                            </div>
+                            {currentPlan === "Free" && (
+                                <Button onClick={onUpgrade} disabled={isCheckoutLoading}>
+                                    {isCheckoutLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Upgrade to Premium"}
+                                </Button>
+                            )}
+                        </div>
+                    )}
                 </CardContent>
-                 {currentPlan !== "Free" && (
+                 {currentPlan !== "Free" && !isSubscriptionLoading && (
                     <CardFooter className="border-t px-6 py-4">
                         <Button variant="outline" asChild>
-                            <a href="https://billing.stripe.com/p/login/YOUR_PORTAL_LINK" target="_blank">
+                            <a href={process.env.NEXT_PUBLIC_STRIPE_PORTAL_LINK} target="_blank">
                                 Manage Billing
                                 <ExternalLink className="ml-2 h-4 w-4" />
                             </a>
