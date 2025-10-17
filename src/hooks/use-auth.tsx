@@ -5,13 +5,22 @@ import { useState, useEffect, createContext, useContext, ReactNode } from "react
 import type { User } from "firebase/auth";
 import { usePathname, useRouter } from "next/navigation";
 import { initAuthListener } from "@/lib/auth";
+import { db } from "@/lib/firebase";
+import { collection, query, where, onSnapshot, type Timestamp } from "firebase/firestore";
+
+type Subscription = {
+    status: 'active' | 'trialing' | 'past_due' | 'canceled';
+    plan: string;
+    current_period_end: Timestamp;
+};
 
 type AuthContextType = {
   user: User | null;
   loading: boolean;
+  subscription: Subscription | null;
 };
 
-const AuthContext = createContext<AuthContextType>({ user: null, loading: true });
+const AuthContext = createContext<AuthContextType>({ user: null, loading: true, subscription: null });
 
 const protectedPaths = [
     "/dashboard",
@@ -27,16 +36,43 @@ const publicPaths = ["/", "/auth"];
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
     const unsubscribe = initAuthListener((authUser) => {
       setUser(authUser);
-      setLoading(false);
+      if (!authUser) {
+        setSubscription(null);
+        setLoading(false);
+      }
     });
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (user && !loading) {
+      const subscriptionsRef = collection(db, 'customers', user.uid, 'subscriptions');
+      const q = query(subscriptionsRef, where("status", "in", ["trialing", "active"]));
+      
+      const unsubscribeSub = onSnapshot(q, (snapshot) => {
+        if (!snapshot.empty) {
+          const subData = snapshot.docs[0].data() as Subscription;
+          setSubscription(subData);
+        } else {
+          setSubscription(null);
+        }
+      });
+      return () => unsubscribeSub();
+    }
+  }, [user, loading]);
+
+  useEffect(() => {
+    if (!user) {
+        setLoading(false);
+    }
+  }, [user])
 
   useEffect(() => {
     if (loading) return;
@@ -47,7 +83,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       router.replace('/auth');
     }
     
-    // Do not redirect if on checkout flow
     const isCheckout = new URLSearchParams(window.location.search).has('redirect_to');
     if (user && pathname.startsWith('/auth') && !isCheckout) {
         router.replace('/dashboard');
@@ -61,12 +96,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   
   const pathIsProtected = protectedPaths.some(path => pathname.startsWith(path));
   if (!user && pathIsProtected) {
-    // While redirecting, show a loader
     return <div className="flex h-screen w-full items-center justify-center bg-background"></div>;
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, loading, subscription }}>
       {children}
     </AuthContext.Provider>
   );
