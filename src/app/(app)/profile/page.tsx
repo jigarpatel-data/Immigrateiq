@@ -68,7 +68,6 @@ function ProfilePage() {
   const [isPortalLoading, setIsPortalLoading] = useState(false);
   const { user } = useAuth();
   const [subscription, setSubscription] = useState<Subscription | null>(null);
-  const [payments, setPayments] = useState<Payment[]>([]);
   const [isSubscriptionLoading, setIsSubscriptionLoading] = useState(true);
   
   const profileForm = useForm<z.infer<typeof profileSchema>>({
@@ -102,20 +101,8 @@ function ProfilePage() {
         setIsSubscriptionLoading(false);
       });
 
-      const paymentsRef = collection(db, 'customers', user.uid, 'payments');
-      const paymentsQuery = query(paymentsRef, orderBy('created', 'desc'));
-      
-      const unsubscribePayments = onSnapshot(paymentsQuery, (snapshot) => {
-        const paymentsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Payment));
-        setPayments(paymentsData);
-      }, (error) => {
-        console.error("Error fetching payments:", error);
-      });
-
-
       return () => {
         unsubscribeSub();
-        unsubscribePayments();
       };
     }
   }, [user, profileForm]);
@@ -214,16 +201,18 @@ function ProfilePage() {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
-                           <div className="flex items-center gap-2">
-                            <Input type="email" placeholder="your@email.com" {...field} disabled />
-                             {user.emailVerified && (
+                          <div className="flex items-center gap-2">
+                            <FormLabel>Email</FormLabel>
+                            {user.emailVerified && (
                                 <div className="flex items-center gap-1 text-sm text-green-600">
                                     <ShieldCheck className="h-4 w-4" />
                                     <span>Verified</span>
                                 </div>
                             )}
                           </div>
+                          <FormControl>
+                            <Input type="email" placeholder="your@email.com" {...field} disabled />
+                          </FormControl>
                            <FormDescription>You cannot change your email address.</FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -283,7 +272,6 @@ function ProfilePage() {
                     </CardFooter>
                  )}
             </Card>
-
         </div>
         <div className="space-y-6">
               <Card className="text-center">
@@ -304,5 +292,3 @@ function ProfilePage() {
 }
 
 export default withAuth(ProfilePage);
-
-    
