@@ -180,7 +180,7 @@ function ProfilePage() {
 
   const currentPlan = subscription ? "Premium" : "Free";
   const nextBillingDate = subscription?.current_period_end 
-    ? subscription.current_period_end.toDate().toLocaleDateString()
+    ? new Date(subscription.current_period_end.seconds * 1000).toLocaleDateString()
     : null;
 
   return (
@@ -302,8 +302,8 @@ function ProfilePage() {
                                 {payments.map((payment) => (
                                 <TableRow key={payment.id}>
                                     <TableCell>
-                                      {payment.created && typeof payment.created.toDate === 'function'
-                                        ? payment.created.toDate().toLocaleDateString()
+                                      {payment.created && payment.created.seconds
+                                        ? new Date(payment.created.seconds * 1000).toLocaleDateString()
                                         : 'Invalid Date'}
                                     </TableCell>
                                     <TableCell>${(payment.amount / 100).toFixed(2)}</TableCell>
@@ -338,5 +338,4 @@ function ProfilePage() {
 
 export default withAuth(ProfilePage);
 
-    
     
