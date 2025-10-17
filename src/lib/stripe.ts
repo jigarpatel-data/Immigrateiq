@@ -1,6 +1,7 @@
+
 "use client";
 
-import { app } from "./firebase";
+import { FirebaseApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import {
   addDoc,
@@ -11,6 +12,7 @@ import {
 import { getFunctions, httpsCallable } from "firebase/functions";
 
 export const getCheckoutUrl = async (
+  app: FirebaseApp,
   priceId: string
 ): Promise<string> => {
   const auth = getAuth(app);
@@ -27,7 +29,7 @@ export const getCheckoutUrl = async (
 
   const docRef = await addDoc(checkoutSessionRef, {
     price: priceId,
-    success_url: window.location.origin,
+    success_url: `${window.location.origin}/dashboard`,
     cancel_url: window.location.origin,
   });
 
@@ -50,10 +52,11 @@ export const getCheckoutUrl = async (
   });
 };
 
-export const getPortalUrl = async (): Promise<string> => {
+export const getPortalUrl = async (app: FirebaseApp): Promise<string> => {
   const auth = getAuth(app);
   const user = auth.currentUser;
   if (!user) throw new Error("User is not authenticated");
+
 
   let dataWithUrl: any;
   try {

@@ -38,6 +38,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { getCheckoutUrl } from "@/lib/stripe";
 import type { User } from "firebase/auth";
+import { app } from "@/lib/firebase";
 
 const signUpSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -64,7 +65,6 @@ export function AuthForm() {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("login");
   const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
-  const [isVerificationDialogOpen, setIsVerificationDialogOpen] = useState(false);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showSignUpPassword, setShowSignUpPassword] = useState(false);
   const { toast } = useToast();
@@ -98,25 +98,6 @@ export function AuthForm() {
     ];
   }, [password]);
 
-  const handleAuthSuccess = async (user?: User | null) => {
-    if (redirectToCheckout && user) {
-      try {
-        const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
-        const url = await getCheckoutUrl(priceId);
-        window.location.assign(url);
-      } catch (error: any) {
-        toast({
-          title: "Checkout Error",
-          description: error.message || "Could not proceed to checkout. Please try again.",
-          variant: "destructive",
-        });
-        setLoading(false);
-      }
-    } else {
-      router.push("/dashboard");
-    }
-  };
-
   const onLoginSubmit = async (values: z.infer<typeof loginSchema>) => {
     setLoading(true);
     const { error, user } = await handleSignIn(values.email, values.password);
@@ -127,8 +108,8 @@ export function AuthForm() {
         variant: "destructive",
       });
       setLoading(false);
-    } else {
-      handleAuthSuccess(user);
+    } else if (user) {
+       router.push('/dashboard');
     }
   };
 
@@ -142,8 +123,23 @@ export function AuthForm() {
         variant: "destructive",
       });
       setLoading(false);
-    } else {
-      handleAuthSuccess(user);
+    } else if (user) {
+        if (redirectToCheckout) {
+             try {
+                const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
+                const url = await getCheckoutUrl(app, priceId);
+                window.location.assign(url);
+            } catch (checkoutError: any) {
+                toast({
+                    title: "Checkout Error",
+                    description: checkoutError.message || "Could not proceed to checkout.",
+                    variant: "destructive",
+                });
+                setLoading(false);
+            }
+        } else {
+           router.push('/dashboard');
+        }
     }
   };
 
@@ -159,14 +155,7 @@ export function AuthForm() {
     } else {
         toast({
             title: "Password Reset Email Sent",
-            description: (
-              <p>
-                Please check your inbox for instructions to reset your password.{" "}
-                <Link href="/auth" className="underline font-bold" onClick={() => setIsResetDialogOpen(false)}>
-                  Login here.
-                </Link>
-              </p>
-            )
+            description: "Please check your inbox for instructions.",
         });
         setIsResetDialogOpen(false);
         passwordResetForm.reset();
@@ -185,8 +174,23 @@ export function AuthForm() {
             variant: "destructive",
         });
         setLoading(false);
-    } else {
-      handleAuthSuccess(user);
+    } else if (user) {
+       if (redirectToCheckout) {
+            try {
+                const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
+                const url = await getCheckoutUrl(app, priceId);
+                window.location.assign(url);
+            } catch (checkoutError: any) {
+                 toast({
+                    title: "Checkout Error",
+                    description: checkoutError.message || "Could not proceed to checkout.",
+                    variant: "destructive",
+                });
+                setLoading(false);
+            }
+        } else {
+           router.push('/dashboard');
+        }
     }
   };
 
@@ -388,30 +392,6 @@ export function AuthForm() {
           </form>
         </Form>
       </AlertDialogContent>
-    </AlertDialog>
-    
-    <AlertDialog open={isVerificationDialogOpen} onOpenChange={setIsVerificationDialogOpen}>
-        <AlertDialogContent>
-            <AlertDialogHeader>
-                <AlertDialogTitle>Verification Email Sent (check spam flder)</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Please check your inbox to verify your email address. Once verified, you can{" "}
-                  <button
-                    className="underline text-primary font-semibold"
-                    onClick={() => {
-                      setIsVerificationDialogOpen(false);
-                      setActiveTab("login");
-                    }}
-                  >
-                    log in here
-                  </button>
-                  .
-                </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-                <AlertDialogAction onClick={() => setIsVerificationDialogOpen(false)}>Close</AlertDialogAction>
-            </AlertDialogFooter>
-        </AlertDialogContent>
     </AlertDialog>
     </>
   );

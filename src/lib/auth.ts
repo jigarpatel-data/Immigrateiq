@@ -24,6 +24,7 @@ export async function handleSignUp(email: string, password: string): Promise<Aut
   try {
     await setPersistence(auth, browserLocalPersistence);
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    // Send verification email but don't block login
     await sendEmailVerification(userCredential.user);
     return { user: userCredential.user, error: null };
   } catch (error: any) {
@@ -38,13 +39,8 @@ export async function handleSignIn(email: string, password: string): Promise<Aut
   try {
     await setPersistence(auth, browserLocalPersistence);
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
-    if (!userCredential.user.emailVerified) {
-      await sendEmailVerification(userCredential.user);
-      await firebaseSignOut(auth);
-      return { error: "Your email is not verified. We've sent a new verification link to your inbox." };
-    }
     
+    // Allow login even if email is not verified
     return { user: userCredential.user, error: null };
   } catch (error: any) {
     if (error.code === 'auth/invalid-credential') {
@@ -96,12 +92,25 @@ export async function handleProfileUpdate(profileData: { displayName?: string; p
     }
 }
 
+export async function resendVerificationEmail(): Promise<{ error?: string }> {
+    const user = auth.currentUser;
+    if (!user) {
+        return { error: "You are not logged in." };
+    }
+    if (user.emailVerified) {
+        return { error: "Your email is already verified." };
+    }
+    try {
+        await sendEmailVerification(user);
+        return {};
+    } catch (error: any) {
+        return { error: error.message };
+    }
+}
+
+
 export function initAuthListener(callback: (user: User | null) => void) {
   return onAuthStateChanged(auth, (user) => {
-    if (user && !user.emailVerified) {
-      callback(null);
-    } else {
       callback(user);
-    }
   });
 }

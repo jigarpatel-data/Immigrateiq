@@ -32,7 +32,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const unsubscribe = initAuthListener((authUser) => {
-      // The listener now only gives us verified users or null
       setUser(authUser);
       setLoading(false);
     });
@@ -48,7 +47,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       router.replace('/auth');
     }
     
-    if (user && pathname.startsWith('/auth')) {
+    // Do not redirect if on checkout flow
+    const isCheckout = new URLSearchParams(window.location.search).has('redirect_to');
+    if (user && pathname.startsWith('/auth') && !isCheckout) {
         router.replace('/dashboard');
     }
 

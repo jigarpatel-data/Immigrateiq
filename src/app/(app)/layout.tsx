@@ -27,11 +27,13 @@ import {
   PanelLeft,
   Menu,
   User,
-  GraduationCap
+  GraduationCap,
+  MailWarning,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
-import { handleSignOut } from "@/lib/auth";
+import { handleSignOut, resendVerificationEmail } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -56,13 +58,32 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
   const SidebarLayout = ({ children: mainContent }: { children: React.ReactNode }) => {
     const pathname = usePathname();
     const { setOpenMobile } = useSidebar();
-    
+    const { toast } = useToast();
+
     const handleLinkClick = () => {
       setOpenMobile(false);
     };
 
+    const handleResendVerification = async () => {
+        const { error } = await resendVerificationEmail();
+        if (error) {
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: error,
+            });
+        } else {
+            toast({
+                title: "Verification Email Sent",
+                description: "A new verification link has been sent to your inbox.",
+            });
+        }
+    };
+
     const currentPage = navItems.find(item => pathname.startsWith(item.href));
     const pageTitle = currentPage ? currentPage.label : "";
+
+    const isEmailVerified = user?.emailVerified ?? false;
 
 
     return (
@@ -97,6 +118,19 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter>
+              {user && !isEmailVerified && (
+                  <div className="p-2 group-data-[collapsible=icon]:p-1">
+                      <div className="bg-yellow-100 dark:bg-yellow-900/50 border-l-4 border-yellow-500 text-yellow-800 dark:text-yellow-300 p-3 rounded-md">
+                          <div className="flex items-center gap-2 group-data-[collapsible=icon]:justify-center">
+                              <MailWarning className="h-5 w-5 shrink-0" />
+                              <div className="text-xs group-data-[collapsible=icon]:hidden">
+                                  <p className="font-semibold">Verify your email</p>
+                                  <Button variant="link" size="sm" className="h-auto p-0 text-current underline" onClick={handleResendVerification}>Resend Email</Button>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              )}
               {user ? (
                 <div className="w-full flex flex-col gap-2 p-2">
                    <Link href="/profile" onClick={handleLinkClick} className="w-full">
