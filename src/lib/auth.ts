@@ -15,15 +15,17 @@ import {
   type User
 } from "firebase/auth";
 
-export async function handleSignUp(email: string, password: string):Promise<{error: string | null}> {
+type AuthResult = {
+  user?: User | null;
+  error?: string | null;
+};
+
+export async function handleSignUp(email: string, password: string): Promise<AuthResult> {
   try {
     await setPersistence(auth, browserLocalPersistence);
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    // We send the verification email, but we no longer sign them out.
-    // The redirect to checkout will happen, and verification will be enforced 
-    // when they try to access protected routes later.
     await sendEmailVerification(userCredential.user);
-    return { error: null };
+    return { user: userCredential.user, error: null };
   } catch (error: any) {
     if (error.code === 'auth/email-already-in-use') {
       return { error: "An account with this email address already exists." };
@@ -32,19 +34,18 @@ export async function handleSignUp(email: string, password: string):Promise<{err
   }
 }
 
-export async function handleSignIn(email: string, password: string): Promise<{error: string | null}> {
+export async function handleSignIn(email: string, password: string): Promise<AuthResult> {
   try {
     await setPersistence(auth, browserLocalPersistence);
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
     if (!userCredential.user.emailVerified) {
-      // Optionally re-send the verification email if they try to log in without verifying
       await sendEmailVerification(userCredential.user);
-      await firebaseSignOut(auth); // Log them out
+      await firebaseSignOut(auth);
       return { error: "Your email is not verified. We've sent a new verification link to your inbox." };
     }
     
-    return { error: null };
+    return { user: userCredential.user, error: null };
   } catch (error: any) {
     if (error.code === 'auth/invalid-credential') {
       return { error: "Incorrect email or password. Please try again." };
@@ -53,12 +54,12 @@ export async function handleSignIn(email: string, password: string): Promise<{er
   }
 }
 
-export async function handleGoogleSignIn(): Promise<{error: string | null}> {
+export async function handleGoogleSignIn(): Promise<AuthResult> {
   const provider = new GoogleAuthProvider();
   try {
     await setPersistence(auth, browserLocalPersistence);
-    await signInWithPopup(auth, provider);
-    return { error: null };
+    const result = await signInWithPopup(auth, provider);
+    return { user: result.user, error: null };
   } catch (error: any) {
     return { error: error.message };
   }
@@ -88,7 +89,6 @@ export async function handleProfileUpdate(profileData: { displayName?: string; p
     }
     try {
         await updateProfile(auth.currentUser, profileData);
-        // Force a refresh of the user's token to get the latest profile data
         await auth.currentUser.getIdToken(true);
         return { error: null };
     } catch (error: any) {
@@ -99,7 +99,6 @@ export async function handleProfileUpdate(profileData: { displayName?: string; p
 export function initAuthListener(callback: (user: User | null) => void) {
   return onAuthStateChanged(auth, (user) => {
     if (user && !user.emailVerified) {
-      // Don't consider the user "logged in" for the app's purposes if email is not verified
       callback(null);
     } else {
       callback(user);

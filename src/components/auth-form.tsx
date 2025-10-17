@@ -37,6 +37,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { handleCheckout } from "@/lib/stripe";
+import type { User } from "firebase/auth";
 
 const signUpSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -97,10 +98,10 @@ export function AuthForm() {
     ];
   }, [password]);
 
-  const handleAuthSuccess = async () => {
-    if (redirectToCheckout) {
+  const handleAuthSuccess = async (user?: User | null) => {
+    if (redirectToCheckout && user) {
       try {
-        await handleCheckout();
+        await handleCheckout(user.uid);
         // The handleCheckout function will redirect, so no router.push is needed here.
       } catch (error) {
         toast({
@@ -117,7 +118,7 @@ export function AuthForm() {
 
   const onLoginSubmit = async (values: z.infer<typeof loginSchema>) => {
     setLoading(true);
-    const { error } = await handleSignIn(values.email, values.password);
+    const { error, user } = await handleSignIn(values.email, values.password);
     if (error) {
       toast({
         title: "Login Failed",
@@ -126,13 +127,13 @@ export function AuthForm() {
       });
       setLoading(false);
     } else {
-      handleAuthSuccess();
+      handleAuthSuccess(user);
     }
   };
 
   const onSignUpSubmit = async (values: z.infer<typeof signUpSchema>) => {
     setLoading(true);
-    const { error } = await handleSignUp(values.email, values.password);
+    const { error, user } = await handleSignUp(values.email, values.password);
     if (error) {
       toast({
         title: "Sign Up Failed",
@@ -141,7 +142,7 @@ export function AuthForm() {
       });
       setLoading(false);
     } else {
-      handleAuthSuccess();
+      handleAuthSuccess(user);
     }
   };
 
@@ -175,7 +176,7 @@ export function AuthForm() {
 
   const onGoogleSignIn = async () => {
     setLoading(true);
-    const { error } = await handleGoogleSignIn();
+    const { error, user } = await handleGoogleSignIn();
     if (error) {
         toast({
             title: "Google Sign-In Failed",
@@ -184,7 +185,7 @@ export function AuthForm() {
         });
         setLoading(false);
     } else {
-      handleAuthSuccess();
+      handleAuthSuccess(user);
     }
   };
 

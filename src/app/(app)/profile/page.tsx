@@ -111,7 +111,7 @@ function ProfilePage() {
     if (!user) return;
     setIsCheckoutLoading(true);
     try {
-        await handleCheckout();
+        await handleCheckout(user.uid);
     } catch (error) {
         console.error(error);
         toast({
