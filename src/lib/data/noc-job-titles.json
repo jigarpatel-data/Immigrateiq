@@ -1,70 +1,2582 @@
-
 [
   {
-    "nocCode": "75110",
-    "nocTitle": "Construction trades helpers and labourers",
-    "exampleJobTitles": [
-      "asphalt spreader",
-      "bricklayer helper",
-      "carpenter helper",
-      "concrete mixer helper",
-      "concrete paving labourer",
-      "construction helper",
-      "construction labourer",
-      "demolition worker",
-      "driller helper - surface mining",
-      "drywall sander",
-      "excavation labourer",
-      "flagperson",
-      "glazier helper",
-      "pipeline mandrel operator",
-      "plumber helper",
-      "roofer helper",
-      "stabber - pipeline construction"
-    ]
+    "nocCode": 10,
+    "nocTitle": "Legislators",
+    "TEER": 0
   },
   {
-    "nocCode": "73111",
-    "nocTitle": "Glaziers",
-    "exampleJobTitles": [
-      "glazier",
-      "building glazier",
-      "plate glass installer",
-      "stained glass glazier",
-      "glazier and metal mechanic"
-    ]
+    "nocCode": 11,
+    "nocTitle": "Senior government managers and officials",
+    "TEER": 0
   },
   {
-    "nocCode": "72106",
-    "nocTitle": "Welders and related machine operators",
-    "exampleJobTitles": [
-      "welder",
-      "brazer",
-      "welding machine operator",
-      "arc welder",
-      "gas welder",
-      "pipe welder"
-    ]
+    "nocCode": 12,
+    "nocTitle": "Senior managers - financial, communications and other business services",
+    "TEER": 0
   },
   {
-    "nocCode": "72200",
-    "nocTitle": "Electricians (except industrial and power system)",
-    "exampleJobTitles": [
-      "electrician",
-      "construction electrician",
-      "domestic and rural electrician",
-      "journeyman electrician"
-    ]
+    "nocCode": 13,
+    "nocTitle": "Senior managers - health, education, social and community services and membership organizations",
+    "TEER": 0
   },
   {
-    "nocCode": "21231",
+    "nocCode": 14,
+    "nocTitle": "Senior managers - trade, broadcasting and other services",
+    "TEER": 0
+  },
+  {
+    "nocCode": 15,
+    "nocTitle": "Senior managers - construction, transportation, production and utilities",
+    "TEER": 0
+  },
+  {
+    "nocCode": 10010,
+    "nocTitle": "Financial managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 10011,
+    "nocTitle": "Human resources managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 10012,
+    "nocTitle": "Purchasing managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 10019,
+    "nocTitle": "Other administrative services managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 10020,
+    "nocTitle": "Insurance, real estate and financial brokerage managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 10021,
+    "nocTitle": "Banking, credit and other investment managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 10022,
+    "nocTitle": "Advertising, marketing and public relations managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 10029,
+    "nocTitle": "Other business services managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 10030,
+    "nocTitle": "Telecommunication carriers managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 11100,
+    "nocTitle": "Financial auditors and accountants",
+    "TEER": 1
+  },
+  {
+    "nocCode": 11101,
+    "nocTitle": "Financial and investment analysts",
+    "TEER": 1
+  },
+  {
+    "nocCode": 11102,
+    "nocTitle": "Financial advisors",
+    "TEER": 1
+  },
+  {
+    "nocCode": 11103,
+    "nocTitle": "Securities agents, investment dealers and brokers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 11109,
+    "nocTitle": "Other financial officers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 11200,
+    "nocTitle": "Human resources professionals",
+    "TEER": 1
+  },
+  {
+    "nocCode": 11201,
+    "nocTitle": "Professional occupations in business management consulting",
+    "TEER": 1
+  },
+  {
+    "nocCode": 11202,
+    "nocTitle": "Professional occupations in advertising, marketing and public relations",
+    "TEER": 1
+  },
+  {
+    "nocCode": 12010,
+    "nocTitle": "Supervisors, general office and administrative support workers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 12011,
+    "nocTitle": "Supervisors, finance and insurance office workers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 12012,
+    "nocTitle": "Supervisors, library, correspondence and related information workers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 12013,
+    "nocTitle": "Supervisors, supply chain, tracking and scheduling coordination occupations",
+    "TEER": 2
+  },
+  {
+    "nocCode": 12100,
+    "nocTitle": "Executive assistants",
+    "TEER": 2
+  },
+  {
+    "nocCode": 12101,
+    "nocTitle": "Human resources and recruitment officers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 12102,
+    "nocTitle": "Procurement and purchasing agents and officers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 12103,
+    "nocTitle": "Conference and event planners",
+    "TEER": 2
+  },
+  {
+    "nocCode": 12104,
+    "nocTitle": "Employment insurance and revenue officers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 12110,
+    "nocTitle": "Court reporters, medical transcriptionists and related occupations",
+    "TEER": 2
+  },
+  {
+    "nocCode": 12111,
+    "nocTitle": "Health information management occupations",
+    "TEER": 2
+  },
+  {
+    "nocCode": 12112,
+    "nocTitle": "Records management technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 12113,
+    "nocTitle": "Statistical officers and related research support occupations",
+    "TEER": 2
+  },
+  {
+    "nocCode": 12200,
+    "nocTitle": "Accounting technicians and bookkeepers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 12201,
+    "nocTitle": "Insurance adjusters and claims examiners",
+    "TEER": 2
+  },
+  {
+    "nocCode": 12202,
+    "nocTitle": "Insurance underwriters",
+    "TEER": 2
+  },
+  {
+    "nocCode": 12203,
+    "nocTitle": "Assessors, business valuators and appraisers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 13100,
+    "nocTitle": "Administrative officers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 13101,
+    "nocTitle": "Property administrators",
+    "TEER": 3
+  },
+  {
+    "nocCode": 13102,
+    "nocTitle": "Payroll administrators",
+    "TEER": 3
+  },
+  {
+    "nocCode": 13110,
+    "nocTitle": "Administrative assistants",
+    "TEER": 3
+  },
+  {
+    "nocCode": 13111,
+    "nocTitle": "Legal administrative assistants",
+    "TEER": 3
+  },
+  {
+    "nocCode": 13112,
+    "nocTitle": "Medical administrative assistants",
+    "TEER": 3
+  },
+  {
+    "nocCode": 13200,
+    "nocTitle": "Customs, ship and other brokers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 13201,
+    "nocTitle": "Production and transportation logistics coordinators",
+    "TEER": 3
+  },
+  {
+    "nocCode": 14100,
+    "nocTitle": "General office support workers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 14101,
+    "nocTitle": "Receptionists",
+    "TEER": 4
+  },
+  {
+    "nocCode": 14102,
+    "nocTitle": "Personnel clerks",
+    "TEER": 4
+  },
+  {
+    "nocCode": 14103,
+    "nocTitle": "Court clerks and related court services occupations",
+    "TEER": 4
+  },
+  {
+    "nocCode": 14110,
+    "nocTitle": "Survey interviewers and statistical clerks",
+    "TEER": 4
+  },
+  {
+    "nocCode": 14111,
+    "nocTitle": "Data entry clerks",
+    "TEER": 4
+  },
+  {
+    "nocCode": 14112,
+    "nocTitle": "Desktop publishing operators and related occupations",
+    "TEER": 4
+  },
+  {
+    "nocCode": 14200,
+    "nocTitle": "Accounting and related clerks",
+    "TEER": 4
+  },
+  {
+    "nocCode": 14201,
+    "nocTitle": "Banking, insurance and other financial clerks",
+    "TEER": 4
+  },
+  {
+    "nocCode": 14202,
+    "nocTitle": "Collection clerks",
+    "TEER": 4
+  },
+  {
+    "nocCode": 14300,
+    "nocTitle": "Library assistants and clerks",
+    "TEER": 4
+  },
+  {
+    "nocCode": 14301,
+    "nocTitle": "Correspondence, publication and regulatory clerks",
+    "TEER": 4
+  },
+  {
+    "nocCode": 14400,
+    "nocTitle": "Shippers and receivers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 14401,
+    "nocTitle": "Storekeepers and partspersons",
+    "TEER": 4
+  },
+  {
+    "nocCode": 14402,
+    "nocTitle": "Production logistics workers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 14403,
+    "nocTitle": "Purchasing and inventory control workers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 14404,
+    "nocTitle": "Dispatchers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 14405,
+    "nocTitle": "Transportation route and crew schedulers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 20010,
+    "nocTitle": "Engineering managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 20011,
+    "nocTitle": "Architecture and science managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 20012,
+    "nocTitle": "Computer and information systems managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 21100,
+    "nocTitle": "Physicists and astronomers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21101,
+    "nocTitle": "Chemists",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21102,
+    "nocTitle": "Geoscientists and oceanographers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21103,
+    "nocTitle": "Meteorologists and climatologists",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21109,
+    "nocTitle": "Other professional occupations in physical sciences",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21110,
+    "nocTitle": "Biologists and related scientists",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21111,
+    "nocTitle": "Forestry professionals",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21112,
+    "nocTitle": "Agricultural representatives, consultants and specialists",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21120,
+    "nocTitle": "Public and environmental health and safety professionals",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21200,
+    "nocTitle": "Architects",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21201,
+    "nocTitle": "Landscape architects",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21202,
+    "nocTitle": "Urban and land use planners",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21203,
+    "nocTitle": "Land surveyors",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21210,
+    "nocTitle": "Mathematicians, statisticians and actuaries",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21211,
+    "nocTitle": "Data scientists",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21220,
+    "nocTitle": "Cybersecurity specialists",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21221,
+    "nocTitle": "Business systems specialists",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21222,
+    "nocTitle": "Information systems specialists",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21223,
+    "nocTitle": "Database analysts and data administrators",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21230,
+    "nocTitle": "Computer systems developers and programmers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21231,
     "nocTitle": "Software engineers and designers",
-    "exampleJobTitles": [
-      "software engineer",
-      "software designer",
-      "application developer",
-      "systems engineer",
-      "tech lead"
-    ]
+    "TEER": 1
+  },
+  {
+    "nocCode": 21232,
+    "nocTitle": "Software developers and programmers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21233,
+    "nocTitle": "Web designers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21234,
+    "nocTitle": "Web developers and programmers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21300,
+    "nocTitle": "Civil engineers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21301,
+    "nocTitle": "Mechanical engineers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21310,
+    "nocTitle": "Electrical and electronics engineers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21311,
+    "nocTitle": "Computer engineers (except software engineers and designers)",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21320,
+    "nocTitle": "Chemical engineers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21321,
+    "nocTitle": "Industrial and manufacturing engineers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21322,
+    "nocTitle": "Metallurgical and materials engineers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21330,
+    "nocTitle": "Mining engineers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21331,
+    "nocTitle": "Geological engineers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21332,
+    "nocTitle": "Petroleum engineers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21390,
+    "nocTitle": "Aerospace engineers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 21399,
+    "nocTitle": "Other professional engineers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 22100,
+    "nocTitle": "Chemical technologists and technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22101,
+    "nocTitle": "Geological and mineral technologists and technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22110,
+    "nocTitle": "Biological technologists and technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22111,
+    "nocTitle": "Agricultural and fish products inspectors",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22112,
+    "nocTitle": "Forestry technologists and technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22113,
+    "nocTitle": "Conservation and fishery officers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22114,
+    "nocTitle": "Landscape and horticulture technicians and specialists",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22210,
+    "nocTitle": "Architectural technologists and technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22211,
+    "nocTitle": "Industrial designers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22212,
+    "nocTitle": "Drafting technologists and technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22213,
+    "nocTitle": "Land survey technologists and technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22214,
+    "nocTitle": "Technical occupations in geomatics and meteorology",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22220,
+    "nocTitle": "Computer network and web technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22221,
+    "nocTitle": "User support technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22222,
+    "nocTitle": "Information systems testing technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22230,
+    "nocTitle": "Non-destructive testers and inspectors",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22231,
+    "nocTitle": "Engineering inspectors and regulatory officers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22232,
+    "nocTitle": "Occupational health and safety specialists",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22233,
+    "nocTitle": "Construction inspectors",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22300,
+    "nocTitle": "Civil engineering technologists and technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22301,
+    "nocTitle": "Mechanical engineering technologists and technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22302,
+    "nocTitle": "Industrial engineering and manufacturing technologists and technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22303,
+    "nocTitle": "Construction estimators",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22310,
+    "nocTitle": "Electrical and electronics engineering technologists and technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22311,
+    "nocTitle": "Electronic service technicians (household and business equipment)",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22312,
+    "nocTitle": "Industrial instrument technicians and mechanics",
+    "TEER": 2
+  },
+  {
+    "nocCode": 22313,
+    "nocTitle": "Aircraft instrument, electrical and avionics mechanics, technicians and inspectors",
+    "TEER": 2
+  },
+  {
+    "nocCode": 30010,
+    "nocTitle": "Managers in health care",
+    "TEER": 0
+  },
+  {
+    "nocCode": 31100,
+    "nocTitle": "Specialists in clinical and laboratory medicine",
+    "TEER": 1
+  },
+  {
+    "nocCode": 31101,
+    "nocTitle": "Specialists in surgery",
+    "TEER": 1
+  },
+  {
+    "nocCode": 31102,
+    "nocTitle": "General practitioners and family physicians",
+    "TEER": 1
+  },
+  {
+    "nocCode": 31103,
+    "nocTitle": "Veterinarians",
+    "TEER": 1
+  },
+  {
+    "nocCode": 31110,
+    "nocTitle": "Dentists",
+    "TEER": 1
+  },
+  {
+    "nocCode": 31111,
+    "nocTitle": "Optometrists",
+    "TEER": 1
+  },
+  {
+    "nocCode": 31112,
+    "nocTitle": "Audiologists and speech-language pathologists",
+    "TEER": 1
+  },
+  {
+    "nocCode": 31120,
+    "nocTitle": "Pharmacists",
+    "TEER": 1
+  },
+  {
+    "nocCode": 31121,
+    "nocTitle": "Dietitians and nutritionists",
+    "TEER": 1
+  },
+  {
+    "nocCode": 31200,
+    "nocTitle": "Psychologists",
+    "TEER": 1
+  },
+  {
+    "nocCode": 31201,
+    "nocTitle": "Chiropractors",
+    "TEER": 1
+  },
+  {
+    "nocCode": 31202,
+    "nocTitle": "Physiotherapists",
+    "TEER": 1
+  },
+  {
+    "nocCode": 31203,
+    "nocTitle": "Occupational therapists",
+    "TEER": 1
+  },
+  {
+    "nocCode": 31204,
+    "nocTitle": "Kinesiologists and other professional occupations in therapy and assessment",
+    "TEER": 1
+  },
+  {
+    "nocCode": 31209,
+    "nocTitle": "Other professional occupations in health diagnosing and treating",
+    "TEER": 1
+  },
+  {
+    "nocCode": 31300,
+    "nocTitle": "Nursing coordinators and supervisors",
+    "TEER": 1
+  },
+  {
+    "nocCode": 31301,
+    "nocTitle": "Registered nurses and registered psychiatric nurses",
+    "TEER": 1
+  },
+  {
+    "nocCode": 31302,
+    "nocTitle": "Nurse practitioners",
+    "TEER": 1
+  },
+  {
+    "nocCode": 31303,
+    "nocTitle": "Physician assistants, midwives and allied health professionals",
+    "TEER": 1
+  },
+  {
+    "nocCode": 32100,
+    "nocTitle": "Opticians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 32101,
+    "nocTitle": "Licensed practical nurses",
+    "TEER": 2
+  },
+  {
+    "nocCode": 32102,
+    "nocTitle": "Paramedical occupations",
+    "TEER": 2
+  },
+  {
+    "nocCode": 32103,
+    "nocTitle": "Respiratory therapists, clinical perfusionists and cardiopulmonary technologists",
+    "TEER": 2
+  },
+  {
+    "nocCode": 32104,
+    "nocTitle": "Animal health technologists and veterinary technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 32109,
+    "nocTitle": "Other technical occupations in therapy and assessment",
+    "TEER": 2
+  },
+  {
+    "nocCode": 32110,
+    "nocTitle": "Denturists",
+    "TEER": 2
+  },
+  {
+    "nocCode": 32111,
+    "nocTitle": "Dental hygienists and dental therapists",
+    "TEER": 2
+  },
+  {
+    "nocCode": 32112,
+    "nocTitle": "Dental technologists and technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 32120,
+    "nocTitle": "Medical laboratory technologists",
+    "TEER": 2
+  },
+  {
+    "nocCode": 32121,
+    "nocTitle": "Medical radiation technologists",
+    "TEER": 2
+  },
+  {
+    "nocCode": 32122,
+    "nocTitle": "Medical sonographers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 32123,
+    "nocTitle": "Cardiology technologists and electrophysiological diagnostic technologists",
+    "TEER": 2
+  },
+  {
+    "nocCode": 32124,
+    "nocTitle": "Pharmacy technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 32129,
+    "nocTitle": "Other medical technologists and technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 32200,
+    "nocTitle": "Traditional Chinese medicine practitioners and acupuncturists",
+    "TEER": 2
+  },
+  {
+    "nocCode": 32201,
+    "nocTitle": "Massage therapists",
+    "TEER": 2
+  },
+  {
+    "nocCode": 32209,
+    "nocTitle": "Other practitioners of natural healing",
+    "TEER": 2
+  },
+  {
+    "nocCode": 33100,
+    "nocTitle": "Dental assistants and dental laboratory assistants",
+    "TEER": 3
+  },
+  {
+    "nocCode": 33101,
+    "nocTitle": "Medical laboratory assistants and related technical occupations",
+    "TEER": 3
+  },
+  {
+    "nocCode": 33102,
+    "nocTitle": "Nurse aides, orderlies and patient service associates",
+    "TEER": 3
+  },
+  {
+    "nocCode": 33103,
+    "nocTitle": "Pharmacy technical assistants and pharmacy assistants",
+    "TEER": 3
+  },
+  {
+    "nocCode": 33109,
+    "nocTitle": "Other assisting occupations in support of health services",
+    "TEER": 3
+  },
+  {
+    "nocCode": 40010,
+    "nocTitle": "Government managers - health and social policy development and program administration",
+    "TEER": 0
+  },
+  {
+    "nocCode": 40011,
+    "nocTitle": "Government managers - economic analysis, policy development and program administration",
+    "TEER": 0
+  },
+  {
+    "nocCode": 40012,
+    "nocTitle": "Government managers - education policy development and program administration",
+    "TEER": 0
+  },
+  {
+    "nocCode": 40019,
+    "nocTitle": "Other managers in public administration",
+    "TEER": 0
+  },
+  {
+    "nocCode": 40020,
+    "nocTitle": "Administrators - post-secondary education and vocational training",
+    "TEER": 0
+  },
+  {
+    "nocCode": 40021,
+    "nocTitle": "School principals and administrators of elementary and secondary education",
+    "TEER": 0
+  },
+  {
+    "nocCode": 40030,
+    "nocTitle": "Managers in social, community and correctional services",
+    "TEER": 0
+  },
+  {
+    "nocCode": 40040,
+    "nocTitle": "Commissioned police officers and related occupations in public protection services",
+    "TEER": 0
+  },
+  {
+    "nocCode": 40041,
+    "nocTitle": "Fire chiefs and senior firefighting officers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 40042,
+    "nocTitle": "Commissioned officers of the Canadian Armed Forces",
+    "TEER": 0
+  },
+  {
+    "nocCode": 41100,
+    "nocTitle": "Judges",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41101,
+    "nocTitle": "Lawyers and Quebec notaries",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41200,
+    "nocTitle": "University professors and lecturers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41201,
+    "nocTitle": "Post-secondary teaching and research assistants",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41210,
+    "nocTitle": "College and other vocational instructors",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41220,
+    "nocTitle": "Secondary school teachers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41221,
+    "nocTitle": "Elementary school and kindergarten teachers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41300,
+    "nocTitle": "Social workers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41301,
+    "nocTitle": "Therapists in counselling and related specialized therapies",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41302,
+    "nocTitle": "Religious leaders",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41310,
+    "nocTitle": "Police investigators and other investigative occupations",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41311,
+    "nocTitle": "Probation and parole officers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41320,
+    "nocTitle": "Educational counsellors",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41321,
+    "nocTitle": "Career development practitioners and career counsellors (except education)",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41400,
+    "nocTitle": "Natural and applied science policy researchers, consultants and program officers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41401,
+    "nocTitle": "Economists and economic policy researchers and analysts",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41402,
+    "nocTitle": "Business development officers and market researchers and analysts",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41403,
+    "nocTitle": "Social policy researchers, consultants and program officers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41404,
+    "nocTitle": "Health policy researchers, consultants and program officers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41405,
+    "nocTitle": "Education policy researchers, consultants and program officers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41406,
+    "nocTitle": "Recreation, sports and fitness policy researchers, consultants and program officers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41407,
+    "nocTitle": "Program officers unique to government",
+    "TEER": 1
+  },
+  {
+    "nocCode": 41409,
+    "nocTitle": "Other professional occupations in social science",
+    "TEER": 1
+  },
+  {
+    "nocCode": 42100,
+    "nocTitle": "Police officers (except commissioned)",
+    "TEER": 2
+  },
+  {
+    "nocCode": 42101,
+    "nocTitle": "Firefighters",
+    "TEER": 2
+  },
+  {
+    "nocCode": 42102,
+    "nocTitle": "Specialized members of the Canadian Armed Forces",
+    "TEER": 2
+  },
+  {
+    "nocCode": 42200,
+    "nocTitle": "Paralegals and related occupations",
+    "TEER": 2
+  },
+  {
+    "nocCode": 42201,
+    "nocTitle": "Social and community service workers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 42202,
+    "nocTitle": "Early childhood educators and assistants",
+    "TEER": 2
+  },
+  {
+    "nocCode": 42203,
+    "nocTitle": "Instructors of persons with disabilities",
+    "TEER": 2
+  },
+  {
+    "nocCode": 42204,
+    "nocTitle": "Religion workers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 43100,
+    "nocTitle": "Elementary and secondary school teacher assistants",
+    "TEER": 3
+  },
+  {
+    "nocCode": 43109,
+    "nocTitle": "Other instructors",
+    "TEER": 3
+  },
+  {
+    "nocCode": 43200,
+    "nocTitle": "Sheriffs and bailiffs",
+    "TEER": 3
+  },
+  {
+    "nocCode": 43201,
+    "nocTitle": "Correctional service officers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 43202,
+    "nocTitle": "By-law enforcement and other regulatory officers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 43203,
+    "nocTitle": "Border services, customs, and immigration officers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 43204,
+    "nocTitle": "Operations members of the Canadian Armed Forces",
+    "TEER": 3
+  },
+  {
+    "nocCode": 44100,
+    "nocTitle": "Home child care providers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 44101,
+    "nocTitle": "Home support workers, caregivers and related occupations",
+    "TEER": 4
+  },
+  {
+    "nocCode": 44200,
+    "nocTitle": "Primary combat members of the Canadian Armed Forces",
+    "TEER": 4
+  },
+  {
+    "nocCode": 45100,
+    "nocTitle": "Student monitors, crossing guards and related occupations",
+    "TEER": 5
+  },
+  {
+    "nocCode": 50010,
+    "nocTitle": "Library, archive, museum and art gallery managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 50011,
+    "nocTitle": "Managers - publishing, motion pictures, broadcasting and performing arts",
+    "TEER": 0
+  },
+  {
+    "nocCode": 50012,
+    "nocTitle": "Recreation, sports and fitness program and service directors",
+    "TEER": 0
+  },
+  {
+    "nocCode": 51100,
+    "nocTitle": "Librarians",
+    "TEER": 1
+  },
+  {
+    "nocCode": 51101,
+    "nocTitle": "Conservators and curators",
+    "TEER": 1
+  },
+  {
+    "nocCode": 51102,
+    "nocTitle": "Archivists",
+    "TEER": 1
+  },
+  {
+    "nocCode": 51110,
+    "nocTitle": "Editors",
+    "TEER": 1
+  },
+  {
+    "nocCode": 51111,
+    "nocTitle": "Authors and writers (except technical)",
+    "TEER": 1
+  },
+  {
+    "nocCode": 51112,
+    "nocTitle": "Technical writers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 51113,
+    "nocTitle": "Journalists",
+    "TEER": 1
+  },
+  {
+    "nocCode": 51114,
+    "nocTitle": "Translators, terminologists and interpreters",
+    "TEER": 1
+  },
+  {
+    "nocCode": 51120,
+    "nocTitle": "Producers, directors, choreographers and related occupations",
+    "TEER": 1
+  },
+  {
+    "nocCode": 51121,
+    "nocTitle": "Conductors, composers and arrangers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 51122,
+    "nocTitle": "Musicians and singers",
+    "TEER": 1
+  },
+  {
+    "nocCode": 52100,
+    "nocTitle": "Library and public archive technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 52110,
+    "nocTitle": "Film and video camera operators",
+    "TEER": 2
+  },
+  {
+    "nocCode": 52111,
+    "nocTitle": "Graphic arts technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 52112,
+    "nocTitle": "Broadcast technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 52113,
+    "nocTitle": "Audio and video recording technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 52114,
+    "nocTitle": "Announcers and other broadcasters",
+    "TEER": 2
+  },
+  {
+    "nocCode": 52119,
+    "nocTitle": "Other technical and coordinating occupations in motion pictures, broadcasting and the performing arts",
+    "TEER": 2
+  },
+  {
+    "nocCode": 52120,
+    "nocTitle": "Graphic designers and illustrators",
+    "TEER": 2
+  },
+  {
+    "nocCode": 52121,
+    "nocTitle": "Interior designers and interior decorators",
+    "TEER": 2
+  },
+  {
+    "nocCode": 53100,
+    "nocTitle": "Registrars, restorers, interpreters and other occupations related to museum and art galleries",
+    "TEER": 3
+  },
+  {
+    "nocCode": 53110,
+    "nocTitle": "Photographers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 53111,
+    "nocTitle": "Motion pictures, broadcasting, photography and performing arts assistants and operators",
+    "TEER": 3
+  },
+  {
+    "nocCode": 53120,
+    "nocTitle": "Dancers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 53121,
+    "nocTitle": "Actors, comedians and circus performers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 53122,
+    "nocTitle": "Painters, sculptors and other visual artists",
+    "TEER": 3
+  },
+  {
+    "nocCode": 53123,
+    "nocTitle": "Theatre, fashion, exhibit and other creative designers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 53124,
+    "nocTitle": "Artisans and craftspersons",
+    "TEER": 3
+  },
+  {
+    "nocCode": 53125,
+    "nocTitle": "Patternmakers - textile, leather and fur products",
+    "TEER": 3
+  },
+  {
+    "nocCode": 53200,
+    "nocTitle": "Athletes",
+    "TEER": 3
+  },
+  {
+    "nocCode": 53201,
+    "nocTitle": "Coaches",
+    "TEER": 3
+  },
+  {
+    "nocCode": 53202,
+    "nocTitle": "Sports officials and referees",
+    "TEER": 3
+  },
+  {
+    "nocCode": 54100,
+    "nocTitle": "Program leaders and instructors in recreation, sport and fitness",
+    "TEER": 4
+  },
+  {
+    "nocCode": 55109,
+    "nocTitle": "Other performers",
+    "TEER": 5
+  },
+  {
+    "nocCode": 60010,
+    "nocTitle": "Corporate sales managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 60020,
+    "nocTitle": "Retail and wholesale trade managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 60030,
+    "nocTitle": "Restaurant and food service managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 60031,
+    "nocTitle": "Accommodation service managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 60040,
+    "nocTitle": "Managers in customer and personal services",
+    "TEER": 0
+  },
+  {
+    "nocCode": 62010,
+    "nocTitle": "Retail sales supervisors",
+    "TEER": 2
+  },
+  {
+    "nocCode": 62020,
+    "nocTitle": "Food service supervisors",
+    "TEER": 2
+  },
+  {
+    "nocCode": 62021,
+    "nocTitle": "Executive housekeepers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 62022,
+    "nocTitle": "Accommodation, travel, tourism and related services supervisors",
+    "TEER": 2
+  },
+  {
+    "nocCode": 62023,
+    "nocTitle": "Customer and information services supervisors",
+    "TEER": 2
+  },
+  {
+    "nocCode": 62024,
+    "nocTitle": "Cleaning supervisors",
+    "TEER": 2
+  },
+  {
+    "nocCode": 62029,
+    "nocTitle": "Other services supervisors",
+    "TEER": 2
+  },
+  {
+    "nocCode": 62100,
+    "nocTitle": "Technical sales specialists - wholesale trade",
+    "TEER": 2
+  },
+  {
+    "nocCode": 62101,
+    "nocTitle": "Retail and wholesale buyers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 62200,
+    "nocTitle": "Chefs",
+    "TEER": 2
+  },
+  {
+    "nocCode": 62201,
+    "nocTitle": "Funeral directors and embalmers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 62202,
+    "nocTitle": "Jewellers, jewellery and watch repairers and related occupations",
+    "TEER": 2
+  },
+  {
+    "nocCode": 63100,
+    "nocTitle": "Insurance agents and brokers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 63101,
+    "nocTitle": "Real estate agents and salespersons",
+    "TEER": 3
+  },
+  {
+    "nocCode": 63102,
+    "nocTitle": "Financial sales representatives",
+    "TEER": 3
+  },
+  {
+    "nocCode": 63200,
+    "nocTitle": "Cooks",
+    "TEER": 3
+  },
+  {
+    "nocCode": 63201,
+    "nocTitle": "Butchers - retail and wholesale",
+    "TEER": 3
+  },
+  {
+    "nocCode": 63202,
+    "nocTitle": "Bakers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 63210,
+    "nocTitle": "Hairstylists and barbers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 63211,
+    "nocTitle": "Estheticians, electrologists and related occupations",
+    "TEER": 3
+  },
+  {
+    "nocCode": 63220,
+    "nocTitle": "Shoe repairers and shoemakers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 63221,
+    "nocTitle": "Upholsterers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 64100,
+    "nocTitle": "Retail salespersons and visual merchandisers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 64101,
+    "nocTitle": "Sales and account representatives - wholesale trade (non-technical)",
+    "TEER": 4
+  },
+  {
+    "nocCode": 64200,
+    "nocTitle": "Tailors, dressmakers, furriers and milliners",
+    "TEER": 4
+  },
+  {
+    "nocCode": 64201,
+    "nocTitle": "Image, social and other personal consultants",
+    "TEER": 4
+  },
+  {
+    "nocCode": 64300,
+    "nocTitle": "Maîtres d'hôtel and hosts/hostesses",
+    "TEER": 4
+  },
+  {
+    "nocCode": 64301,
+    "nocTitle": "Bartenders",
+    "TEER": 4
+  },
+  {
+    "nocCode": 64310,
+    "nocTitle": "Travel counsellors",
+    "TEER": 4
+  },
+  {
+    "nocCode": 64311,
+    "nocTitle": "Pursers and flight attendants",
+    "TEER": 4
+  },
+  {
+    "nocCode": 64312,
+    "nocTitle": "Airline ticket and service agents",
+    "TEER": 4
+  },
+  {
+    "nocCode": 64313,
+    "nocTitle": "Ground and water transport ticket agents, cargo service representatives and related clerks",
+    "TEER": 4
+  },
+  {
+    "nocCode": 64314,
+    "nocTitle": "Hotel front desk clerks",
+    "TEER": 4
+  },
+  {
+    "nocCode": 64320,
+    "nocTitle": "Tour and travel guides",
+    "TEER": 4
+  },
+  {
+    "nocCode": 64321,
+    "nocTitle": "Casino workers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 64322,
+    "nocTitle": "Outdoor sport and recreational guides",
+    "TEER": 4
+  },
+  {
+    "nocCode": 64400,
+    "nocTitle": "Customer services representatives - financial institutions",
+    "TEER": 4
+  },
+  {
+    "nocCode": 64401,
+    "nocTitle": "Postal services representatives",
+    "TEER": 4
+  },
+  {
+    "nocCode": 64409,
+    "nocTitle": "Other customer and information services representatives",
+    "TEER": 4
+  },
+  {
+    "nocCode": 64410,
+    "nocTitle": "Security guards and related security service occupations",
+    "TEER": 4
+  },
+  {
+    "nocCode": 65100,
+    "nocTitle": "Cashiers",
+    "TEER": 5
+  },
+  {
+    "nocCode": 65101,
+    "nocTitle": "Service station attendants",
+    "TEER": 5
+  },
+  {
+    "nocCode": 65102,
+    "nocTitle": "Store shelf stockers, clerks and order fillers",
+    "TEER": 5
+  },
+  {
+    "nocCode": 65109,
+    "nocTitle": "Other sales related occupations",
+    "TEER": 5
+  },
+  {
+    "nocCode": 65200,
+    "nocTitle": "Food and beverage servers",
+    "TEER": 5
+  },
+  {
+    "nocCode": 65201,
+    "nocTitle": "Food counter attendants, kitchen helpers and related support occupations",
+    "TEER": 5
+  },
+  {
+    "nocCode": 65202,
+    "nocTitle": "Meat cutters and fishmongers - retail and wholesale",
+    "TEER": 5
+  },
+  {
+    "nocCode": 65210,
+    "nocTitle": "Support occupations in accommodation, travel and facilities set-up services",
+    "TEER": 5
+  },
+  {
+    "nocCode": 65211,
+    "nocTitle": "Operators and attendants in amusement, recreation and sport",
+    "TEER": 5
+  },
+  {
+    "nocCode": 65220,
+    "nocTitle": "Pet groomers and animal care workers",
+    "TEER": 5
+  },
+  {
+    "nocCode": 65229,
+    "nocTitle": "Other support occupations in personal services",
+    "TEER": 5
+  },
+  {
+    "nocCode": 65310,
+    "nocTitle": "Light duty cleaners",
+    "TEER": 5
+  },
+  {
+    "nocCode": 65311,
+    "nocTitle": "Specialized cleaners",
+    "TEER": 5
+  },
+  {
+    "nocCode": 65312,
+    "nocTitle": "Janitors, caretakers and heavy-duty cleaners",
+    "TEER": 5
+  },
+  {
+    "nocCode": 65320,
+    "nocTitle": "Dry cleaning, laundry and related occupations",
+    "TEER": 5
+  },
+  {
+    "nocCode": 65329,
+    "nocTitle": "Other service support occupations",
+    "TEER": 5
+  },
+  {
+    "nocCode": 70010,
+    "nocTitle": "Construction managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 70011,
+    "nocTitle": "Home building and renovation managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 70012,
+    "nocTitle": "Facility operation and maintenance managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 70020,
+    "nocTitle": "Managers in transportation",
+    "TEER": 0
+  },
+  {
+    "nocCode": 70021,
+    "nocTitle": "Postal and courier services managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 72010,
+    "nocTitle": "Contractors and supervisors, machining, metal forming, shaping and erecting trades and related occupations",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72011,
+    "nocTitle": "Contractors and supervisors, electrical trades and telecommunications occupations",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72012,
+    "nocTitle": "Contractors and supervisors, pipefitting trades",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72013,
+    "nocTitle": "Contractors and supervisors, carpentry trades",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72014,
+    "nocTitle": "Contractors and supervisors, other construction trades, installers, repairers and servicers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72020,
+    "nocTitle": "Contractors and supervisors, mechanic trades",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72021,
+    "nocTitle": "Contractors and supervisors, heavy equipment operator crews",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72022,
+    "nocTitle": "Supervisors, printing and related occupations",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72023,
+    "nocTitle": "Supervisors, railway transport operations",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72024,
+    "nocTitle": "Supervisors, motor transport and other ground transit operators",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72025,
+    "nocTitle": "Supervisors, mail and message distribution occupations",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72100,
+    "nocTitle": "Machinists and machining and tooling inspectors",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72101,
+    "nocTitle": "Tool and die makers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72102,
+    "nocTitle": "Sheet metal workers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72103,
+    "nocTitle": "Boilermakers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72104,
+    "nocTitle": "Structural metal and platework fabricators and fitters",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72105,
+    "nocTitle": "Ironworkers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72106,
+    "nocTitle": "Welders and related machine operators",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72200,
+    "nocTitle": "Electricians (except industrial and power system)",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72201,
+    "nocTitle": "Industrial electricians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72202,
+    "nocTitle": "Power system electricians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72203,
+    "nocTitle": "Electrical power line and cable workers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72204,
+    "nocTitle": "Telecommunications line and cable installers and repairers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72205,
+    "nocTitle": "Telecommunications equipment installation and cable television service technicians",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72300,
+    "nocTitle": "Plumbers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72301,
+    "nocTitle": "Steamfitters, pipefitters and sprinkler system installers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72302,
+    "nocTitle": "Gas fitters",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72310,
+    "nocTitle": "Carpenters",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72311,
+    "nocTitle": "Cabinetmakers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72320,
+    "nocTitle": "Bricklayers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72321,
+    "nocTitle": "Insulators",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72400,
+    "nocTitle": "Construction millwrights and industrial mechanics",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72401,
+    "nocTitle": "Heavy-duty equipment mechanics",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72402,
+    "nocTitle": "Heating, refrigeration and air conditioning mechanics",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72403,
+    "nocTitle": "Railway carmen/women",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72404,
+    "nocTitle": "Aircraft mechanics and aircraft inspectors",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72405,
+    "nocTitle": "Machine fitters",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72406,
+    "nocTitle": "Elevator constructors and mechanics",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72410,
+    "nocTitle": "Automotive service technicians, truck and bus mechanics and mechanical repairers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72411,
+    "nocTitle": "Auto body collision, refinishing and glass technicians and damage repair estimators",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72420,
+    "nocTitle": "Oil and solid fuel heating mechanics",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72421,
+    "nocTitle": "Appliance servicers and repairers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72422,
+    "nocTitle": "Electrical mechanics",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72423,
+    "nocTitle": "Motorcycle, all-terrain vehicle and other related mechanics",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72429,
+    "nocTitle": "Other small engine and small equipment repairers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72500,
+    "nocTitle": "Crane operators",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72501,
+    "nocTitle": "Water well drillers",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72600,
+    "nocTitle": "Air pilots, flight engineers and flying instructors",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72601,
+    "nocTitle": "Air traffic controllers and related occupations",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72602,
+    "nocTitle": "Deck officers, water transport",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72603,
+    "nocTitle": "Engineer officers, water transport",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72604,
+    "nocTitle": "Railway traffic controllers and marine traffic regulators",
+    "TEER": 2
+  },
+  {
+    "nocCode": 72999,
+    "nocTitle": "Other technical trades and related occupations",
+    "TEER": 2
+  },
+  {
+    "nocCode": 73100,
+    "nocTitle": "Concrete finishers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 73101,
+    "nocTitle": "Tilesetters",
+    "TEER": 3
+  },
+  {
+    "nocCode": 73102,
+    "nocTitle": "Plasterers, drywall installers and finishers and lathers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 73110,
+    "nocTitle": "Roofers and shinglers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 73111,
+    "nocTitle": "Glaziers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 73112,
+    "nocTitle": "Painters and decorators (except interior decorators)",
+    "TEER": 3
+  },
+  {
+    "nocCode": 73113,
+    "nocTitle": "Floor covering installers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 73200,
+    "nocTitle": "Residential and commercial installers and servicers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 73201,
+    "nocTitle": "General building maintenance workers and building superintendents",
+    "TEER": 3
+  },
+  {
+    "nocCode": 73202,
+    "nocTitle": "Pest controllers and fumigators",
+    "TEER": 3
+  },
+  {
+    "nocCode": 73209,
+    "nocTitle": "Other repairers and servicers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 73300,
+    "nocTitle": "Transport truck drivers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 73301,
+    "nocTitle": "Bus drivers, subway operators and other transit operators",
+    "TEER": 3
+  },
+  {
+    "nocCode": 73310,
+    "nocTitle": "Railway and yard locomotive engineers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 73311,
+    "nocTitle": "Railway conductors and brakemen/women",
+    "TEER": 3
+  },
+  {
+    "nocCode": 73400,
+    "nocTitle": "Heavy equipment operators",
+    "TEER": 3
+  },
+  {
+    "nocCode": 73401,
+    "nocTitle": "Printing press operators",
+    "TEER": 3
+  },
+  {
+    "nocCode": 73402,
+    "nocTitle": "Drillers and blasters - surface mining, quarrying and construction",
+    "TEER": 3
+  },
+  {
+    "nocCode": 74100,
+    "nocTitle": "Mail and parcel sorters and related occupations",
+    "TEER": 4
+  },
+  {
+    "nocCode": 74101,
+    "nocTitle": "Letter carriers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 74102,
+    "nocTitle": "Couriers and messengers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 74200,
+    "nocTitle": "Railway yard and track maintenance workers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 74201,
+    "nocTitle": "Water transport deck and engine room crew",
+    "TEER": 4
+  },
+  {
+    "nocCode": 74202,
+    "nocTitle": "Air transport ramp attendants",
+    "TEER": 4
+  },
+  {
+    "nocCode": 74203,
+    "nocTitle": "Automotive and heavy truck and equipment parts installers and servicers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 74204,
+    "nocTitle": "Utility maintenance workers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 74205,
+    "nocTitle": "Public works maintenance equipment operators and related workers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 75100,
+    "nocTitle": "Longshore workers",
+    "TEER": 5
+  },
+  {
+    "nocCode": 75101,
+    "nocTitle": "Material handlers",
+    "TEER": 5
+  },
+  {
+    "nocCode": 75110,
+    "nocTitle": "Construction trades helpers and labourers",
+    "TEER": 5
+  },
+  {
+    "nocCode": 75119,
+    "nocTitle": "Other trades helpers and labourers",
+    "TEER": 5
+  },
+  {
+    "nocCode": 75200,
+    "nocTitle": "Taxi and limousine drivers and chauffeurs",
+    "TEER": 5
+  },
+  {
+    "nocCode": 75201,
+    "nocTitle": "Delivery service drivers and door-to-door distributors",
+    "TEER": 5
+  },
+  {
+    "nocCode": 75210,
+    "nocTitle": "Boat and cable ferry operators and related occupations",
+    "TEER": 5
+  },
+  {
+    "nocCode": 75211,
+    "nocTitle": "Railway and motor transport labourers",
+    "TEER": 5
+  },
+  {
+    "nocCode": 75212,
+    "nocTitle": "Public works and maintenance labourers",
+    "TEER": 5
+  },
+  {
+    "nocCode": 80010,
+    "nocTitle": "Managers in natural resources production and fishing",
+    "TEER": 0
+  },
+  {
+    "nocCode": 80020,
+    "nocTitle": "Managers in agriculture",
+    "TEER": 0
+  },
+  {
+    "nocCode": 80021,
+    "nocTitle": "Managers in horticulture",
+    "TEER": 0
+  },
+  {
+    "nocCode": 80022,
+    "nocTitle": "Managers in aquaculture",
+    "TEER": 0
+  },
+  {
+    "nocCode": 82010,
+    "nocTitle": "Supervisors, logging and forestry",
+    "TEER": 2
+  },
+  {
+    "nocCode": 82020,
+    "nocTitle": "Supervisors, mining and quarrying",
+    "TEER": 2
+  },
+  {
+    "nocCode": 82021,
+    "nocTitle": "Contractors and supervisors, oil and gas drilling and services",
+    "TEER": 2
+  },
+  {
+    "nocCode": 82030,
+    "nocTitle": "Agricultural service contractors and farm supervisors",
+    "TEER": 2
+  },
+  {
+    "nocCode": 82031,
+    "nocTitle": "Contractors and supervisors, landscaping, grounds maintenance and horticulture services",
+    "TEER": 2
+  },
+  {
+    "nocCode": 83100,
+    "nocTitle": "Underground production and development miners",
+    "TEER": 3
+  },
+  {
+    "nocCode": 83101,
+    "nocTitle": "Oil and gas well drillers, servicers, testers and related workers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 83110,
+    "nocTitle": "Logging machinery operators",
+    "TEER": 3
+  },
+  {
+    "nocCode": 83120,
+    "nocTitle": "Fishing masters and officers",
+    "TEER": 3
+  },
+  {
+    "nocCode": 83121,
+    "nocTitle": "Fishermen/women",
+    "TEER": 3
+  },
+  {
+    "nocCode": 84100,
+    "nocTitle": "Underground mine service and support workers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 84101,
+    "nocTitle": "Oil and gas well drilling and related workers and services operators",
+    "TEER": 4
+  },
+  {
+    "nocCode": 84110,
+    "nocTitle": "Chain saw and skidder operators",
+    "TEER": 4
+  },
+  {
+    "nocCode": 84111,
+    "nocTitle": "Silviculture and forestry workers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 84120,
+    "nocTitle": "Specialized livestock workers and farm machinery operators",
+    "TEER": 4
+  },
+  {
+    "nocCode": 84121,
+    "nocTitle": "Fishing vessel deckhands",
+    "TEER": 4
+  },
+  {
+    "nocCode": 85100,
+    "nocTitle": "Livestock labourers",
+    "TEER": 5
+  },
+  {
+    "nocCode": 85101,
+    "nocTitle": "Harvesting labourers",
+    "TEER": 5
+  },
+  {
+    "nocCode": 85102,
+    "nocTitle": "Aquaculture and marine harvest labourers",
+    "TEER": 5
+  },
+  {
+    "nocCode": 85103,
+    "nocTitle": "Nursery and greenhouse labourers",
+    "TEER": 5
+  },
+  {
+    "nocCode": 85104,
+    "nocTitle": "Trappers and hunters",
+    "TEER": 5
+  },
+  {
+    "nocCode": 85110,
+    "nocTitle": "Mine labourers",
+    "TEER": 5
+  },
+  {
+    "nocCode": 85111,
+    "nocTitle": "Oil and gas drilling, servicing and related labourers",
+    "TEER": 5
+  },
+  {
+    "nocCode": 85120,
+    "nocTitle": "Logging and forestry labourers",
+    "TEER": 5
+  },
+  {
+    "nocCode": 85121,
+    "nocTitle": "Landscaping and grounds maintenance labourers",
+    "TEER": 5
+  },
+  {
+    "nocCode": 90010,
+    "nocTitle": "Manufacturing managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 90011,
+    "nocTitle": "Utilities managers",
+    "TEER": 0
+  },
+  {
+    "nocCode": 92010,
+    "nocTitle": "Supervisors, mineral and metal processing",
+    "TEER": 2
+  },
+  {
+    "nocCode": 92011,
+    "nocTitle": "Supervisors, petroleum, gas and chemical processing and utilities",
+    "TEER": 2
+  },
+  {
+    "nocCode": 92012,
+    "nocTitle": "Supervisors, food and beverage processing",
+    "TEER": 2
+  },
+  {
+    "nocCode": 92013,
+    "nocTitle": "Supervisors, plastic and rubber products manufacturing",
+    "TEER": 2
+  },
+  {
+    "nocCode": 92014,
+    "nocTitle": "Supervisors, forest products processing",
+    "TEER": 2
+  },
+  {
+    "nocCode": 92015,
+    "nocTitle": "Supervisors, textile, fabric, fur and leather products processing and manufacturing",
+    "TEER": 2
+  },
+  {
+    "nocCode": 92020,
+    "nocTitle": "Supervisors, motor vehicle assembling",
+    "TEER": 2
+  },
+  {
+    "nocCode": 92021,
+    "nocTitle": "Supervisors, electronics and electrical products manufacturing",
+    "TEER": 2
+  },
+  {
+    "nocCode": 92022,
+    "nocTitle": "Supervisors, furniture and fixtures manufacturing",
+    "TEER": 2
+  },
+  {
+    "nocCode": 92023,
+    "nocTitle": "Supervisors, other mechanical and metal products manufacturing",
+    "TEER": 2
+  },
+  {
+    "nocCode": 92024,
+    "nocTitle": "Supervisors, other products manufacturing and assembly",
+    "TEER": 2
+  },
+  {
+    "nocCode": 92100,
+    "nocTitle": "Power engineers and power systems operators",
+    "TEER": 2
+  },
+  {
+    "nocCode": 92101,
+    "nocTitle": "Water and waste treatment plant operators",
+    "TEER": 2
+  },
+  {
+    "nocCode": 93100,
+    "nocTitle": "Central control and process operators, mineral and metal processing",
+    "TEER": 3
+  },
+  {
+    "nocCode": 93101,
+    "nocTitle": "Central control and process operators, petroleum, gas and chemical processing",
+    "TEER": 3
+  },
+  {
+    "nocCode": 93102,
+    "nocTitle": "Pulping, papermaking and coating control operators",
+    "TEER": 3
+  },
+  {
+    "nocCode": 93200,
+    "nocTitle": "Aircraft assemblers and aircraft assembly inspectors",
+    "TEER": 3
+  },
+  {
+    "nocCode": 94100,
+    "nocTitle": "Machine operators, mineral and metal processing",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94101,
+    "nocTitle": "Foundry workers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94102,
+    "nocTitle": "Glass forming and finishing machine operators and glass cutters",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94103,
+    "nocTitle": "Concrete, clay and stone forming operators",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94104,
+    "nocTitle": "Inspectors and testers, mineral and metal processing",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94105,
+    "nocTitle": "Metalworking and forging machine operators",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94106,
+    "nocTitle": "Machining tool operators",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94107,
+    "nocTitle": "Machine operators of other metal products",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94110,
+    "nocTitle": "Chemical plant machine operators",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94111,
+    "nocTitle": "Plastics processing machine operators",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94112,
+    "nocTitle": "Rubber processing machine operators and related workers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94120,
+    "nocTitle": "Sawmill machine operators",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94121,
+    "nocTitle": "Pulp mill, papermaking and finishing machine operators",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94122,
+    "nocTitle": "Paper converting machine operators",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94123,
+    "nocTitle": "Lumber graders and other wood processing inspectors and graders",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94124,
+    "nocTitle": "Woodworking machine operators",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94129,
+    "nocTitle": "Other wood processing machine operators",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94130,
+    "nocTitle": "Textile fibre and yarn, hide and pelt processing machine operators and workers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94131,
+    "nocTitle": "Weavers, knitters and other fabric making occupations",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94132,
+    "nocTitle": "Industrial sewing machine operators",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94133,
+    "nocTitle": "Inspectors and graders, textile, fabric, fur and leather products manufacturing",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94140,
+    "nocTitle": "Process control and machine operators, food and beverage processing",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94141,
+    "nocTitle": "Industrial butchers and meat cutters, poultry preparers and related workers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94142,
+    "nocTitle": "Fish and seafood plant workers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94143,
+    "nocTitle": "Testers and graders, food and beverage processing",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94150,
+    "nocTitle": "Plateless printing equipment operators",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94151,
+    "nocTitle": "Camera, platemaking and other prepress occupations",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94152,
+    "nocTitle": "Binding and finishing machine operators",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94153,
+    "nocTitle": "Photographic and film processors",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94200,
+    "nocTitle": "Motor vehicle assemblers, inspectors and testers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94201,
+    "nocTitle": "Electronics assemblers, fabricators, inspectors and testers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94202,
+    "nocTitle": "Assemblers and inspectors, electrical appliance, apparatus and equipment manufacturing",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94203,
+    "nocTitle": "Assemblers, fabricators and inspectors, industrial electrical motors and transformers",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94204,
+    "nocTitle": "Mechanical assemblers and inspectors",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94205,
+    "nocTitle": "Machine operators and inspectors, electrical apparatus manufacturing",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94210,
+    "nocTitle": "Furniture and fixture assemblers, finishers, refinishers and inspectors",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94211,
+    "nocTitle": "Assemblers and inspectors of other wood products",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94212,
+    "nocTitle": "Plastic products assemblers, finishers and inspectors",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94213,
+    "nocTitle": "Industrial painters, coaters and metal finishing process operators",
+    "TEER": 4
+  },
+  {
+    "nocCode": 94219,
+    "nocTitle": "Other products assemblers, finishers and inspectors",
+    "TEER": 4
+  },
+  {
+    "nocCode": 95100,
+    "nocTitle": "Labourers in mineral and metal processing",
+    "TEER": 5
+  },
+  {
+    "nocCode": 95101,
+    "nocTitle": "Labourers in metal fabrication",
+    "TEER": 5
+  },
+  {
+    "nocCode": 95102,
+    "nocTitle": "Labourers in chemical products processing and utilities",
+    "TEER": 5
+  },
+  {
+    "nocCode": 95103,
+    "nocTitle": "Labourers in wood, pulp and paper processing",
+    "TEER": 5
+  },
+  {
+    "nocCode": 95104,
+    "nocTitle": "Labourers in rubber and plastic products manufacturing",
+    "TEER": 5
+  },
+  {
+    "nocCode": 95105,
+    "nocTitle": "Labourers in textile processing and cutting",
+    "TEER": 5
+  },
+  {
+    "nocCode": 95106,
+    "nocTitle": "Labourers in food and beverage processing",
+    "TEER": 5
+  },
+  {
+    "nocCode": 95107,
+    "nocTitle": "Labourers in fish and seafood processing",
+    "TEER": 5
+  },
+  {
+    "nocCode": 95109,
+    "nocTitle": "Other labourers in processing, manufacturing and utilities",
+    "TEER": 5
   }
 ]
