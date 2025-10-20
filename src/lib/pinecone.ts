@@ -2,9 +2,8 @@
 'use server';
 
 import { Pinecone } from '@pinecone-database/pinecone';
-import { Document } from 'genkit/doc';
-import { genkit } from 'genkit';
-import { googleAI } from '@genkit-ai/google-genai';
+import { genkit, Document } from 'genkit';
+import { googleAI } from '@genkit-ai/googleai';
 
 genkit({
   plugins: [googleAI()],
