@@ -11,6 +11,11 @@ import {
   type CrsCalculatorChatbotInput,
   type CrsCalculatorChatbotOutput,
 } from "@/ai/flows/crs-calculator-chatbot";
+import {
+  nocFinderChatbot as nocFinderChatbotFlow,
+  type NocFinderChatbotInput,
+  type NocFinderChatbotOutput,
+} from "@/ai/flows/noc-finder-chatbot";
 import { extractSearchTerm } from "@/ai/flows/search-term-extractor";
 import { getDrawDetails as getAirtableDrawDetails } from './airtable';
 
@@ -31,6 +36,9 @@ export async function crsCalculatorChatbot(input: CrsCalculatorChatbotInput): Pr
   return await crsCalculatorChatbotFlow(input);
 }
 
+export async function nocFinderChatbot(input: NocFinderChatbotInput): Promise<NocFinderChatbotOutput> {
+    return await nocFinderChatbotFlow(input);
+}
 
 export async function getDrawDetails(recordId: string) {
     return getAirtableDrawDetails(recordId);
