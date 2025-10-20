@@ -39,7 +39,11 @@ export async function queryPinecone(embedding: number[], topK: number): Promise<
         if (queryResponse.matches) {
             return queryResponse.matches.map(match => {
                 const metadata = match.metadata as { text?: string };
-                return Document.fromText(metadata?.text || '', match.metadata);
+                // Reconstruct the Document object in the expected format for Genkit
+                return new Document({
+                    content: [{ text: metadata?.text || '' }],
+                    metadata: match.metadata,
+                });
             });
         }
         return [];
