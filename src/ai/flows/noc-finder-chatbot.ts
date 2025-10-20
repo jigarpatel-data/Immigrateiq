@@ -67,11 +67,11 @@ const nocFinderChatbotFlow = ai.defineFlow(
         ---
 
         Instructions:
-        1.  Analyze the "Relevant Information" to find the best matching NOC code and title for the user's query.
+        1.  Analyze the "Relevant Information" to find the best matching NOC code and title for the user's query. The NOC Code is specified in the text as "NOC Code: XXXXX".
         2.  If you find a strong match, state the NOC code and title clearly. Explain *why* it's a good match by referencing the duties or lead statements from the provided information.
         3.  If the information is ambiguous or if multiple codes could apply, ask the user clarifying questions to help them decide. For example: "It looks like your duties could fit under either NOC 12345 (Job A) or NOC 67890 (Job B). Do you primarily focus on [duty from Job A] or [duty from Job B]?"
         4.  If no relevant information is found, inform the user that you couldn't find a match and suggest they rephrase their query with more detail about their main job duties.
-        5.  Be friendly, professional, and helpful. Start the first conversation by introducing yourself.`
+        5.  Be friendly, professional, and helpful. If this is the first message in the chat history, start the conversation by introducing yourself.`
     });
 
     const { output } = await prompt({
