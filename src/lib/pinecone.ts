@@ -2,12 +2,8 @@
 'use server';
 
 import { Pinecone } from '@pinecone-database/pinecone';
-import { genkit, Document } from 'genkit';
-import { googleAI } from '@genkit-ai/googleai';
-
-genkit({
-  plugins: [googleAI()],
-});
+import { Document } from 'genkit';
+import { ai } from '@/ai/genkit';
 
 let pinecone: Pinecone | null = null;
 
@@ -55,6 +51,9 @@ export async function queryPinecone(embedding: number[], topK: number): Promise<
 }
 
 export async function generateEmbedding(text: string): Promise<number[]> {
-  const embedding = await googleAI.embedder('text-embedding-004').embed({ content: text });
-  return embedding.embedding;
+  const { embedding } = await ai.embed({
+    embedder: 'googleai/text-embedding-004',
+    content: text,
+  });
+  return embedding;
 }
