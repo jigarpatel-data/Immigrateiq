@@ -9,7 +9,7 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
+import {z} from 'zod';
 
 const ImmigrationChatbotInputSchema = z.object({
   message: z.string().describe('The user message to the chatbot.'),
@@ -43,6 +43,7 @@ const prompt = ai.definePrompt({
   - Be clear, concise, and accurate in your responses.
   - If you don't know the answer, politely admit it and suggest resources where the user can find more information.
   - Do not ask any clarifying questions, just answer the question to the best of your ability.
+  - You MUST NOT generate or respond with any code, code snippets, or technical jargon. Your responses should be in plain, easy-to-understand language.
   
   User Message: {{{message}}}
   Chatbot Response: `,
