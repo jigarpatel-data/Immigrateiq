@@ -5,31 +5,27 @@ import { Pinecone } from '@pinecone-database/pinecone';
 import { Document } from 'genkit';
 import { ai } from '@/ai/genkit';
 
-let pinecone: Pinecone | null = null;
-
-const getPineconeClient = async () => {
-    if (!pinecone) {
-        const apiKey = process.env.PINECONE_API_KEY;
-        if (!apiKey) {
-            throw new Error('Pinecone API key not found in environment variables.');
-        }
-        pinecone = new Pinecone({ apiKey });
-    }
-    return pinecone;
-};
-
+// This function queries a Pinecone index.
 export async function queryPinecone(embedding: number[], topK: number): Promise<Document[]> {
-    const client = await getPineconeClient();
+    const apiKey = process.env.PINECONE_API_KEY;
     const indexName = process.env.PINECONE_INDEX_NAME;
     const hostUrl = process.env.PINECONE_HOST_URL;
     
-    if (!indexName || !hostUrl) {
-        throw new Error('Pinecone index name or host URL not configured.');
+    if (!apiKey) {
+        throw new Error('Pinecone API key not found in environment variables.');
     }
-    
-    const index = client.index(indexName);
+    if (!indexName) {
+        throw new Error('Pinecone index name not configured in environment variables.');
+    }
+     if (!hostUrl) {
+        throw new Error('Pinecone host URL not configured in environment variables.');
+    }
 
     try {
+        const pinecone = new Pinecone({ apiKey });
+        
+        const index = pinecone.index(indexName);
+
         const queryResponse = await index.query({
             vector: embedding,
             topK,
@@ -54,6 +50,7 @@ export async function queryPinecone(embedding: number[], topK: number): Promise<
     }
 }
 
+// This function generates an embedding for a given text using Genkit.
 export async function generateEmbedding(text: string): Promise<number[]> {
   const { embedding } = await ai.embed({
     embedder: 'googleai/text-embedding-004',
