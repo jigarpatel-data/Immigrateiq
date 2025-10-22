@@ -60,7 +60,7 @@ type FilterOptions = {
 export async function getAirtableDraws(offset?: string, filters?: FilterOptions): Promise<AirtableResult> {
   const apiKey = process.env.AIRTABLE_API_KEY;
   const baseId = process.env.AIRTABLE_BASE_ID;
-  const tableName = 'Draww Tracker';
+  const tableName = process.env.AIRTABLE_TABLE_NAME || 'Draww Tracker';
 
   if (!apiKey || !baseId) {
     console.error("Airtable environment variables not set. Please add AIRTABLE_API_KEY and AIRTABLE_BASE_ID to your .env.local file.");
@@ -137,7 +137,7 @@ export async function getAirtableDraws(offset?: string, filters?: FilterOptions)
 export async function getUniqueFieldValues(field: 'Province' | 'Category'): Promise<{ values?: string[], error?: string }> {
   const apiKey = process.env.AIRTABLE_API_KEY;
   const baseId = process.env.AIRTABLE_BASE_ID;
-  const tableName = 'Draww Tracker';
+  const tableName = process.env.AIRTABLE_TABLE_NAME || 'Draww Tracker';
 
   if (!apiKey || !baseId) {
     return { error: 'Server configuration error.' };
@@ -194,7 +194,7 @@ export async function getUniqueFieldValues(field: 'Province' | 'Category'): Prom
 export async function getDrawDetails(recordId: string): Promise<{ details?: string; error?: string }> {
     const apiKey = process.env.AIRTABLE_API_KEY;
     const baseId = process.env.AIRTABLE_BASE_ID;
-    const tableName = 'Draww Tracker';
+    const tableName = process.env.AIRTABLE_TABLE_NAME || 'Draww Tracker';
   
     if (!apiKey || !baseId) {
       return { error: 'Server configuration error.' };
