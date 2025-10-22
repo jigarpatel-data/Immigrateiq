@@ -29,46 +29,19 @@ export const lookupNocByJobTitle = ai.defineTool(
     console.log(`Looking up NOC code for job title: ${input.jobTitle}`);
     const jobTitleLower = input.jobTitle.toLowerCase().trim();
     
-    let bestMatch: { nocCode: string | number, score: number } | null = null;
+    // Simplistic search for demo purposes. This could be improved with fuzzy matching.
+    const foundNoc = (nocData as NocEntry[]).find(noc => 
+        noc.nocTitle.toLowerCase().includes(jobTitleLower) ||
+        noc.exampleJobTitles?.some(ex => ex.toLowerCase().includes(jobTitleLower))
+    );
 
-    (nocData as NocEntry[]).forEach(noc => {
-      const titleLower = noc.nocTitle.toLowerCase();
-      let currentScore = 0;
-
-      // 1. Prioritize exact match on main title (highest score)
-      if (titleLower === jobTitleLower) {
-        currentScore = 1.0;
-      } 
-      // 2. Check for exact match in example titles
-      else if (noc.exampleJobTitles?.some(ex => ex.toLowerCase() === jobTitleLower)) {
-        currentScore = 0.95;
-      }
-      // 3. Check if main title starts with the query (very relevant)
-      else if (titleLower.startsWith(jobTitleLower)) {
-        currentScore = 0.9;
-      }
-      // 4. Check for inclusion in main title (less relevant, lower score)
-      else if (titleLower.includes(jobTitleLower)) {
-        // Score based on how much of the title is matched. Closer to 1 is better.
-        currentScore = jobTitleLower.length / titleLower.length * 0.5; // Penalize simple inclusion
-      }
-      // 5. Check for inclusion in example titles
-      else if (noc.exampleJobTitles?.some(ex => ex.toLowerCase().includes(jobTitleLower))) {
-        currentScore = 0.4; // Low score for partial match in examples
-      }
-      
-      if (currentScore > (bestMatch?.score ?? 0)) {
-        bestMatch = { nocCode: noc.nocCode, score: currentScore };
-      }
-    });
-
-    if (bestMatch && bestMatch.score > 0.3) { // Set a threshold to avoid poor matches
-      const nocCodeStr = String(bestMatch.nocCode);
-      console.log(`Found best match NOC code: ${nocCodeStr} with score ${bestMatch.score}`);
+    if (foundNoc) {
+      const nocCodeStr = String(foundNoc.nocCode);
+      console.log(`Found NOC code: ${nocCodeStr}`);
       return { nocCode: nocCodeStr };
     }
     
-    console.log('No suitable NOC code found for the title.');
+    console.log('No NOC code found for the title.');
     return { nocCode: undefined };
   }
 );

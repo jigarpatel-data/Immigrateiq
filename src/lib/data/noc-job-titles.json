@@ -1,3 +1,4 @@
+
 [
   {
     "nocCode": 10,
@@ -447,7 +448,25 @@
   {
     "nocCode": 21231,
     "nocTitle": "Software engineers and designers",
-    "TEER": 1
+    "TEER": 1,
+    "exampleJobTitles": [
+      "application developer",
+      "computer software engineer",
+      "embedded software engineer",
+      "lead developer",
+      "lead software developer",
+      "software architect",
+      "software design engineer",
+      "software design verification engineer",
+      "software designer",
+      "software development team lead",
+      "software engineer",
+      "software systems developer",
+      "software systems integration engineer",
+      "software technical architect",
+      "systems applications engineer",
+      "telecommunications software engineer"
+    ]
   },
   {
     "nocCode": 21232,

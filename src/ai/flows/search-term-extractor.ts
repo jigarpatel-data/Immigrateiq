@@ -36,7 +36,7 @@ const prompt = ai.definePrompt({
   The user's query is: {{{query}}}
 
   - **First, check if the query is a job title.** If it is, use the \`lookupNocByJobTitle\` tool to find its official NOC code.
-  - **If the tool returns a NOC code, you MUST use that code as the searchTerm.**
+  - If the tool returns a NOC code, use that code as the searchTerm.
   - If the tool does not return a NOC code, then extract the most relevant keyword, program name (like "PNP", "Express Entry"), or specific category.
   - If the user asks "any recent tech draws", the search term is "tech".
   - If the user types a simple keyword like "PNP", the search term is "PNP".
