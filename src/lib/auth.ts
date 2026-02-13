@@ -21,6 +21,7 @@ type AuthResult = {
 };
 
 export async function handleSignUp(email: string, password: string): Promise<AuthResult> {
+  if (!auth) return { error: "Firebase is not configured." };
   try {
     await setPersistence(auth, browserLocalPersistence);
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -36,6 +37,7 @@ export async function handleSignUp(email: string, password: string): Promise<Aut
 }
 
 export async function handleSignIn(email: string, password: string): Promise<AuthResult> {
+  if (!auth) return { error: "Firebase is not configured." };
   try {
     await setPersistence(auth, browserLocalPersistence);
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -51,6 +53,7 @@ export async function handleSignIn(email: string, password: string): Promise<Aut
 }
 
 export async function handleGoogleSignIn(): Promise<AuthResult> {
+  if (!auth) return { error: "Firebase is not configured." };
   const provider = new GoogleAuthProvider();
   try {
     await setPersistence(auth, browserLocalPersistence);
@@ -62,6 +65,7 @@ export async function handleGoogleSignIn(): Promise<AuthResult> {
 }
 
 export async function handleSignOut(): Promise<{error: string | null}> {
+    if (!auth) return { error: null };
     try {
         await firebaseSignOut(auth);
         return { error: null };
@@ -71,6 +75,7 @@ export async function handleSignOut(): Promise<{error: string | null}> {
 }
 
 export async function handlePasswordReset(email: string): Promise<{error: string | null}> {
+  if (!auth) return { error: "Firebase is not configured." };
   try {
     await sendPasswordResetEmail(auth, email);
     return { error: null };
@@ -80,6 +85,7 @@ export async function handlePasswordReset(email: string): Promise<{error: string
 }
 
 export async function handleProfileUpdate(profileData: { displayName?: string; photoURL?: string }): Promise<{ error: string | null }> {
+    if (!auth) return { error: "Firebase is not configured." };
     if (!auth.currentUser) {
         return { error: "You must be logged in to update your profile." };
     }
@@ -93,6 +99,7 @@ export async function handleProfileUpdate(profileData: { displayName?: string; p
 }
 
 export async function resendVerificationEmail(): Promise<{ error?: string }> {
+    if (!auth) return { error: "Firebase is not configured." };
     const user = auth.currentUser;
     if (!user) {
         return { error: "You are not logged in." };
@@ -110,7 +117,11 @@ export async function resendVerificationEmail(): Promise<{ error?: string }> {
 
 
 export function initAuthListener(callback: (user: User | null) => void) {
+  if (!auth) {
+    callback(null);
+    return () => {};
+  }
   return onAuthStateChanged(auth, (user) => {
-      callback(user);
+    callback(user);
   });
 }

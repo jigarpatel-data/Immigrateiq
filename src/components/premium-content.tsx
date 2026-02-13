@@ -20,6 +20,10 @@ export function PremiumContent({ children }: PremiumContentProps) {
     const { toast } = useToast();
 
     const onUpgrade = async () => {
+        if (!app) {
+            toast({ variant: "destructive", title: "Firebase is not configured." });
+            return;
+        }
         setIsCheckoutLoading(true);
         try {
             const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;

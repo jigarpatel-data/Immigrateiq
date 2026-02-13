@@ -79,13 +79,13 @@ function ProfilePage() {
   });
 
   useEffect(() => {
-    if (user) {
-      profileForm.reset({
-        name: user.displayName ?? '',
-        email: user.email ?? '',
-      });
-      
-      const subscriptionsRef = collection(db, 'customers', user.uid, 'subscriptions');
+    if (!user || !db) return;
+    profileForm.reset({
+      name: user.displayName ?? '',
+      email: user.email ?? '',
+    });
+
+    const subscriptionsRef = collection(db, 'customers', user.uid, 'subscriptions');
       const q = query(subscriptionsRef, where("status", "in", ["trialing", "active"]));
 
       const unsubscribeSub = onSnapshot(q, (snapshot) => {
@@ -101,10 +101,9 @@ function ProfilePage() {
         setIsSubscriptionLoading(false);
       });
 
-      return () => {
-        unsubscribeSub();
-      };
-    }
+    return () => {
+      unsubscribeSub();
+    };
   }, [user, profileForm]);
 
   const onProfileSubmit = async (values: z.infer<typeof profileSchema>) => {
@@ -127,6 +126,10 @@ function ProfilePage() {
   };
   
   const onUpgrade = async () => {
+    if (!app) {
+      toast({ variant: "destructive", title: "Firebase is not configured." });
+      return;
+    }
     setIsCheckoutLoading(true);
     try {
         const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
@@ -145,6 +148,10 @@ function ProfilePage() {
   };
 
   const onManageBilling = async () => {
+    if (!app) {
+      toast({ variant: "destructive", title: "Firebase is not configured." });
+      return;
+    }
     setIsPortalLoading(true);
     try {
         const url = await getPortalUrl(app);

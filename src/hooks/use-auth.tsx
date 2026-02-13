@@ -52,8 +52,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    if (user && !loading) {
-      const subscriptionsRef = collection(db, 'customers', user.uid, 'subscriptions');
+    if (!db || !user || loading) return;
+    const subscriptionsRef = collection(db, 'customers', user.uid, 'subscriptions');
       const q = query(subscriptionsRef, where("status", "in", ["trialing", "active"]));
       
       const unsubscribeSub = onSnapshot(q, (snapshot) => {
@@ -64,8 +64,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setSubscription(null);
         }
       });
-      return () => unsubscribeSub();
-    }
+    return () => unsubscribeSub();
   }, [user, loading]);
 
   useEffect(() => {

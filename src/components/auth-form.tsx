@@ -125,6 +125,11 @@ export function AuthForm() {
       setLoading(false);
     } else if (user) {
         if (redirectToCheckout) {
+             if (!app) {
+                toast({ title: "Firebase is not configured.", variant: "destructive" });
+                setLoading(false);
+                return;
+             }
              try {
                 const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
                 const url = await getCheckoutUrl(app, priceId);
@@ -176,6 +181,11 @@ export function AuthForm() {
         setLoading(false);
     } else if (user) {
        if (redirectToCheckout) {
+            if (!app) {
+                toast({ title: "Firebase is not configured.", variant: "destructive" });
+                setLoading(false);
+                return;
+            }
             try {
                 const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
                 const url = await getCheckoutUrl(app, priceId);
