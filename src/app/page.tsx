@@ -18,6 +18,8 @@ import { useState } from "react";
 import {
   Sheet,
   SheetContent,
+  SheetTitle,
+  SheetDescription,
   SheetTrigger,
   SheetClose
 } from "@/components/ui/sheet";
@@ -140,6 +142,8 @@ export default function HomePage() {
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="right" className="bg-sidebar text-sidebar-foreground">
+                        <SheetTitle className="sr-only">Menu</SheetTitle>
+                        <SheetDescription className="sr-only">Navigation menu</SheetDescription>
                         <nav className="flex flex-col gap-6 text-lg font-medium mt-10">
                             <SheetClose asChild>
                                 <Link href="/auth" className="text-muted-foreground transition-colors hover:text-foreground">
