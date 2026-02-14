@@ -124,27 +124,7 @@ export function AuthForm() {
       });
       setLoading(false);
     } else if (user) {
-        if (redirectToCheckout) {
-             if (!app) {
-                toast({ title: "Firebase is not configured.", variant: "destructive" });
-                setLoading(false);
-                return;
-             }
-             try {
-                const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
-                const url = await getCheckoutUrl(app, priceId);
-                window.location.assign(url);
-            } catch (checkoutError: any) {
-                toast({
-                    title: "Checkout Error",
-                    description: checkoutError.message || "Could not proceed to checkout.",
-                    variant: "destructive",
-                });
-                setLoading(false);
-            }
-        } else {
-           router.push('/dashboard');
-        }
+        router.push('/dashboard');
     }
   };
 
@@ -180,27 +160,7 @@ export function AuthForm() {
         });
         setLoading(false);
     } else if (user) {
-       if (redirectToCheckout) {
-            if (!app) {
-                toast({ title: "Firebase is not configured.", variant: "destructive" });
-                setLoading(false);
-                return;
-            }
-            try {
-                const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
-                const url = await getCheckoutUrl(app, priceId);
-                window.location.assign(url);
-            } catch (checkoutError: any) {
-                 toast({
-                    title: "Checkout Error",
-                    description: checkoutError.message || "Could not proceed to checkout.",
-                    variant: "destructive",
-                });
-                setLoading(false);
-            }
-        } else {
-           router.push('/dashboard');
-        }
+       router.push('/dashboard');
     }
   };
 

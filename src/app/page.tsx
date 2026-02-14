@@ -18,17 +18,16 @@ import { useState } from "react";
 import {
   Sheet,
   SheetContent,
-  SheetTitle,
-  SheetDescription,
   SheetTrigger,
   SheetClose
 } from "@/components/ui/sheet";
 import { TypedText } from "@/components/typed-text";
 import { cn } from "@/lib/utils";
-import { getCheckoutUrl } from "@/lib/stripe";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
 import { useRouter } from "next/navigation";
+import { app } from "@/lib/firebase";
+import { getCheckoutUrl } from "@/lib/stripe";
 
 const features = [
     { icon: <CheckCircle className="h-6 w-6 text-primary" />, text: "Personalized PR eligibility checker" },
@@ -95,24 +94,29 @@ export default function HomePage() {
   const router = useRouter();
 
   const onCheckout = async () => {
-    setIsCheckoutLoading(true);
-    if (user) {
-        try {
-            const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
-            const url = await getCheckoutUrl(priceId);
-            window.location.assign(url);
-        } catch (error: any) {
-            console.error(error);
-            toast({
-                variant: "destructive",
-                title: "Checkout Error",
-                description: error.message || "Could not proceed to checkout. Please try again.",
-            });
-            setIsCheckoutLoading(false);
-        }
-    } else {
-        router.push('/auth?redirect_to=checkout');
-    }
+    toast({
+        variant: "default",
+        title: "Temporarily Disabled",
+        description: "This feature is temporarily disabled for maintenance.",
+    });
+    // setIsCheckoutLoading(true);
+    // if (user) {
+    //     try {
+    //         const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
+    //         const url = await getCheckoutUrl(app, priceId);
+    //         window.location.assign(url);
+    //     } catch (error: any) {
+    //         console.error(error);
+    //         toast({
+    //             variant: "destructive",
+    //             title: "Checkout Error",
+    //             description: error.message || "Could not proceed to checkout. Please try again.",
+    //         });
+    //         setIsCheckoutLoading(false);
+    //     }
+    // } else {
+    //     router.push('/auth?redirect_to=checkout');
+    // }
   };
 
 
@@ -142,8 +146,6 @@ export default function HomePage() {
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="right" className="bg-sidebar text-sidebar-foreground">
-                        <SheetTitle className="sr-only">Menu</SheetTitle>
-                        <SheetDescription className="sr-only">Navigation menu</SheetDescription>
                         <nav className="flex flex-col gap-6 text-lg font-medium mt-10">
                             <SheetClose asChild>
                                 <Link href="/auth" className="text-muted-foreground transition-colors hover:text-foreground">
@@ -377,5 +379,3 @@ export default function HomePage() {
     </div>
   );
 }
-
-    

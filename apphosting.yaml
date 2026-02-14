@@ -27,9 +27,9 @@ env:
   - variable: NEXT_PUBLIC_FIREBASE_APP_ID
     secret: NEXT_PUBLIC_FIREBASE_APP_ID
     availability: [BUILD, RUNTIME]
-  - variable: NEXT_PUBLIC_STRIPE_PRICE_ID
-    secret: NEXT_PUBLIC_STRIPE_PRICE_ID
-    availability: [BUILD, RUNTIME]
+  #- variable: NEXT_PUBLIC_STRIPE_PRICE_ID
+  #  secret: NEXT_PUBLIC_STRIPE_PRICE_ID
+  #  availability: [BUILD, RUNTIME]
   - variable: STRIPE_SECRET_KEY
     secret: STRIPE_SECRET_KEY
     availability: [RUNTIME]
