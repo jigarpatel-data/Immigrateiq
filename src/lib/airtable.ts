@@ -1,5 +1,3 @@
-
-
 'use server';
 
 import { z } from 'zod';
@@ -57,17 +55,44 @@ type FilterOptions = {
     search?: string;
 }
 
-export async function getAirtableDraws(offset?: string, filters?: FilterOptions): Promise<AirtableResult> {
-  const apiKey = process.env.AIRTABLE_API_KEY;
-  const baseId = process.env.AIRTABLE_BASE_ID;
-  const tableName = process.env.AIRTABLE_TABLE_NAME || 'Draww Tracker';
+const checkAirtableConfig = (): { apiKey?: string; baseId?: string; tableName?: string; error?: string } => {
+    console.log('Checking Airtable environment variables...');
+    console.log(`- AIRTABLE_API_KEY is present: ${!!process.env.AIRTABLE_API_KEY}`);
+    console.log(`- AIRTABLE_BASE_ID is present: ${!!process.env.AIRTABLE_BASE_ID}`);
+    console.log(`- AIRTABLE_TABLE_NAME is present: ${!!process.env.AIRTABLE_TABLE_NAME}`);
 
-  if (!apiKey || !baseId) {
-    console.error("Airtable environment variables not set. Please add AIRTABLE_API_KEY and AIRTABLE_BASE_ID to your .env.local file.");
-    return { error: 'Server configuration error. The app is not connected to Airtable.' };
+    const requiredVars: Record<string, string | undefined> = {
+        AIRTABLE_API_KEY: process.env.AIRTABLE_API_KEY,
+        AIRTABLE_BASE_ID: process.env.AIRTABLE_BASE_ID,
+        AIRTABLE_TABLE_NAME: process.env.AIRTABLE_TABLE_NAME,
+    };
+
+    const missingVars = Object.entries(requiredVars)
+        .filter(([_, value]) => !value)
+        .map(([key]) => key);
+
+    if (missingVars.length > 0) {
+        const errorMsg = `Server configuration error. The following Airtable environment variables are not set: ${missingVars.join(', ')}. Please check your App Hosting secrets.`;
+        console.error(errorMsg);
+        return { error: errorMsg };
+    }
+
+    return {
+        apiKey: requiredVars.AIRTABLE_API_KEY,
+        baseId: requiredVars.AIRTABLE_BASE_ID,
+        tableName: requiredVars.AIRTABLE_TABLE_NAME,
+    };
+};
+
+
+export async function getAirtableDraws(offset?: string, filters?: FilterOptions): Promise<AirtableResult> {
+  const config = checkAirtableConfig();
+  if (config.error) {
+    return { error: config.error };
   }
+  const { apiKey, baseId, tableName } = config;
   
-  const baseUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`;
+  const baseUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName!)}`;
 
   try {
     const url = new URL(baseUrl);
@@ -135,15 +160,13 @@ export async function getAirtableDraws(offset?: string, filters?: FilterOptions)
 }
 
 export async function getUniqueFieldValues(field: 'Province' | 'Category'): Promise<{ values?: string[], error?: string }> {
-  const apiKey = process.env.AIRTABLE_API_KEY;
-  const baseId = process.env.AIRTABLE_BASE_ID;
-  const tableName = process.env.AIRTABLE_TABLE_NAME || 'Draww Tracker';
-
-  if (!apiKey || !baseId) {
-    return { error: 'Server configuration error.' };
+  const config = checkAirtableConfig();
+  if (config.error) {
+    return { error: config.error };
   }
+  const { apiKey, baseId, tableName } = config;
 
-  const baseUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}`;
+  const baseUrl = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName!)}`;
   const uniqueValues = new Set<string>();
   let offset: string | undefined;
 
@@ -192,15 +215,13 @@ export async function getUniqueFieldValues(field: 'Province' | 'Category'): Prom
 }
 
 export async function getDrawDetails(recordId: string): Promise<{ details?: string; error?: string }> {
-    const apiKey = process.env.AIRTABLE_API_KEY;
-    const baseId = process.env.AIRTABLE_BASE_ID;
-    const tableName = process.env.AIRTABLE_TABLE_NAME || 'Draww Tracker';
-  
-    if (!apiKey || !baseId) {
-      return { error: 'Server configuration error.' };
+    const config = checkAirtableConfig();
+    if (config.error) {
+        return { error: config.error };
     }
+    const { apiKey, baseId, tableName } = config;
   
-    const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName)}/${recordId}`;
+    const url = `https://api.airtable.com/v0/${baseId}/${encodeURIComponent(tableName!)}/${recordId}`;
   
     try {
       const response = await fetch(url, {
@@ -224,5 +245,3 @@ export async function getDrawDetails(recordId: string): Promise<{ details?: stri
       return { error: 'An unexpected error occurred while fetching details.' };
     }
   }
-
-    
