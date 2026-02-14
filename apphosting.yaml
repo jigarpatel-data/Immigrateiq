@@ -27,6 +27,15 @@ env:
   - variable: NEXT_PUBLIC_FIREBASE_APP_ID
     secret: NEXT_PUBLIC_FIREBASE_APP_ID
     availability: [BUILD, RUNTIME]
+  - variable: AIRTABLE_API_KEY
+    secret: AIRTABLE_API_KEY
+    availability: [BUILD, RUNTIME]
+  - variable: AIRTABLE_BASE_ID
+    secret: AIRTABLE_BASE_ID
+    availability: [BUILD, RUNTIME]
+  - variable: AIRTABLE_TABLE_NAME
+    secret: AIRTABLE_TABLE_NAME
+    availability: [BUILD, RUNTIME]
 
 runConfig:
   # Increase this value if you'd like to automatically spin up
