@@ -3,7 +3,7 @@
 
 buildConfig:
   build: npm run build
-  fetch: npm install
+  #fetch: npm install
 
 # Map env var names to Secret Manager secret names (values live in Secret Manager only).
 # NEXT_PUBLIC_* must be available at BUILD so Next.js inlines them into the client bundle.
