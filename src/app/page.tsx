@@ -99,24 +99,6 @@ export default function HomePage() {
         title: "Temporarily Disabled",
         description: "This feature is temporarily disabled for maintenance.",
     });
-    // setIsCheckoutLoading(true);
-    // if (user) {
-    //     try {
-    //         const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
-    //         const url = await getCheckoutUrl(app, priceId);
-    //         window.location.assign(url);
-    //     } catch (error: any) {
-    //         console.error(error);
-    //         toast({
-    //             variant: "destructive",
-    //             title: "Checkout Error",
-    //             description: error.message || "Could not proceed to checkout. Please try again.",
-    //         });
-    //         setIsCheckoutLoading(false);
-    //     }
-    // } else {
-    //     router.push('/auth?redirect_to=checkout');
-    // }
   };
 
 

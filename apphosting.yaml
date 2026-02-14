@@ -27,15 +27,6 @@ env:
   - variable: NEXT_PUBLIC_FIREBASE_APP_ID
     secret: NEXT_PUBLIC_FIREBASE_APP_ID
     availability: [BUILD, RUNTIME]
-  #- variable: NEXT_PUBLIC_STRIPE_PRICE_ID
-  #  secret: NEXT_PUBLIC_STRIPE_PRICE_ID
-  #  availability: [BUILD, RUNTIME]
-  - variable: STRIPE_SECRET_KEY
-    secret: STRIPE_SECRET_KEY
-    availability: [RUNTIME]
-  - variable: STRIPE_WEBHOOK_SECRET
-    secret: STRIPE_WEBHOOK_SECRET
-    availability: [RUNTIME]
 
 runConfig:
   # Increase this value if you'd like to automatically spin up

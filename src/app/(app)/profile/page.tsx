@@ -132,38 +132,14 @@ function ProfilePage() {
         title: "Temporarily Disabled",
         description: "This feature is temporarily disabled for maintenance.",
     });
-    // setIsCheckoutLoading(true);
-    // try {
-    //     const priceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID!;
-    //     const url = await getCheckoutUrl(app, priceId);
-    //     window.location.assign(url);
-    // } catch (error: any) {
-    //     console.error(error);
-    //     toast({
-    //         variant: "destructive",
-    //         title: "Checkout Error",
-    //         description: error.message || "Could not proceed to checkout. Please try again.",
-    //     });
-    // } finally {
-    //     setIsCheckoutLoading(false);
-    // }
   };
 
   const onManageBilling = async () => {
-    setIsPortalLoading(true);
-    try {
-        const url = await getPortalUrl(app);
-        window.location.assign(url);
-    } catch (error: any) {
-        console.error(error);
-        toast({
-            variant: "destructive",
-            title: "Billing Error",
-            description: error.message || "Could not open billing portal. Please try again.",
-        });
-    } finally {
-        setIsPortalLoading(false);
-    }
+    toast({
+        variant: "default",
+        title: "Temporarily Disabled",
+        description: "This feature is temporarily disabled for maintenance.",
+    });
   };
 
   if (!user) {
