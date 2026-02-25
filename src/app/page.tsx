@@ -148,13 +148,13 @@ export default function HomePage() {
       <main className="relative">
         {/* Hero Section */}
         <section className="pt-32 pb-20 text-center bg-background text-foreground relative overflow-hidden">
-            <div className="w-full max-w-7xl mx-auto px-[5%] relative z-10 pb-10">
+            <div className="w-full max-w-7xl mx-auto px-[5%] relative z-10 pt-10 pb-10">
                 <div className="max-w-5xl mx-auto mt-10">
                     <h1 className="text-2xl font-extrabold tracking-tight md:text-4xl lg:text-5xl animate-fade-in-up">
-                        Find the best path to Canadian PR with AI-powered guidance
+                        Find the best path to Canada PR
                     </h1>
                      <p className="mt-6 text-sm sm:text-base text-muted-foreground max-w-4xl mx-auto">
-                        Check your eligibility, track immigration draws, and explore PR pathways - all in one place.
+                     Check your eligibility, track the latest draws, and find the right PR path for your job — all in one place.
                      </p>
                      <div className="mt-10 animate-fade-in-up animation-delay-3000 h-28 w-full sm:w-5/6 lg:w-4/5 mx-auto">
                       <div data-name="search-container" className="relative rounded-md border border-border bg-card/50 p-4 shadow-inner h-full">
@@ -201,7 +201,7 @@ export default function HomePage() {
         <section id="features">
           <div className="w-full px-[5%] bg-background">
             <div className="w-full">
-              <div className="max-w-7xl mx-auto text-center py-20">
+              <div className="max-w-7xl mx-0 text-center py-20 mt-5 mb-5 px-2.5">
                 <h2 className="text-2xl font-bold">How It Works</h2>
                 <p className="mt-4 max-w-2xl mx-auto text-muted-foreground text-sm">
                     Everything you need for a smarter immigration strategy.
@@ -328,7 +328,7 @@ export default function HomePage() {
         <section id="faq">
           <div className="w-full px-[5%] py-20">
             <div className="w-full">
-              <div className="max-w-7xl mx-auto max-w-3xl">
+              <div className="max-w-7xl max-w-3xl px-0 mx-[10px]">
                   <h2 className="text-2xl font-bold text-center">Frequently Asked Questions</h2>
                   <Accordion type="single" collapsible className="w-full mt-8">
                       {faqData.map((faq, index) => (
