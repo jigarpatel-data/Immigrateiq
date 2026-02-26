@@ -1,0 +1,28 @@
+---
+description: Tailwind and styling conventions
+globs: "**/*.{tsx,jsx,css}"
+alwaysApply: false
+---
+
+# Styling Conventions
+
+## Tailwind
+- Use Tailwind utility classes; avoid inline styles except for dynamic values (e.g., transform)
+- Add custom keyframes in `tailwind.config.ts`; add animations in `theme.extend.animation`
+- Use `animation-delay-*` utilities from `globals.css` for staggered animations
+
+## Semantic Colors
+- `bg-background`, `text-foreground` - main surfaces
+- `text-muted-foreground` - secondary text
+- `text-foreground/80`, `text-foreground/85` - brighter body text
+- `bg-primary`, `text-primary` - accents
+- `border-border` - borders
+
+## Typography
+- Hero: `text-4xl` → `text-7xl`, `font-extrabold`
+- Section headings: `text-2xl font-bold`
+- Body: `text-base sm:text-lg`, `text-foreground/85` or `text-foreground/80`
+
+## Layout
+- Page sections: `max-w-7xl mx-auto px-[5%]`
+- Content width: `max-w-5xl` or `max-w-4xl` for centered text

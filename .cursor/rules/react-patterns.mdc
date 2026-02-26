@@ -1,0 +1,27 @@
+---
+description: React and Next.js patterns for this project
+globs: "**/*.{tsx,jsx}"
+alwaysApply: false
+---
+
+# React Patterns
+
+## Component Structure
+- Functional components with TypeScript
+- Props interfaces with `Readonly<>` when appropriate
+- Use `"use client"` at top of file only when using hooks or browser APIs
+
+## State & Hooks
+- `useState` for local UI state
+- `useState` + `useRef` + `useCallback` for interactive effects (e.g., 3D tilt)
+- `useAuth()` from `@/hooks/use-auth` for auth state
+- `useToast()` from `@/hooks/use-toast` for notifications
+
+## Routing
+- Use `Link` from `next/link` for navigation
+- Use `useRouter` from `next/navigation` for programmatic navigation
+
+## UI Components
+- Use shadcn/ui components from `@/components/ui/*`
+- Use `Card`, `CardHeader`, `CardContent`, `Button`, `Accordion`, etc.
+- Use `Sheet` for mobile menus

@@ -1,0 +1,36 @@
+---
+description: Core project conventions and structure for Immigrateiq
+alwaysApply: true
+---
+
+# Immigrateiq Project Conventions
+
+## Tech Stack
+- **Framework**: Next.js 15 (App Router) with Turbopack
+- **Styling**: Tailwind CSS with shadcn/ui (Radix primitives)
+- **Auth**: Firebase Authentication
+- **Payments**: Stripe
+- **AI**: Genkit (Google AI)
+- **Database/Vector**: Pinecone, Airtable
+
+## File Structure
+- `src/app/` - Next.js App Router pages and layouts
+- `src/components/` - Reusable UI components
+- `src/components/ui/` - shadcn/ui primitives (Button, Card, etc.)
+- `src/hooks/` - Custom React hooks (use-auth, use-toast, use-mobile)
+- `src/lib/` - Utilities, Firebase, Stripe, AI, data fetching
+- `src/ai/` - Genkit flows and tools
+
+## Design System
+- **Theme**: Dark mode by default (`className='dark'` on html)
+- **Font**: Inter (font-body, font-headline)
+- **Colors**: Use semantic tokens (background, foreground, primary, muted, etc.) from `globals.css`
+- **Spacing**: Use `px-[5%]` for horizontal page padding; `max-w-7xl` for content width
+
+## Import Aliases
+- Use `@/components/...`, `@/lib/...`, `@/hooks/...` for imports
+
+## Component Patterns
+- Use `cn()` from `@/lib/utils` for conditional class merging
+- Prefer `"use client"` only when needed (hooks, interactivity)
+- Use Lucide React for icons
