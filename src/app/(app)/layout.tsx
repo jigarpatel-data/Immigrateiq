@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/sidebar";
 import {
   Bot,
+  Calculator,
   GanttChart,
   HelpCircle,
   LayoutDashboard,
@@ -38,6 +39,7 @@ import { useToast } from "@/hooks/use-toast";
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/draw-tracker", icon: GanttChart, label: "Draw Tracker" },
+  { href: "/crs-calculator", icon: Calculator, label: "CRS Calculator" },
   { href: "/chatbot", icon: Bot, label: "AI Assistant" },
   { href: "/faq", icon: HelpCircle, label: "FAQ" },
   { href: "/profile", icon: User, label: "Profile", hidden: true },

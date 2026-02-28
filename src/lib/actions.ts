@@ -6,11 +6,6 @@ import {
   type ImmigrationChatbotInput,
 } from "@/ai/flows/immigration-chatbot";
 import {
-  crsCalculatorChatbot as crsCalculatorChatbotFlow,
-  type CrsCalculatorChatbotInput,
-  type CrsCalculatorChatbotOutput,
-} from "@/ai/flows/crs-calculator-chatbot";
-import {
   nocFinderChatbot as nocFinderChatbotFlow,
   type NocFinderChatbotInput,
   type NocFinderChatbotOutput,
@@ -29,10 +24,6 @@ export async function handleChat(input: ImmigrationChatbotInput) {
       response: "An error occurred while processing your request. Please try again later.",
     };
   }
-}
-
-export async function crsCalculatorChatbot(input: CrsCalculatorChatbotInput): Promise<CrsCalculatorChatbotOutput> {
-  return await crsCalculatorChatbotFlow(input);
 }
 
 export async function nocFinderChatbot(input: NocFinderChatbotInput): Promise<NocFinderChatbotOutput> {
