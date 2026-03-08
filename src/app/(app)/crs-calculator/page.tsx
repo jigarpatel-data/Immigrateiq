@@ -20,7 +20,12 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
-import { Calculator, Loader2, AlertCircle } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { Calculator, Loader2, AlertCircle, ChevronDown, Save } from "lucide-react";
 import {
   calculateCrs,
   type CrsInput,
@@ -28,6 +33,9 @@ import {
   type EducationLevel,
   type LanguageScores,
 } from "@/lib/crs";
+import { saveCrsScore, saveHypotheticalCrsScore } from "@/lib/crs-storage";
+import { useAuth } from "@/hooks/use-auth";
+import { useToast } from "@/hooks/use-toast";
 
 const EDUCATION_OPTIONS: { value: EducationLevel; label: string }[] = [
   { value: "less_than_high_school", label: "None, or less than secondary (high school)" },
@@ -56,6 +64,125 @@ const CLB_SECOND_LANG_OPTIONS = [
   { value: 7, label: "CLB 7 or 8" },
   { value: 9, label: "CLB 9 or more" },
 ];
+
+/** CLB options for score variation simulator (4–10) */
+const CLB_SIMULATOR_OPTIONS = [4, 5, 6, 7, 8, 9, 10].map((v) => ({
+  value: v,
+  label: v === 10 ? "CLB 10+" : `CLB ${v}`,
+}));
+
+type TestScores = { speaking: number; listening: number; reading: number; writing: number };
+
+/** Convert test scores to CLB based on test type */
+function testScoresToClb(
+  testType: string,
+  scores: TestScores
+): LanguageScores {
+  if (testType === "ielts") {
+    return {
+      speaking_clb: ieltsToClb("speaking", scores.speaking),
+      listening_clb: ieltsToClb("listening", scores.listening),
+      reading_clb: ieltsToClb("reading", scores.reading),
+      writing_clb: ieltsToClb("writing", scores.writing),
+    };
+  }
+  if (testType === "celpip_g") {
+    return {
+      speaking_clb: celpipToClb(scores.speaking),
+      listening_clb: celpipToClb(scores.listening),
+      reading_clb: celpipToClb(scores.reading),
+      writing_clb: celpipToClb(scores.writing),
+    };
+  }
+  if (testType === "pte_core") {
+    return {
+      speaking_clb: pteToClb("speaking", scores.speaking),
+      listening_clb: pteToClb("listening", scores.listening),
+      reading_clb: pteToClb("reading", scores.reading),
+      writing_clb: pteToClb("writing", scores.writing),
+    };
+  }
+  if (testType === "tef_canada") {
+    return {
+      speaking_clb: tefToNclc("speaking", scores.speaking),
+      listening_clb: tefToNclc("listening", scores.listening),
+      reading_clb: tefToNclc("reading", scores.reading),
+      writing_clb: tefToNclc("writing", scores.writing),
+    };
+  }
+  if (testType === "tcf_canada") {
+    return {
+      speaking_clb: tcfToNclc("speaking", scores.speaking),
+      listening_clb: tcfToNclc("listening", scores.listening),
+      reading_clb: tcfToNclc("reading", scores.reading),
+      writing_clb: tcfToNclc("writing", scores.writing),
+    };
+  }
+  return {
+    speaking_clb: scores.speaking,
+    listening_clb: scores.listening,
+    reading_clb: scores.reading,
+    writing_clb: scores.writing,
+  };
+}
+
+/** Get representative test scores for a given CLB (for preset buttons). Uses minimum band/score per IRCC tables. */
+function getTestScoresForClb(
+  testType: string,
+  clb: number
+): TestScores {
+  if (testType === "ielts") {
+    const byMod: Record<number, TestScores> = {
+      4: { speaking: 4, listening: 4, reading: 4, writing: 4 },
+      5: { speaking: 5, listening: 5, reading: 4, writing: 5 },
+      6: { speaking: 5.5, listening: 5.5, reading: 5, writing: 5.5 },
+      7: { speaking: 6, listening: 6, reading: 6, writing: 6 },
+      8: { speaking: 6.5, listening: 7.5, reading: 6.5, writing: 6.5 },
+      9: { speaking: 7, listening: 8, reading: 7, writing: 7 },
+      10: { speaking: 7.5, listening: 8.5, reading: 8, writing: 7.5 },
+    };
+    return byMod[clb] ?? byMod[7];
+  }
+  if (testType === "celpip_g") {
+    const s = Math.min(Math.max(clb, 5), 12);
+    return { speaking: s, listening: s, reading: s, writing: s };
+  }
+  if (testType === "pte_core") {
+    const byMod: Record<number, TestScores> = {
+      4: { speaking: 39, listening: 39, reading: 42, writing: 39 },
+      5: { speaking: 51, listening: 39, reading: 42, writing: 51 },
+      6: { speaking: 59, listening: 50, reading: 51, writing: 60 },
+      7: { speaking: 68, listening: 60, reading: 60, writing: 69 },
+      8: { speaking: 76, listening: 71, reading: 69, writing: 79 },
+      9: { speaking: 84, listening: 82, reading: 78, writing: 88 },
+      10: { speaking: 89, listening: 89, reading: 88, writing: 90 },
+    };
+    return byMod[clb] ?? byMod[7];
+  }
+  if (testType === "tef_canada") {
+    const byMod: Record<number, TestScores> = {
+      5: { speaking: 226, listening: 181, reading: 151, writing: 226 },
+      6: { speaking: 271, listening: 217, reading: 181, writing: 271 },
+      7: { speaking: 310, listening: 249, reading: 207, writing: 310 },
+      8: { speaking: 349, listening: 280, reading: 233, writing: 349 },
+      9: { speaking: 371, listening: 298, reading: 248, writing: 371 },
+      10: { speaking: 371, listening: 298, reading: 248, writing: 371 },
+    };
+    return byMod[clb] ?? byMod[7];
+  }
+  if (testType === "tcf_canada") {
+    const byMod: Record<number, TestScores> = {
+      5: { speaking: 6, listening: 369, reading: 375, writing: 6 },
+      6: { speaking: 7, listening: 398, reading: 406, writing: 7 },
+      7: { speaking: 10, listening: 458, reading: 453, writing: 10 },
+      8: { speaking: 12, listening: 503, reading: 499, writing: 12 },
+      9: { speaking: 14, listening: 523, reading: 524, writing: 14 },
+      10: { speaking: 16, listening: 549, reading: 549, writing: 16 },
+    };
+    return byMod[clb] ?? byMod[7];
+  }
+  return { speaking: clb, listening: clb, reading: clb, writing: clb };
+}
 
 const MARITAL_STATUS_OPTIONS = [
   { value: "never_married", label: "Never Married / Single", hasSpouse: false },
@@ -169,6 +296,98 @@ function pteToClb(module: "speaking" | "listening" | "reading" | "writing", scor
   return 4;
 }
 
+/** TEF Canada: range options per IRCC table. Value = min of range for conversion. */
+const TEF_SPEAKING_OPTIONS = [
+  { value: 371, label: "371+ (NCLC 9+)" },
+  { value: 349, label: "349-370 (NCLC 8)" },
+  { value: 310, label: "310-348 (NCLC 7)" },
+  { value: 271, label: "271-309 (NCLC 6)" },
+  { value: 226, label: "226-270 (NCLC 5)" },
+];
+const TEF_LISTENING_OPTIONS = [
+  { value: 298, label: "298+ (NCLC 9+)" },
+  { value: 280, label: "280-297 (NCLC 8)" },
+  { value: 249, label: "249-279 (NCLC 7)" },
+  { value: 217, label: "217-248 (NCLC 6)" },
+  { value: 181, label: "181-216 (NCLC 5)" },
+];
+const TEF_READING_OPTIONS = [
+  { value: 248, label: "248+ (NCLC 9+)" },
+  { value: 233, label: "233-247 (NCLC 8)" },
+  { value: 207, label: "207-232 (NCLC 7)" },
+  { value: 181, label: "181-206 (NCLC 6)" },
+  { value: 151, label: "151-180 (NCLC 5)" },
+];
+const TEF_WRITING_OPTIONS = [
+  { value: 371, label: "371+ (NCLC 9+)" },
+  { value: 349, label: "349-370 (NCLC 8)" },
+  { value: 310, label: "310-348 (NCLC 7)" },
+  { value: 271, label: "271-309 (NCLC 6)" },
+  { value: 226, label: "226-270 (NCLC 5)" },
+];
+function tefToNclc(module: "speaking" | "listening" | "reading" | "writing", score: number): number {
+  if (!Number.isFinite(score)) return 4;
+  const tables = {
+    speaking: [[9, 371], [8, 349], [7, 310], [6, 271], [5, 226]] as [number, number][],
+    listening: [[9, 298], [8, 280], [7, 249], [6, 217], [5, 181]] as [number, number][],
+    reading: [[9, 248], [8, 233], [7, 207], [6, 181], [5, 151]] as [number, number][],
+    writing: [[9, 371], [8, 349], [7, 310], [6, 271], [5, 226]] as [number, number][],
+  };
+  const t = tables[module];
+  for (const [nclc, minScore] of t) {
+    if (score >= minScore) return nclc;
+  }
+  return 4;
+}
+
+/** TCF Canada: range options per IRCC table. Value = min of range for conversion. */
+const TCF_SW_OPTIONS = [
+  { value: 16, label: "16-20 (NCLC 10+)" },
+  { value: 14, label: "14-15 (NCLC 9)" },
+  { value: 12, label: "12-13 (NCLC 8)" },
+  { value: 10, label: "10-11 (NCLC 7)" },
+  { value: 7, label: "7-9 (NCLC 6)" },
+  { value: 6, label: "6 (NCLC 5)" },
+];
+const TCF_LISTENING_OPTIONS = [
+  { value: 549, label: "549-699 (NCLC 10+)" },
+  { value: 523, label: "523-548 (NCLC 9)" },
+  { value: 503, label: "503-522 (NCLC 8)" },
+  { value: 458, label: "458-502 (NCLC 7)" },
+  { value: 398, label: "398-457 (NCLC 6)" },
+  { value: 369, label: "369-397 (NCLC 5)" },
+];
+const TCF_READING_OPTIONS = [
+  { value: 549, label: "549-699 (NCLC 10+)" },
+  { value: 524, label: "524-548 (NCLC 9)" },
+  { value: 499, label: "499-523 (NCLC 8)" },
+  { value: 453, label: "453-498 (NCLC 7)" },
+  { value: 406, label: "406-452 (NCLC 6)" },
+  { value: 375, label: "375-405 (NCLC 5)" },
+];
+function tcfToNclc(module: "speaking" | "listening" | "reading" | "writing", score: number): number {
+  if (!Number.isFinite(score)) return 4;
+  if (module === "speaking" || module === "writing") {
+    const t: [number, number][] = [[10, 16], [9, 14], [8, 12], [7, 10], [6, 7], [5, 6]];
+    for (const [nclc, minScore] of t) {
+      if (score >= minScore) return nclc;
+    }
+    return 4;
+  }
+  if (module === "listening") {
+    const t: [number, number][] = [[10, 549], [9, 523], [8, 503], [7, 458], [6, 398], [5, 369]];
+    for (const [nclc, minScore] of t) {
+      if (score >= minScore) return nclc;
+    }
+    return 4;
+  }
+  const t: [number, number][] = [[10, 549], [9, 524], [8, 499], [7, 453], [6, 406], [5, 375]];
+  for (const [nclc, minScore] of t) {
+    if (score >= minScore) return nclc;
+  }
+  return 4;
+}
+
 const AGE_SELECT = 0;
 const CLB_SELECT = -1;
 const WORK_SELECT = -1;
@@ -212,7 +431,14 @@ type StepId =
   | "first_lang_ielts"
   | "first_lang_celpip"
   | "first_lang_pte"
+  | "first_lang_tef"
+  | "first_lang_tcf"
   | "second_lang_test"
+  | "second_lang_ielts"
+  | "second_lang_celpip"
+  | "second_lang_pte"
+  | "second_lang_tef"
+  | "second_lang_tcf"
   | "second_lang_clb"
   | "canadian_work"
   | "foreign_work"
@@ -233,7 +459,15 @@ export default function CrsCalculatorPage() {
   const [ieltsScores, setIeltsScores] = useState<{ speaking: number; listening: number; reading: number; writing: number } | null>(null);
   const [celpipScores, setCelpipScores] = useState<{ speaking: number; listening: number; reading: number; writing: number } | null>(null);
   const [pteScores, setPteScores] = useState<{ speaking: number; listening: number; reading: number; writing: number } | null>(null);
+  const [tefScores, setTefScores] = useState<{ speaking: number; listening: number; reading: number; writing: number } | null>(null);
+  const [tcfScores, setTcfScores] = useState<{ speaking: number; listening: number; reading: number; writing: number } | null>(null);
   const [secondLangTestType, setSecondLangTestType] = useState<"select" | "celpip_g" | "ielts" | "pte_core" | "tef_canada" | "tcf_canada" | "not_applicable">("select");
+  const [secondIeltsScores, setSecondIeltsScores] = useState<TestScores | null>(null);
+  const [secondCelpipScores, setSecondCelpipScores] = useState<TestScores | null>(null);
+  const [secondPteScores, setSecondPteScores] = useState<TestScores | null>(null);
+  const [secondTefScores, setSecondTefScores] = useState<TestScores | null>(null);
+  const [secondTcfScores, setSecondTcfScores] = useState<TestScores | null>(null);
+  const [hypotheticalTestScores, setHypotheticalTestScores] = useState<TestScores | null>(null);
   const [tradeCertificateAnswer, setTradeCertificateAnswer] = useState<"select" | "yes" | "no">("select");
   const [jobOfferAnswer, setJobOfferAnswer] = useState<"select" | "yes" | "no">("select");
   const [nominationAnswer, setNominationAnswer] = useState<"select" | "yes" | "no">("select");
@@ -242,6 +476,9 @@ export default function CrsCalculatorPage() {
   const [result, setResult] = useState<CrsOutput | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const { user } = useAuth();
+  const { toast } = useToast();
 
   const visibleSteps = useMemo((): StepId[] => {
     const steps: StepId[] = ["marital"];
@@ -258,9 +495,16 @@ export default function CrsCalculatorPage() {
     if (firstLangTestType === "ielts") steps.push("first_lang_ielts");
     else if (firstLangTestType === "celpip_g") steps.push("first_lang_celpip");
     else if (firstLangTestType === "pte_core") steps.push("first_lang_pte");
+    else if (firstLangTestType === "tef_canada") steps.push("first_lang_tef");
+    else if (firstLangTestType === "tcf_canada") steps.push("first_lang_tcf");
     else if (firstLangTestType !== "select") steps.push("first_lang_clb");
     if (firstLangTestType !== "select") steps.push("second_lang_test");
-    if (secondLangTestType !== "select" && secondLangTestType !== "not_applicable") steps.push("second_lang_clb");
+    if (secondLangTestType === "ielts") steps.push("second_lang_ielts");
+    else if (secondLangTestType === "celpip_g") steps.push("second_lang_celpip");
+    else if (secondLangTestType === "pte_core") steps.push("second_lang_pte");
+    else if (secondLangTestType === "tef_canada") steps.push("second_lang_tef");
+    else if (secondLangTestType === "tcf_canada") steps.push("second_lang_tcf");
+    else if (secondLangTestType !== "select" && secondLangTestType !== "not_applicable") steps.push("second_lang_clb");
     steps.push("canadian_work");
     steps.push("foreign_work");
     steps.push("trade_certificate");
@@ -281,6 +525,8 @@ export default function CrsCalculatorPage() {
   ]);
 
   const prevStepsLengthRef = useRef(visibleSteps.length);
+  const lastSanitizedInputRef = useRef<CrsInput | null>(null);
+
   useEffect(() => {
     const newLength = visibleSteps.length;
     const prevLength = prevStepsLengthRef.current;
@@ -334,6 +580,7 @@ export default function CrsCalculatorPage() {
             : input.spouse,
         };
         const output = calculateCrs(sanitized);
+        lastSanitizedInputRef.current = sanitized;
         setResult(output);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to calculate CRS");
@@ -630,6 +877,10 @@ export default function CrsCalculatorPage() {
             <Label className="text-lg font-semibold text-primary block leading-relaxed">
               5ii) Which language test did you take for your first official language?
             </Label>
+            <p className="text-sm text-muted-foreground">
+              After calculating your score, use the "Advanced: Score variation" section to see how
+              different language scores would affect your CRS.
+            </p>
             <Select
               value={firstLangTestType}
               onValueChange={(v: "select" | "celpip_g" | "ielts" | "pte_core" | "tef_canada" | "tcf_canada") => {
@@ -637,6 +888,8 @@ export default function CrsCalculatorPage() {
                 if (v !== "ielts") setIeltsScores(null);
                 if (v !== "celpip_g") setCelpipScores(null);
                 if (v !== "pte_core") setPteScores(null);
+                if (v !== "tef_canada") setTefScores(null);
+                if (v !== "tcf_canada") setTcfScores(null);
                 if (v === "select") setSecondLangTestType("select");
                 updateInput({
                   first_language_test_type: v === "select" ? undefined : v,
@@ -930,6 +1183,129 @@ export default function CrsCalculatorPage() {
             )}
           </div>
         )}
+        {step === "first_lang_tef" && (
+          <div className="space-y-4">
+            <Label className="text-lg font-semibold text-primary block leading-relaxed">
+              Enter your TEF Canada scores by module
+            </Label>
+            <p className="text-sm text-muted-foreground mb-4">
+              Select the range that includes your score for each module. NCLC level will be calculated automatically.
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {(["speaking", "listening", "reading", "writing"] as const).map((mod) => {
+                const tefOpts = mod === "speaking" ? TEF_SPEAKING_OPTIONS : mod === "listening" ? TEF_LISTENING_OPTIONS : mod === "reading" ? TEF_READING_OPTIONS : TEF_WRITING_OPTIONS;
+                return (
+                  <div key={mod}>
+                    <Label htmlFor={`tef-${mod}`}>{mod.charAt(0).toUpperCase() + mod.slice(1)}</Label>
+                    <Select
+                      value={tefScores?.[mod] != null && tefScores[mod] > 0 ? String(tefScores[mod]) : "select"}
+                      onValueChange={(v) => {
+                        const score = v === "select" ? 0 : Number(v);
+                        const next = tefScores ? { ...tefScores, [mod]: score } : { speaking: 0, listening: 0, reading: 0, writing: 0, [mod]: score };
+                        setTefScores(next);
+                        if (score > 0) {
+                          updateInput({
+                            first_official_language: {
+                              ...input.first_official_language,
+                              speaking_clb: next.speaking > 0 ? tefToNclc("speaking", next.speaking) : input.first_official_language.speaking_clb,
+                              listening_clb: next.listening > 0 ? tefToNclc("listening", next.listening) : input.first_official_language.listening_clb,
+                              reading_clb: next.reading > 0 ? tefToNclc("reading", next.reading) : input.first_official_language.reading_clb,
+                              writing_clb: next.writing > 0 ? tefToNclc("writing", next.writing) : input.first_official_language.writing_clb,
+                            },
+                          });
+                        }
+                        handleStepChange("first_lang_tef");
+                      }}
+                    >
+                      <SelectTrigger id={`tef-${mod}`} className="h-11 text-base">
+                        <SelectValue placeholder="Select..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="select">Select...</SelectItem>
+                        {tefOpts.map((o) => (
+                          <SelectItem key={o.value} value={String(o.value)}>{o.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                );
+              })}
+            </div>
+            {tefScores && (tefScores.speaking > 0 || tefScores.listening > 0 || tefScores.reading > 0 || tefScores.writing > 0) && (
+              <div className="mt-4 rounded-lg border bg-muted/30 p-4 text-sm">
+                <p className="font-medium mb-2">Calculated NCLC (CLB) levels</p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {tefScores.speaking > 0 && <span>Speaking: NCLC {tefToNclc("speaking", tefScores.speaking)}</span>}
+                  {tefScores.listening > 0 && <span>Listening: NCLC {tefToNclc("listening", tefScores.listening)}</span>}
+                  {tefScores.reading > 0 && <span>Reading: NCLC {tefToNclc("reading", tefScores.reading)}</span>}
+                  {tefScores.writing > 0 && <span>Writing: NCLC {tefToNclc("writing", tefScores.writing)}</span>}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        {step === "first_lang_tcf" && (
+          <div className="space-y-4">
+            <Label className="text-lg font-semibold text-primary block leading-relaxed">
+              Enter your TCF Canada scores by module
+            </Label>
+            <p className="text-sm text-muted-foreground mb-4">
+              Speaking & Writing: 0–20 scale. Listening & Reading: 0–699 scale. NCLC level (equivalent to CLB) will be calculated.
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {(["speaking", "listening", "reading", "writing"] as const).map((mod) => {
+                const isSw = mod === "speaking" || mod === "writing";
+                const options = isSw ? TCF_SW_OPTIONS : mod === "listening" ? TCF_LISTENING_OPTIONS : TCF_READING_OPTIONS;
+                return (
+                  <div key={mod}>
+                    <Label htmlFor={`tcf-${mod}`}>{mod.charAt(0).toUpperCase() + mod.slice(1)}</Label>
+                    <Select
+                      value={tcfScores?.[mod] != null && tcfScores[mod] > 0 ? String(tcfScores[mod]) : "select"}
+                      onValueChange={(v) => {
+                        const score = v === "select" ? 0 : Number(v);
+                        const next = tcfScores ? { ...tcfScores, [mod]: score } : { speaking: 0, listening: 0, reading: 0, writing: 0, [mod]: score };
+                        setTcfScores(next);
+                        if (score > 0) {
+                          updateInput({
+                            first_official_language: {
+                              ...input.first_official_language,
+                              speaking_clb: next.speaking > 0 ? tcfToNclc("speaking", next.speaking) : input.first_official_language.speaking_clb,
+                              listening_clb: next.listening > 0 ? tcfToNclc("listening", next.listening) : input.first_official_language.listening_clb,
+                              reading_clb: next.reading > 0 ? tcfToNclc("reading", next.reading) : input.first_official_language.reading_clb,
+                              writing_clb: next.writing > 0 ? tcfToNclc("writing", next.writing) : input.first_official_language.writing_clb,
+                            },
+                          });
+                        }
+                        handleStepChange("first_lang_tcf");
+                      }}
+                    >
+                      <SelectTrigger id={`tcf-${mod}`} className="h-11 text-base">
+                        <SelectValue placeholder="Select..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="select">Select...</SelectItem>
+                        {options.map((o) => (
+                          <SelectItem key={o.value} value={String(o.value)}>{o.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                );
+              })}
+            </div>
+            {tcfScores && (tcfScores.speaking > 0 || tcfScores.listening > 0 || tcfScores.reading > 0 || tcfScores.writing > 0) && (
+              <div className="mt-4 rounded-lg border bg-muted/30 p-4 text-sm">
+                <p className="font-medium mb-2">Calculated NCLC (CLB) levels</p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {tcfScores.speaking > 0 && <span>Speaking: NCLC {tcfToNclc("speaking", tcfScores.speaking)}</span>}
+                  {tcfScores.listening > 0 && <span>Listening: NCLC {tcfToNclc("listening", tcfScores.listening)}</span>}
+                  {tcfScores.reading > 0 && <span>Reading: NCLC {tcfToNclc("reading", tcfScores.reading)}</span>}
+                  {tcfScores.writing > 0 && <span>Writing: NCLC {tcfToNclc("writing", tcfScores.writing)}</span>}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
         {step === "first_lang_clb" && (
           <div className="space-y-4">
             <Label className="text-lg font-semibold text-primary block leading-relaxed">
@@ -972,6 +1348,11 @@ export default function CrsCalculatorPage() {
               value={secondLangTestType}
               onValueChange={(v: "select" | "celpip_g" | "ielts" | "pte_core" | "tef_canada" | "tcf_canada" | "not_applicable") => {
                 setSecondLangTestType(v);
+                if (v !== "ielts") setSecondIeltsScores(null);
+                if (v !== "celpip_g") setSecondCelpipScores(null);
+                if (v !== "pte_core") setSecondPteScores(null);
+                if (v !== "tef_canada") setSecondTefScores(null);
+                if (v !== "tcf_canada") setSecondTcfScores(null);
                 updateInput({
                   second_official_language: v === "not_applicable" || v === "select" ? null : defaultLanguageScores(5),
                 });
@@ -998,6 +1379,303 @@ export default function CrsCalculatorPage() {
                 <SelectItem value="not_applicable">not applicable</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+        )}
+        {step === "second_lang_ielts" && (
+          <div className="space-y-4">
+            <Label className="text-lg font-semibold text-primary block leading-relaxed">
+              Enter your second language (IELTS) scores by module
+            </Label>
+            <p className="text-sm text-muted-foreground mb-4">
+              Enter your band score for each module. CLB level will be calculated automatically.
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {(["speaking", "listening", "reading", "writing"] as const).map((mod) => (
+                <div key={mod}>
+                  <Label htmlFor={`second-ielts-${mod}`}>{mod.charAt(0).toUpperCase() + mod.slice(1)}</Label>
+                  <Select
+                    value={secondIeltsScores?.[mod] != null && secondIeltsScores[mod] > 0 ? String(secondIeltsScores[mod]) : "select"}
+                    onValueChange={(v) => {
+                      const band = v === "select" ? 0 : Number(v);
+                      const next = secondIeltsScores ? { ...secondIeltsScores, [mod]: band } : { speaking: 0, listening: 0, reading: 0, writing: 0, [mod]: band };
+                      setSecondIeltsScores(next);
+                      if (band > 0) {
+                        updateInput({
+                          second_official_language: {
+                            ...(input.second_official_language ?? defaultLanguageScores(5)),
+                            speaking_clb: next.speaking > 0 ? ieltsToClb("speaking", next.speaking) : (input.second_official_language?.speaking_clb ?? 5),
+                            listening_clb: next.listening > 0 ? ieltsToClb("listening", next.listening) : (input.second_official_language?.listening_clb ?? 5),
+                            reading_clb: next.reading > 0 ? ieltsToClb("reading", next.reading) : (input.second_official_language?.reading_clb ?? 5),
+                            writing_clb: next.writing > 0 ? ieltsToClb("writing", next.writing) : (input.second_official_language?.writing_clb ?? 5),
+                          },
+                        });
+                      }
+                      handleStepChange("second_lang_ielts");
+                    }}
+                  >
+                    <SelectTrigger id={`second-ielts-${mod}`} className="h-11 text-base">
+                      <SelectValue placeholder="Select..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="select">Select...</SelectItem>
+                      {IELTS_BAND_OPTIONS.map((o) => (
+                        <SelectItem key={o.value} value={String(o.value)}>{o.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ))}
+            </div>
+            {secondIeltsScores && (secondIeltsScores.speaking > 0 || secondIeltsScores.listening > 0 || secondIeltsScores.reading > 0 || secondIeltsScores.writing > 0) && (
+              <div className="mt-4 rounded-lg border bg-muted/30 p-4 text-sm">
+                <p className="font-medium mb-2">Calculated CLB levels</p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {secondIeltsScores.speaking > 0 && <span>Speaking: CLB {ieltsToClb("speaking", secondIeltsScores.speaking)}</span>}
+                  {secondIeltsScores.listening > 0 && <span>Listening: CLB {ieltsToClb("listening", secondIeltsScores.listening)}</span>}
+                  {secondIeltsScores.reading > 0 && <span>Reading: CLB {ieltsToClb("reading", secondIeltsScores.reading)}</span>}
+                  {secondIeltsScores.writing > 0 && <span>Writing: CLB {ieltsToClb("writing", secondIeltsScores.writing)}</span>}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        {step === "second_lang_celpip" && (
+          <div className="space-y-4">
+            <Label className="text-lg font-semibold text-primary block leading-relaxed">
+              Enter your second language (CELPIP) scores by module
+            </Label>
+            <p className="text-sm text-muted-foreground mb-4">
+              Enter your score for each module (5–12). CLB level equals CELPIP score; 9+ = CLB 9+.
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {(["speaking", "listening", "reading", "writing"] as const).map((mod) => (
+                <div key={mod}>
+                  <Label htmlFor={`second-celpip-${mod}`}>{mod.charAt(0).toUpperCase() + mod.slice(1)}</Label>
+                  <Select
+                    value={secondCelpipScores?.[mod] != null && secondCelpipScores[mod] > 0 ? String(secondCelpipScores[mod]) : "select"}
+                    onValueChange={(v) => {
+                      const score = v === "select" ? 0 : Number(v);
+                      const next = secondCelpipScores ? { ...secondCelpipScores, [mod]: score } : { speaking: 0, listening: 0, reading: 0, writing: 0, [mod]: score };
+                      setSecondCelpipScores(next);
+                      if (score > 0) {
+                        updateInput({
+                          second_official_language: {
+                            ...(input.second_official_language ?? defaultLanguageScores(5)),
+                            speaking_clb: next.speaking > 0 ? celpipToClb(next.speaking) : (input.second_official_language?.speaking_clb ?? 5),
+                            listening_clb: next.listening > 0 ? celpipToClb(next.listening) : (input.second_official_language?.listening_clb ?? 5),
+                            reading_clb: next.reading > 0 ? celpipToClb(next.reading) : (input.second_official_language?.reading_clb ?? 5),
+                            writing_clb: next.writing > 0 ? celpipToClb(next.writing) : (input.second_official_language?.writing_clb ?? 5),
+                          },
+                        });
+                      }
+                      handleStepChange("second_lang_celpip");
+                    }}
+                  >
+                    <SelectTrigger id={`second-celpip-${mod}`} className="h-11 text-base">
+                      <SelectValue placeholder="Select..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="select">Select...</SelectItem>
+                      {CELPIP_OPTIONS.map((o) => (
+                        <SelectItem key={o.value} value={String(o.value)}>{o.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ))}
+            </div>
+            {secondCelpipScores && (secondCelpipScores.speaking > 0 || secondCelpipScores.listening > 0 || secondCelpipScores.reading > 0 || secondCelpipScores.writing > 0) && (
+              <div className="mt-4 rounded-lg border bg-muted/30 p-4 text-sm">
+                <p className="font-medium mb-2">Calculated CLB levels</p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {secondCelpipScores.speaking > 0 && <span>Speaking: CLB {celpipToClb(secondCelpipScores.speaking)}</span>}
+                  {secondCelpipScores.listening > 0 && <span>Listening: CLB {celpipToClb(secondCelpipScores.listening)}</span>}
+                  {secondCelpipScores.reading > 0 && <span>Reading: CLB {celpipToClb(secondCelpipScores.reading)}</span>}
+                  {secondCelpipScores.writing > 0 && <span>Writing: CLB {celpipToClb(secondCelpipScores.writing)}</span>}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        {step === "second_lang_pte" && (
+          <div className="space-y-4">
+            <Label className="text-lg font-semibold text-primary block leading-relaxed">
+              Enter your second language (PTE Core) scores by module
+            </Label>
+            <p className="text-sm text-muted-foreground mb-4">
+              Enter your score for each module (39–90). CLB level will be calculated automatically.
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {(["speaking", "listening", "reading", "writing"] as const).map((mod) => (
+                <div key={mod}>
+                  <Label htmlFor={`second-pte-${mod}`}>{mod.charAt(0).toUpperCase() + mod.slice(1)}</Label>
+                  <Select
+                    value={secondPteScores?.[mod] != null && secondPteScores[mod] > 0 ? String(secondPteScores[mod]) : "select"}
+                    onValueChange={(v) => {
+                      const score = v === "select" ? 0 : Number(v);
+                      const next = secondPteScores ? { ...secondPteScores, [mod]: score } : { speaking: 0, listening: 0, reading: 0, writing: 0, [mod]: score };
+                      setSecondPteScores(next);
+                      if (score > 0) {
+                        updateInput({
+                          second_official_language: {
+                            ...(input.second_official_language ?? defaultLanguageScores(5)),
+                            speaking_clb: next.speaking > 0 ? pteToClb("speaking", next.speaking) : (input.second_official_language?.speaking_clb ?? 5),
+                            listening_clb: next.listening > 0 ? pteToClb("listening", next.listening) : (input.second_official_language?.listening_clb ?? 5),
+                            reading_clb: next.reading > 0 ? pteToClb("reading", next.reading) : (input.second_official_language?.reading_clb ?? 5),
+                            writing_clb: next.writing > 0 ? pteToClb("writing", next.writing) : (input.second_official_language?.writing_clb ?? 5),
+                          },
+                        });
+                      }
+                      handleStepChange("second_lang_pte");
+                    }}
+                  >
+                    <SelectTrigger id={`second-pte-${mod}`} className="h-11 text-base">
+                      <SelectValue placeholder="Select..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="select">Select...</SelectItem>
+                      {PTE_OPTIONS.map((o) => (
+                        <SelectItem key={o.value} value={String(o.value)}>{o.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ))}
+            </div>
+            {secondPteScores && (secondPteScores.speaking > 0 || secondPteScores.listening > 0 || secondPteScores.reading > 0 || secondPteScores.writing > 0) && (
+              <div className="mt-4 rounded-lg border bg-muted/30 p-4 text-sm">
+                <p className="font-medium mb-2">Calculated CLB levels</p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {secondPteScores.speaking > 0 && <span>Speaking: CLB {pteToClb("speaking", secondPteScores.speaking)}</span>}
+                  {secondPteScores.listening > 0 && <span>Listening: CLB {pteToClb("listening", secondPteScores.listening)}</span>}
+                  {secondPteScores.reading > 0 && <span>Reading: CLB {pteToClb("reading", secondPteScores.reading)}</span>}
+                  {secondPteScores.writing > 0 && <span>Writing: CLB {pteToClb("writing", secondPteScores.writing)}</span>}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        {step === "second_lang_tef" && (
+          <div className="space-y-4">
+            <Label className="text-lg font-semibold text-primary block leading-relaxed">
+              Enter your second language (TEF Canada) scores by module
+            </Label>
+            <p className="text-sm text-muted-foreground mb-4">
+              Select the range that includes your score for each module. NCLC level will be calculated automatically.
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {(["speaking", "listening", "reading", "writing"] as const).map((mod) => {
+                const tefOpts = mod === "speaking" ? TEF_SPEAKING_OPTIONS : mod === "listening" ? TEF_LISTENING_OPTIONS : mod === "reading" ? TEF_READING_OPTIONS : TEF_WRITING_OPTIONS;
+                return (
+                  <div key={mod}>
+                    <Label htmlFor={`second-tef-${mod}`}>{mod.charAt(0).toUpperCase() + mod.slice(1)}</Label>
+                    <Select
+                      value={secondTefScores?.[mod] != null && secondTefScores[mod] > 0 ? String(secondTefScores[mod]) : "select"}
+                      onValueChange={(v) => {
+                        const score = v === "select" ? 0 : Number(v);
+                        const next = secondTefScores ? { ...secondTefScores, [mod]: score } : { speaking: 0, listening: 0, reading: 0, writing: 0, [mod]: score };
+                        setSecondTefScores(next);
+                        if (score > 0) {
+                          updateInput({
+                            second_official_language: {
+                              ...(input.second_official_language ?? defaultLanguageScores(5)),
+                              speaking_clb: next.speaking > 0 ? tefToNclc("speaking", next.speaking) : (input.second_official_language?.speaking_clb ?? 5),
+                              listening_clb: next.listening > 0 ? tefToNclc("listening", next.listening) : (input.second_official_language?.listening_clb ?? 5),
+                              reading_clb: next.reading > 0 ? tefToNclc("reading", next.reading) : (input.second_official_language?.reading_clb ?? 5),
+                              writing_clb: next.writing > 0 ? tefToNclc("writing", next.writing) : (input.second_official_language?.writing_clb ?? 5),
+                            },
+                          });
+                        }
+                        handleStepChange("second_lang_tef");
+                      }}
+                    >
+                      <SelectTrigger id={`second-tef-${mod}`} className="h-11 text-base">
+                        <SelectValue placeholder="Select..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="select">Select...</SelectItem>
+                        {tefOpts.map((o) => (
+                          <SelectItem key={o.value} value={String(o.value)}>{o.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                );
+              })}
+            </div>
+            {secondTefScores && (secondTefScores.speaking > 0 || secondTefScores.listening > 0 || secondTefScores.reading > 0 || secondTefScores.writing > 0) && (
+              <div className="mt-4 rounded-lg border bg-muted/30 p-4 text-sm">
+                <p className="font-medium mb-2">Calculated NCLC (CLB) levels</p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {secondTefScores.speaking > 0 && <span>Speaking: NCLC {tefToNclc("speaking", secondTefScores.speaking)}</span>}
+                  {secondTefScores.listening > 0 && <span>Listening: NCLC {tefToNclc("listening", secondTefScores.listening)}</span>}
+                  {secondTefScores.reading > 0 && <span>Reading: NCLC {tefToNclc("reading", secondTefScores.reading)}</span>}
+                  {secondTefScores.writing > 0 && <span>Writing: NCLC {tefToNclc("writing", secondTefScores.writing)}</span>}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        {step === "second_lang_tcf" && (
+          <div className="space-y-4">
+            <Label className="text-lg font-semibold text-primary block leading-relaxed">
+              Enter your second language (TCF Canada) scores by module
+            </Label>
+            <p className="text-sm text-muted-foreground mb-4">
+              Speaking & Writing: 0–20 scale. Listening & Reading: 0–699 scale. NCLC level (equivalent to CLB) will be calculated.
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              {(["speaking", "listening", "reading", "writing"] as const).map((mod) => {
+                const isSw = mod === "speaking" || mod === "writing";
+                const options = isSw ? TCF_SW_OPTIONS : mod === "listening" ? TCF_LISTENING_OPTIONS : TCF_READING_OPTIONS;
+                return (
+                  <div key={mod}>
+                    <Label htmlFor={`second-tcf-${mod}`}>{mod.charAt(0).toUpperCase() + mod.slice(1)}</Label>
+                    <Select
+                      value={secondTcfScores?.[mod] != null && secondTcfScores[mod] > 0 ? String(secondTcfScores[mod]) : "select"}
+                      onValueChange={(v) => {
+                        const score = v === "select" ? 0 : Number(v);
+                        const next = secondTcfScores ? { ...secondTcfScores, [mod]: score } : { speaking: 0, listening: 0, reading: 0, writing: 0, [mod]: score };
+                        setSecondTcfScores(next);
+                        if (score > 0) {
+                          updateInput({
+                            second_official_language: {
+                              ...(input.second_official_language ?? defaultLanguageScores(5)),
+                              speaking_clb: next.speaking > 0 ? tcfToNclc("speaking", next.speaking) : (input.second_official_language?.speaking_clb ?? 5),
+                              listening_clb: next.listening > 0 ? tcfToNclc("listening", next.listening) : (input.second_official_language?.listening_clb ?? 5),
+                              reading_clb: next.reading > 0 ? tcfToNclc("reading", next.reading) : (input.second_official_language?.reading_clb ?? 5),
+                              writing_clb: next.writing > 0 ? tcfToNclc("writing", next.writing) : (input.second_official_language?.writing_clb ?? 5),
+                            },
+                          });
+                        }
+                        handleStepChange("second_lang_tcf");
+                      }}
+                    >
+                      <SelectTrigger id={`second-tcf-${mod}`} className="h-11 text-base">
+                        <SelectValue placeholder="Select..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="select">Select...</SelectItem>
+                        {options.map((o) => (
+                          <SelectItem key={o.value} value={String(o.value)}>{o.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                );
+              })}
+            </div>
+            {secondTcfScores && (secondTcfScores.speaking > 0 || secondTcfScores.listening > 0 || secondTcfScores.reading > 0 || secondTcfScores.writing > 0) && (
+              <div className="mt-4 rounded-lg border bg-muted/30 p-4 text-sm">
+                <p className="font-medium mb-2">Calculated NCLC (CLB) levels</p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {secondTcfScores.speaking > 0 && <span>Speaking: NCLC {tcfToNclc("speaking", secondTcfScores.speaking)}</span>}
+                  {secondTcfScores.listening > 0 && <span>Listening: NCLC {tcfToNclc("listening", secondTcfScores.listening)}</span>}
+                  {secondTcfScores.reading > 0 && <span>Reading: NCLC {tcfToNclc("reading", secondTcfScores.reading)}</span>}
+                  {secondTcfScores.writing > 0 && <span>Writing: NCLC {tcfToNclc("writing", secondTcfScores.writing)}</span>}
+                </div>
+              </div>
+            )}
           </div>
         )}
         {step === "second_lang_clb" && (
@@ -1352,9 +2030,47 @@ export default function CrsCalculatorPage() {
             <CardDescription>Comprehensive Ranking System breakdown</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
+            <p className="text-xs text-muted-foreground">
+              This is an estimate only. Official CRS scores are determined by IRCC. Always verify with
+              official sources.
+            </p>
             <div className="text-center">
               <p className="text-5xl font-bold text-primary">{result.total_crs}</p>
               <p className="text-sm text-muted-foreground mt-1">Total points</p>
+              {user && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mt-4"
+                  disabled={saving || !lastSanitizedInputRef.current}
+                  onClick={async () => {
+                    const sanitized = lastSanitizedInputRef.current;
+                    if (!sanitized || !result) return;
+                    setSaving(true);
+                    const { error: saveError } = await saveCrsScore(user.uid, sanitized, result);
+                    setSaving(false);
+                    if (saveError) {
+                      toast({
+                        variant: "destructive",
+                        title: "Failed to save",
+                        description: saveError,
+                      });
+                    } else {
+                      toast({
+                        title: "Saved to profile",
+                        description: "Your CRS score has been saved to your profile.",
+                      });
+                    }
+                  }}
+                >
+                  {saving ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Save className="mr-2 h-4 w-4" />
+                  )}
+                  Save to profile
+                </Button>
+              )}
             </div>
 
             <Separator />
@@ -1485,10 +2201,220 @@ export default function CrsCalculatorPage() {
               </div>
             </div>
 
-            <p className="text-xs text-muted-foreground">
-              This is an estimate only. Official CRS scores are determined by IRCC. Always verify with
-              official sources.
-            </p>
+            <Collapsible className="mt-4">
+              <CollapsibleTrigger className="flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+                <ChevronDown className="h-4 w-4" />
+                Advanced: See how different language scores would affect your CRS
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className="mt-4 space-y-4 rounded-lg border bg-muted/30 p-4">
+                  {(() => {
+                    const testType = firstLangTestType === "select" ? "ielts" : firstLangTestType;
+                    const baseScores: TestScores =
+                      hypotheticalTestScores ??
+                      (testType === "ielts" && ieltsScores && (ieltsScores.speaking > 0 || ieltsScores.listening > 0 || ieltsScores.reading > 0 || ieltsScores.writing > 0)
+                        ? ieltsScores
+                        : testType === "celpip_g" && celpipScores && (celpipScores.speaking > 0 || celpipScores.listening > 0 || celpipScores.reading > 0 || celpipScores.writing > 0)
+                          ? celpipScores
+                          : testType === "pte_core" && pteScores && (pteScores.speaking > 0 || pteScores.listening > 0 || pteScores.reading > 0 || pteScores.writing > 0)
+                            ? pteScores
+                            : testType === "tef_canada" && tefScores && (tefScores.speaking > 0 || tefScores.listening > 0 || tefScores.reading > 0 || tefScores.writing > 0)
+                              ? tefScores
+                              : testType === "tcf_canada" && tcfScores && (tcfScores.speaking > 0 || tcfScores.listening > 0 || tcfScores.reading > 0 || tcfScores.writing > 0)
+                                ? tcfScores
+                                : (() => {
+                                    const fl = input.first_official_language;
+                                    const norm = (c: number) => (c === CLB_SELECT || c < 4 ? 7 : Math.min(c, 10));
+                                    return {
+                                      speaking: norm(fl?.speaking_clb ?? 7),
+                                      listening: norm(fl?.listening_clb ?? 7),
+                                      reading: norm(fl?.reading_clb ?? 7),
+                                      writing: norm(fl?.writing_clb ?? 7),
+                                    };
+                                  })());
+                    const getOptions = (mod: "speaking" | "listening" | "reading" | "writing") => {
+                      if (testType === "ielts") return IELTS_BAND_OPTIONS;
+                      if (testType === "celpip_g") return CELPIP_OPTIONS.map((o) => ({ value: o.value, label: o.label }));
+                      if (testType === "pte_core") return PTE_OPTIONS.map((o) => ({ value: o.value, label: o.label }));
+                      if (testType === "tef_canada") {
+                        if (mod === "speaking") return TEF_SPEAKING_OPTIONS.map((o) => ({ value: o.value, label: o.label }));
+                        if (mod === "listening") return TEF_LISTENING_OPTIONS.map((o) => ({ value: o.value, label: o.label }));
+                        if (mod === "reading") return TEF_READING_OPTIONS.map((o) => ({ value: o.value, label: o.label }));
+                        return TEF_WRITING_OPTIONS.map((o) => ({ value: o.value, label: o.label }));
+                      }
+                      if (testType === "tcf_canada") {
+                        if (mod === "speaking" || mod === "writing") return TCF_SW_OPTIONS.map((o) => ({ value: o.value, label: o.label }));
+                        if (mod === "listening") return TCF_LISTENING_OPTIONS.map((o) => ({ value: o.value, label: o.label }));
+                        return TCF_READING_OPTIONS.map((o) => ({ value: o.value, label: o.label }));
+                      }
+                      return CLB_SIMULATOR_OPTIONS;
+                    };
+                    const displayScores = baseScores;
+                    const displayLang = testScoresToClb(testType, displayScores);
+                    return (
+                    <>
+                      <p className="text-sm text-muted-foreground">
+                        Enter hypothetical {testType === "ielts" ? "IELTS" : testType === "celpip_g" ? "CELPIP" : testType === "pte_core" ? "PTE Core" : testType === "tef_canada" ? "TEF Canada" : testType === "tcf_canada" ? "TCF Canada" : "CLB"} scores to see how your CRS would change. Save a hypothetical score separately—it appears in its own card on your dashboard with the language breakdown (e.g. L:8 R:7 S:6 W:8), without overwriting your current score.
+                      </p>
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        {(["speaking", "listening", "reading", "writing"] as const).map((mod) => {
+                          const options = getOptions(mod);
+                          return (
+                            <div key={mod}>
+                              <Label className="text-xs">{mod.charAt(0).toUpperCase() + mod.slice(1)}</Label>
+                              <Select
+                                value={displayScores[mod] > 0 ? String(displayScores[mod]) : "select"}
+                                onValueChange={(v) => {
+                                  const val = v === "select" ? 0 : Number(v);
+                                  setHypotheticalTestScores((prev) => ({
+                                    ...(prev ?? baseScores),
+                                    [mod]: val,
+                                  }));
+                                }}
+                              >
+                                <SelectTrigger className="h-9">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="select">Select...</SelectItem>
+                                  {options.map((o) => (
+                                    <SelectItem key={o.value} value={String(o.value)}>
+                                      {o.label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      {displayScores.speaking > 0 || displayScores.listening > 0 || displayScores.reading > 0 || displayScores.writing > 0 ? (
+                        <div className="rounded border bg-background/50 p-2 text-xs text-muted-foreground">
+                          <span className="font-medium">Calculated CLB: </span>
+                          Speaking {displayLang.speaking_clb}, Listening {displayLang.listening_clb}, Reading {displayLang.reading_clb}, Writing {displayLang.writing_clb}
+                        </div>
+                      ) : null}
+                      <div className="flex flex-wrap gap-2">
+                        {[7, 8, 9, 10].map((clb) => (
+                          <Button
+                            key={clb}
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setHypotheticalTestScores(getTestScoresForClb(testType, clb))}
+                          >
+                            All CLB {clb}
+                          </Button>
+                        ))}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setHypotheticalTestScores(null)}
+                        >
+                          Reset to current
+                        </Button>
+                      </div>
+                      {(() => {
+                        const sanitized: CrsInput = {
+                          ...input,
+                          age: input.age === AGE_SELECT ? 30 : input.age,
+                          education_level:
+                            (input.education_level as string) === "select"
+                              ? "bachelor_or_3plus_year"
+                              : input.education_level,
+                          first_official_language: displayLang,
+                          canadian_work_experience_years:
+                            input.canadian_work_experience_years === WORK_SELECT
+                              ? 0
+                              : input.canadian_work_experience_years,
+                          foreign_work_experience_years:
+                            input.foreign_work_experience_years === WORK_SELECT
+                              ? 0
+                              : input.foreign_work_experience_years,
+                          spouse: input.spouse
+                            ? {
+                                ...input.spouse,
+                                education_level:
+                                  (input.spouse.education_level as string) === "select"
+                                    ? "bachelor_or_3plus_year"
+                                    : input.spouse.education_level,
+                                first_official_language:
+                                  input.spouse.first_official_language.reading_clb === CLB_SELECT
+                                    ? defaultLanguageScores(7)
+                                    : input.spouse.first_official_language,
+                                canadian_work_experience_years:
+                                  input.spouse.canadian_work_experience_years === WORK_SELECT
+                                    ? 0
+                                    : input.spouse.canadian_work_experience_years,
+                              }
+                            : input.spouse,
+                        };
+                        const hypoResult = calculateCrs(sanitized);
+                        const diff = hypoResult.total_crs - (result?.total_crs ?? 0);
+                        const hasAllScores = displayScores.speaking > 0 && displayScores.listening > 0 && displayScores.reading > 0 && displayScores.writing > 0;
+                        const formatScore = (v: number) => (v % 1 === 0 ? String(v) : v.toFixed(1));
+                        const langLabel = `L:${formatScore(displayScores.listening)} R:${formatScore(displayScores.reading)} S:${formatScore(displayScores.speaking)} W:${formatScore(displayScores.writing)}`;
+                        const testName = testType === "ielts" ? "IELTS" : testType === "celpip_g" ? "CELPIP" : testType === "pte_core" ? "PTE" : testType === "tef_canada" ? "TEF" : testType === "tcf_canada" ? "TCF" : "CLB";
+                        return (
+                          <div className="space-y-3">
+                            <div className="text-sm font-medium">
+                              <span className="text-muted-foreground">With these scores, your CRS would be: </span>
+                              <span className="text-primary">{hypoResult.total_crs}</span>
+                              {diff !== 0 && (
+                                <span className={diff > 0 ? "text-green-600" : "text-destructive"}>
+                                  {" "}
+                                  ({diff > 0 ? "+" : ""}
+                                  {diff} pts)
+                                </span>
+                              )}
+                            </div>
+                            {hasAllScores && (
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="text-xs text-muted-foreground">
+                                  {testName} {langLabel}
+                                </span>
+                                {user && (
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    disabled={saving}
+                                    onClick={async () => {
+                                      setSaving(true);
+                                      const { error: saveError } = await saveHypotheticalCrsScore(
+                                        user.uid,
+                                        sanitized,
+                                        hypoResult,
+                                        `${testName} ${langLabel}`
+                                      );
+                                      setSaving(false);
+                                      if (saveError) {
+                                        toast({
+                                          variant: "destructive",
+                                          title: "Failed to save",
+                                          description: saveError,
+                                        });
+                                      } else {
+                                        toast({
+                                          title: "Hypothetical score saved",
+                                          description: `Shown separately on your dashboard (${testName} ${langLabel}).`,
+                                        });
+                                      }
+                                    }}
+                                  >
+                                    {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                                    Save as hypothetical
+                                  </Button>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })()}
+                    </>
+                    );
+                  })()}
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
           </CardContent>
         </Card>
       )}

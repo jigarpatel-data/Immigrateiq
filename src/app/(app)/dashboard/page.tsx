@@ -1,6 +1,8 @@
 
 "use client";
 
+import { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -8,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -25,7 +28,9 @@ import {
   ChartLegendContent,
 } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis, Pie, PieChart } from "recharts";
-import { TrendingUp, Target, Users, CheckCircle } from "lucide-react";
+import { TrendingUp, Target, Users, CheckCircle, Calculator, Sparkles } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
+import { subscribeCrsScore, subscribeHypotheticalCrsScore, type CrsScoreDocument } from "@/lib/crs-storage";
 import type { ChartConfig } from "@/components/ui/chart";
 
 const chartData = [
@@ -78,6 +83,20 @@ const recentDraws = [
 ];
 
 export default function DashboardPage() {
+  const { user } = useAuth();
+  const [crsScore, setCrsScore] = useState<CrsScoreDocument | null>(null);
+  const [hypotheticalScore, setHypotheticalScore] = useState<CrsScoreDocument | null>(null);
+
+  useEffect(() => {
+    if (!user) return;
+    const unsubCurrent = subscribeCrsScore(user.uid, setCrsScore);
+    const unsubHypo = subscribeHypotheticalCrsScore(user.uid, setHypotheticalScore);
+    return () => {
+      unsubCurrent();
+      unsubHypo();
+    };
+  }, [user]);
+
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -89,10 +108,78 @@ export default function DashboardPage() {
             <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-xl md:text-2xl font-bold">498</div>
-            <p className="text-xs text-muted-foreground">
-              +3 from last month
-            </p>
+            {crsScore ? (
+              <>
+                <div className="text-xl md:text-2xl font-bold">{crsScore.result.total_crs}</div>
+                {crsScore.languageScoreLabel && (
+                  <p className="text-xs text-muted-foreground font-mono">
+                    {crsScore.languageScoreLabel}
+                  </p>
+                )}
+                <p className="text-xs text-muted-foreground">
+                  {crsScore.updatedAt && "seconds" in crsScore.updatedAt
+                    ? `Saved ${new Date(crsScore.updatedAt.seconds * 1000).toLocaleDateString()}`
+                    : "Saved to profile"}
+                </p>
+                <Link href="/crs-calculator">
+                  <Button variant="link" className="h-auto p-0 text-xs mt-1">
+                    Recalculate
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <>
+                <div className="text-xl md:text-2xl font-bold text-muted-foreground">—</div>
+                <p className="text-xs text-muted-foreground">No score saved yet</p>
+                <Link href="/crs-calculator">
+                  <Button variant="link" className="h-auto p-0 text-xs mt-1">
+                    <Calculator className="h-3 w-3 mr-1 inline" />
+                    Calculate CRS Score
+                  </Button>
+                </Link>
+              </>
+            )}
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Hypothetical CRS Score
+            </CardTitle>
+            <Sparkles className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            {hypotheticalScore ? (
+              <>
+                <div className="text-xl md:text-2xl font-bold">{hypotheticalScore.result.total_crs}</div>
+                {hypotheticalScore.languageScoreLabel && (
+                  <p className="text-xs text-muted-foreground font-mono">
+                    {hypotheticalScore.languageScoreLabel}
+                  </p>
+                )}
+                <p className="text-xs text-muted-foreground">
+                  {hypotheticalScore.updatedAt && "seconds" in hypotheticalScore.updatedAt
+                    ? `Saved ${new Date(hypotheticalScore.updatedAt.seconds * 1000).toLocaleDateString()}`
+                    : "From Advanced section"}
+                </p>
+                <Link href="/crs-calculator">
+                  <Button variant="link" className="h-auto p-0 text-xs mt-1">
+                    Update hypothetical
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <>
+                <div className="text-xl md:text-2xl font-bold text-muted-foreground">—</div>
+                <p className="text-xs text-muted-foreground">No hypothetical score saved</p>
+                <Link href="/crs-calculator">
+                  <Button variant="link" className="h-auto p-0 text-xs mt-1">
+                    <Calculator className="h-3 w-3 mr-1 inline" />
+                    Try Advanced: Score variation
+                  </Button>
+                </Link>
+              </>
+            )}
           </CardContent>
         </Card>
         <Card>

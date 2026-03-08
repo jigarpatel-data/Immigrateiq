@@ -26,6 +26,8 @@ const protectedPaths = [
     "/dashboard",
     "/draw-tracker",
     "/program-tracker",
+    "/score-calculator",
+    "/crs-calculator",
     "/chatbot",
     "/faq",
     "/profile",
