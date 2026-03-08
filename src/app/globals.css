@@ -115,6 +115,13 @@
 }
 
 @layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
   .animation-delay-3000 {
     animation-delay: 3s;
   }

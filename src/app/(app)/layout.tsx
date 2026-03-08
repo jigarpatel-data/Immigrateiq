@@ -19,6 +19,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import {
+  ArrowLeft,
   Bot,
   Calculator,
   GanttChart,
@@ -39,7 +40,7 @@ import { useToast } from "@/hooks/use-toast";
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/draw-tracker", icon: GanttChart, label: "Draw Tracker" },
-  { href: "/crs-calculator", icon: Calculator, label: "CRS Calculator" },
+  { href: "/score-calculator", icon: Calculator, label: "Score Calculator" },
   { href: "/chatbot", icon: Bot, label: "AI Assistant" },
   { href: "/faq", icon: HelpCircle, label: "FAQ" },
   { href: "/profile", icon: User, label: "Profile", hidden: true },
@@ -83,7 +84,9 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
     };
 
     const currentPage = navItems.find(item => pathname.startsWith(item.href));
-    const pageTitle = currentPage ? currentPage.label : "";
+    const pageTitle = currentPage ? currentPage.label : (pathname.startsWith("/crs-calculator") ? "CRS Calculator" : "");
+    const HeaderIcon = pathname.startsWith("/crs-calculator") ? Calculator : (currentPage?.icon ?? null);
+    const showBackToScoreCalculator = pathname.startsWith("/crs-calculator");
 
     const isEmailVerified = user?.emailVerified ?? false;
 
@@ -161,14 +164,26 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
               )}
             </SidebarFooter>
         </Sidebar>
-        <SidebarInset className="flex flex-col h-screen">
+        <SidebarInset className="flex flex-col min-h-screen">
           {/* Unified Header for Mobile and Desktop */}
           <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center justify-between gap-4 border-b bg-background px-4 sm:px-6">
               <div className="flex items-center gap-2">
                   <SidebarTrigger className="lg:hidden">
                     <Menu />
                   </SidebarTrigger>
-                  <h1 className="text-lg font-semibold">{pageTitle}</h1>
+                  {showBackToScoreCalculator && (
+                    <Link
+                      href="/score-calculator"
+                      className="flex items-center justify-center rounded-md p-1.5 hover:bg-accent hover:text-accent-foreground transition-colors"
+                      aria-label="Back to Score Calculator"
+                    >
+                      <ArrowLeft className="h-5 w-5" />
+                    </Link>
+                  )}
+                  <h1 className="text-lg font-semibold flex items-center gap-2">
+                    {HeaderIcon && <HeaderIcon className="h-5 w-5" />}
+                    {pageTitle}
+                  </h1>
               </div>
                {user && (
                 <div className="flex items-center gap-4">
@@ -182,7 +197,7 @@ function AppLayoutComponent({ children }: { children: React.ReactNode }) {
                 </div>
                )}
           </header>
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1">
             <main className="p-4 sm:p-6">
               {mainContent}
             </main>

@@ -1,9 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 import { calculateCrs, type CrsInput } from "@/lib/crs";
 
+function isValidLanguageScores(obj: unknown): obj is { reading_clb: number; writing_clb: number; speaking_clb: number; listening_clb: number } {
+  if (!obj || typeof obj !== "object") return false;
+  const o = obj as Record<string, unknown>;
+  return (
+    typeof o.reading_clb === "number" &&
+    typeof o.writing_clb === "number" &&
+    typeof o.speaking_clb === "number" &&
+    typeof o.listening_clb === "number"
+  );
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    let body: unknown;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid request: body must be valid JSON" },
+        { status: 400 }
+      );
+    }
 
     if (!body || typeof body !== "object") {
       return NextResponse.json(
@@ -26,9 +45,9 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    if (!input.first_official_language || typeof input.first_official_language !== "object") {
+    if (!isValidLanguageScores(input.first_official_language)) {
       return NextResponse.json(
-        { error: "Invalid input: first_official_language is required" },
+        { error: "Invalid input: first_official_language must have reading_clb, writing_clb, speaking_clb, listening_clb (numbers)" },
         { status: 400 }
       );
     }

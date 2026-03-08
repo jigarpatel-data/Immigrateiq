@@ -210,7 +210,7 @@ function scoreSpouseCanadianWork(years: number): number {
 
 // ==================== C. SKILL TRANSFERABILITY (Max 100) ====================
 
-/** Education + language: Secondary=0, Post-sec 1yr=13/25, Two or more/3yr/Master/PhD=25/50 */
+/** Education + language: Secondary=0, Post-sec 1yr/2yr/Bachelor's 3yr=13/25, Two or more/Master/PhD=25/50 */
 function scoreTransferEducationLanguage(
   edu: EducationLevel,
   lang: LanguageScores
@@ -219,15 +219,17 @@ function scoreTransferEducationLanguage(
   if (band === "none") return 0;
 
   const isSecondaryOrLess = edu === "less_than_high_school" || edu === "high_school";
-  const isPostSecOneYear =
-    edu === "one_year_postsecondary" || edu === "two_year_postsecondary";
+  const isPostSecOneYearOrLonger =
+    edu === "one_year_postsecondary" ||
+    edu === "two_year_postsecondary" ||
+    edu === "bachelor_or_3plus_year";
   const isTwoOrMoreOrHigher =
     edu === "two_or_more_postsecondary" ||
     edu === "masters_or_professional" ||
     edu === "phd";
 
   if (isSecondaryOrLess) return 0;
-  if (isPostSecOneYear) return band === "clb7" ? 13 : 25;
+  if (isPostSecOneYearOrLonger) return band === "clb7" ? 13 : 25;
   if (isTwoOrMoreOrHigher) return band === "clb7" ? 25 : 50;
   return 0;
 }
@@ -242,15 +244,17 @@ function scoreTransferEducationCanadianWork(
   if (caBand === 0) return 0;
 
   const isSecondaryOrLess = edu === "less_than_high_school" || edu === "high_school";
-  const isPostSecOneYear =
-    edu === "one_year_postsecondary" || edu === "two_year_postsecondary";
+  const isPostSecOneYearOrLonger =
+    edu === "one_year_postsecondary" ||
+    edu === "two_year_postsecondary" ||
+    edu === "bachelor_or_3plus_year";
   const isTwoOrMoreOrHigher =
     edu === "two_or_more_postsecondary" ||
     edu === "masters_or_professional" ||
     edu === "phd";
 
   if (isSecondaryOrLess) return 0;
-  if (isPostSecOneYear) return caBand === 1 ? 13 : 25;
+  if (isPostSecOneYearOrLonger) return caBand === 1 ? 13 : 25;
   if (isTwoOrMoreOrHigher) return caBand === 1 ? 25 : 50;
   return 0;
 }
@@ -345,7 +349,9 @@ function scorePNP(hasPNP: boolean): number {
 // ==================== MAIN CALCULATOR ====================
 
 export function calculateCrs(input: CrsInput): CrsOutput {
-  const hasSpouse = !!input.has_spouse;
+  // Use "without spouse" grid when spouse is not accompanying (spouse_coming = No)
+  // or when spouse is Canadian PR/citizen (not in application). Spouse data exists only when accompanying.
+  const hasSpouse = !!input.has_spouse && !!input.spouse;
 
   // A. Core human capital
   const agePoints = scoreAge(input.age, hasSpouse);
@@ -430,8 +436,10 @@ export function calculateCrs(input: CrsInput): CrsOutput {
     input.first_official_language
   );
 
-  const educationTransfer = Math.max(eduLangTransfer, eduCaWorkTransfer);
-  const foreignWorkTransfer = Math.max(foreignLangTransfer, foreignCaWorkTransfer);
+  // Education = edu+language + edu+Canadian work (each sub-factor max 50)
+  // Foreign work = foreign+language + foreign+Canadian work (each sub-factor max 50)
+  const educationTransfer = eduLangTransfer + eduCaWorkTransfer;
+  const foreignWorkTransfer = foreignLangTransfer + foreignCaWorkTransfer;
   let skillTransferability = educationTransfer + foreignWorkTransfer + tradeTransfer;
   skillTransferability = clamp(skillTransferability, 0, 100);
 
@@ -469,8 +477,10 @@ export function calculateCrs(input: CrsInput): CrsOutput {
       spouse_canadian_work: spouseWorkPoints,
       transfer_edu_language: eduLangTransfer,
       transfer_edu_canadian_work: eduCaWorkTransfer,
+      transfer_education: educationTransfer,
       transfer_foreign_language: foreignLangTransfer,
       transfer_foreign_canadian_work: foreignCaWorkTransfer,
+      transfer_foreign_work: foreignWorkTransfer,
       transfer_trade_certificate: tradeTransfer,
       additional_sibling: siblingPoints,
       additional_french: frenchAdditional,
