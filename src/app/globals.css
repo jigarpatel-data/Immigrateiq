@@ -114,6 +114,16 @@
   }
 }
 
+/* Select dropdown: ensure long options wrap on mobile */
+[data-radix-select-viewport] {
+  min-width: min(100vw - 2rem, 28rem) !important;
+}
+[data-radix-select-viewport] [role="option"] > span:last-child {
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+}
+
 @layer utilities {
   .scrollbar-hide {
     -ms-overflow-style: none;

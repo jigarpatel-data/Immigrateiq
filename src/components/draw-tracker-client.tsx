@@ -93,13 +93,18 @@ export function DrawTrackerClient({
   
   const isMobile = useIsMobile();
   const viewportRef = useRef<HTMLDivElement>(null);
+  const skipNextFetchRef = useRef(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
     setIsPanelOpen(false);
   }, [isMobile]);
 
-  const fetchDraws = useCallback(async (currentOffset?: string, isNewFilter = false) => {
+  const fetchDraws = useCallback(async (
+    currentOffset?: string, 
+    isNewFilter = false,
+    filterOverrides?: { province?: string; category?: string; search?: string }
+  ) => {
       const isLoadMore = !!currentOffset && !isNewFilter;
 
       if (isNewFilter) {
@@ -114,9 +119,9 @@ export function DrawTrackerClient({
       setError(null);
       
       const filters = {
-        province: provinceFilter,
-        category: categoryFilter,
-        search: activeSearchTerm,
+        province: filterOverrides?.province ?? provinceFilter,
+        category: filterOverrides?.category ?? categoryFilter,
+        search: filterOverrides?.search ?? activeSearchTerm,
       };
 
       const { draws, error: fetchError, offset: newOffset } = await getAirtableDraws(currentOffset, filters);
@@ -174,10 +179,22 @@ export function DrawTrackerClient({
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    const { searchTerm } = await getEnhancedSearchTerm(rawSearchTerm);
-    const finalSearchTerm = searchTerm || rawSearchTerm;
-    setActiveSearchTerm(finalSearchTerm); // This will trigger useEffect
+    const trimmedSearch = rawSearchTerm.trim();
+    const { searchTerm } = await getEnhancedSearchTerm(trimmedSearch);
+    const finalSearchTerm = searchTerm || trimmedSearch;
+
+    // Reset all filters - new search replaces everything
+    setActiveSearchTerm(finalSearchTerm);
+    setProvinceFilter('All');
+    setCategoryFilter('All');
+    skipNextFetchRef.current = true;
+
+    // Fetch immediately with new params (avoids useEffect timing/race)
+    fetchDraws(undefined, true, {
+      search: finalSearchTerm,
+      province: 'All',
+      category: 'All',
+    });
   }
 
   const handleFilterChange = (type: 'province' | 'category', value: string) => {
@@ -190,8 +207,12 @@ export function DrawTrackerClient({
       // This will trigger the useEffect below
   };
   
-  // This useEffect will run when any filter or search term changes
+  // This useEffect will run when any filter or search term changes (except when handleSearch already fetched)
   useEffect(() => {
+    if (skipNextFetchRef.current) {
+      skipNextFetchRef.current = false;
+      return;
+    }
     fetchDraws(undefined, true);
   }, [activeSearchTerm, provinceFilter, categoryFilter]);
 

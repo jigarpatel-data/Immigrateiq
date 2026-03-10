@@ -473,6 +473,7 @@ export default function CrsCalculatorPage() {
   const [nominationAnswer, setNominationAnswer] = useState<"select" | "yes" | "no">("select");
   const [siblingAnswer, setSiblingAnswer] = useState<"select" | "yes" | "no">("select");
   const [stepIndex, setStepIndex] = useState(0);
+  const [answeredStepIndex, setAnsweredStepIndex] = useState(-1);
   const [result, setResult] = useState<CrsOutput | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -532,14 +533,23 @@ export default function CrsCalculatorPage() {
     const prevLength = prevStepsLengthRef.current;
     prevStepsLengthRef.current = newLength;
 
+    const maxIdx = Math.max(0, newLength - 1);
+
     setStepIndex((prev) => {
-      const maxIdx = Math.max(0, newLength - 1);
       if (newLength > prevLength) {
         // Steps added (e.g. conditional 4c appeared): show all steps so other answers stay visible
         return maxIdx;
       }
       // Steps removed: clamp to valid range
       return Math.min(prev, maxIdx);
+    });
+
+    setAnsweredStepIndex((prev) => {
+      // Only clamp when steps removed; never set answeredStepIndex when steps are added
+      if (newLength <= prevLength) {
+        return Math.min(prev, maxIdx);
+      }
+      return prev;
     });
   }, [visibleSteps.length]);
 
@@ -596,9 +606,11 @@ export default function CrsCalculatorPage() {
     if (idx < stepIndex) {
       // Editing a previous step: don't rewind—keep stepIndex at least current, or at length so new conditional steps (e.g. 4c) stay visible
       setStepIndex((i) => Math.max(idx + 1, i, visibleSteps.length));
+      setAnsweredStepIndex((prev) => Math.max(prev, idx));
     } else if (idx === stepIndex) {
       // Answering current step: advance to next
       setStepIndex((i) => Math.min(i + 1, visibleSteps.length - 1));
+      setAnsweredStepIndex((prev) => Math.max(prev, idx));
     }
   };
 
@@ -1981,7 +1993,7 @@ export default function CrsCalculatorPage() {
               <div
                 key={i}
                 className={`h-1.5 w-1.5 rounded-full transition-colors ${
-                  i <= stepIndex ? "bg-primary" : "bg-muted"
+                  i <= answeredStepIndex ? "bg-primary" : "bg-muted"
                 }`}
               />
             ))}
